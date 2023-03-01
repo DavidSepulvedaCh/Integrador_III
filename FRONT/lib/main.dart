@@ -1,11 +1,15 @@
 import 'package:integrador/routes/imports.dart';
+import 'package:integrador/services/shared_service.dart';
 
-
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedService.setUp();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,7 +17,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/':(context) => Login(),
+        '/':(context) => const Login(),
         '/signUp':(context) => const Register()
       },
     );

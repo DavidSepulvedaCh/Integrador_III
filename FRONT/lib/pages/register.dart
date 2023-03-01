@@ -10,7 +10,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   bool terminos = false;
   Widget builTerminos() {
-    return Container(
+    return SizedBox(
       height: 20,
       child: Row(
         children: <Widget>[
@@ -40,7 +40,7 @@ class _RegisterState extends State<Register> {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Login()));
+            context, MaterialPageRoute(builder: (context) => const Login()));
       },
       child: RichText(
         text: const TextSpan(
@@ -78,7 +78,7 @@ class _RegisterState extends State<Register> {
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('fondo2.jpg'),
+                    image: AssetImage('assets/fondo2.jpg'),
                     fit: BoxFit.cover
                   ),
                 ),
@@ -111,9 +111,9 @@ class _RegisterState extends State<Register> {
                       const SizedBox(height: 48),
                       buildUserName(),
                       const SizedBox(height: 30),
-                      buildEmail(),
+                      // buildEmail(),
                       const SizedBox(height: 30),
-                      buildPassword(),
+                      // buildPassword(),
                       const SizedBox(height: 30),
                       buildPasswordRep(),
                       const SizedBox(height: 15),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 Widget buildPassword() {
+  final passwordTextController = TextEditingController();
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
@@ -24,6 +26,7 @@ Widget buildPassword() {
         ),
         height: 60,
         child: TextField(
+          controller: passwordTextController,
           obscureText: true,
           style: const TextStyle(color: Colors.black),
           decoration: InputDecoration(
