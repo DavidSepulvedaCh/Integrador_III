@@ -18,9 +18,9 @@ class APIService {
     };
     final dataBody = json.encode(model.toJson());
     try {
-      final response = await http.post(url, headers: header, body: dataBody).timeout(const Duration(seconds: 15));
+      final response = await http.post(url, headers: header, body: dataBody).timeout(const Duration(seconds: 3));
       if (response.statusCode == 200) {
-        await SharedService.setLogginDetails(loginResponseModel(response.body));
+        await SharedService.setLogginDetails(loginResponseModel(response.body, model.getEmail()));
         return 0;
       } else {
         return 1;

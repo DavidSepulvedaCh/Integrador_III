@@ -1,4 +1,4 @@
 class Config{
-  static const String apiURL = '192.168.142.23:1802';
+  static const String apiURL = '10.153.82.79:1802';
   static const String loginAPI = '/api/users/login';
 }

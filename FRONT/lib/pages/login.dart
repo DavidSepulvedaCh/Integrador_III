@@ -197,7 +197,7 @@ class _LoginState extends State<Login> {
           context: context,
           builder: (context) => AlertDialog(
                 title: const Text('Error'),
-                content: const Text('You must fill in all the fields'),
+                content: const Text('Debes llenar todos los campos'),
                 actions: [
                   TextButton(
                       onPressed: () {
@@ -213,7 +213,7 @@ class _LoginState extends State<Login> {
           context: context,
           builder: (context) => AlertDialog(
                 title: const Text('Error'),
-                content: const Text('Invalid email'),
+                content: const Text('Email inválido'),
                 actions: [
                   TextButton(
                       onPressed: () {

@@ -1,14 +1,15 @@
 import 'dart:convert';
 
-LoginResponseModel loginResponseModel(String str){
+LoginResponseModel loginResponseModel(String str, String email){
   return LoginResponseModel.fromJson(jsonDecode(str));
 }
 
 class LoginResponseModel {
     String? name;
+    String? email;
     String? token;
 
-    LoginResponseModel({this.name, this.token}); 
+    LoginResponseModel({this.name, this.token, this.email}); 
 
     LoginResponseModel.fromJson(Map<String, dynamic> json) {
         name = json['name'];
@@ -18,6 +19,7 @@ class LoginResponseModel {
     Map<String, dynamic> toJson() {
         final Map<String, dynamic> data = <String, dynamic>{};
         data['name'] = name;
+        data['email'] = email;
         data['token'] = token;
         return data;
     }

@@ -4,6 +4,11 @@ class LoginRequestModel {
 
   LoginRequestModel({this.email, this.password});
 
+  String getEmail(){
+    String returnEmail = email ?? 'default';
+    return returnEmail;
+  }
+
   LoginRequestModel.fromJson(Map<String, dynamic> json) {
     email = json['email'];
     password = json['password'];

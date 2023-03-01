@@ -93,6 +93,7 @@ class UserController {
             }
             return res.json({ 'error': false, message: 'Token valid' });
         }
+        return res.json({ 'error': true, message: 'e104' });
     }
 }
 

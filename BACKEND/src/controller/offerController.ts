@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import OfferModel from "../model/offerModel";
+const jwt = require('jsonwebtoken');
 
 class OfferController {
 
@@ -49,7 +50,30 @@ class OfferController {
     }
 
     public register = (req: Request, res: Response) => {
-        const { address, name, description, photo, id_seller, city } = req.body;
+        const { address, name, description, photo, city } = req.body;
+        let id_seller = '';
+
+        const token = req.body.token;
+        if (token) {
+            let decodedToken: any;
+            try {
+                decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+            } catch {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            if (!decodedToken.id) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            id_seller = decodedToken.id;
+        } else {
+            return res.status(400).send({
+                error: 'Missing data'
+            });
+        }
         let { price } = req.body;
         if(!address || !name || !description || !photo || !price || !id_seller || !city){
             return res.status(400).send({

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const offerModel_1 = __importDefault(require("../model/offerModel"));
+const jwt = require('jsonwebtoken');
 class OfferController {
     constructor() {
         this.getById = (req, res) => {
@@ -44,7 +45,31 @@ class OfferController {
             });
         };
         this.register = (req, res) => {
-            const { address, name, description, photo, id_seller, city } = req.body;
+            const { address, name, description, photo, city } = req.body;
+            let id_seller = '';
+            const token = req.body.token;
+            if (token) {
+                let decodedToken;
+                try {
+                    decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+                }
+                catch (_a) {
+                    return res.status(400).send({
+                        error: 'Missing data'
+                    });
+                }
+                if (!decodedToken.id) {
+                    return res.status(400).send({
+                        error: 'Missing data'
+                    });
+                }
+                id_seller = decodedToken.id;
+            }
+            else {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
             let { price } = req.body;
             if (!address || !name || !description || !photo || !price || !id_seller || !city) {
                 return res.status(400).send({
