@@ -2,6 +2,7 @@ import 'package:integrador/routes/imports.dart';
 import 'package:integrador/models/login_request_model.dart';
 import 'package:integrador/services/api_service.dart';
 import 'package:integrador/pages/welcome.dart';
+import 'package:integrador/services/shared_service.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -11,6 +12,21 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  @override
+  void initState() {
+    super.initState();
+    isLoggedIn();
+  }
+
+  isLoggedIn() async {
+    var session = await SharedService.isLoggedIn();
+    if (session) {
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, '/secondPage');
+    }
+  }
+
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
 
@@ -43,80 +59,80 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildPassword() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      const Text(
-        'Contreña',
-        style: TextStyle(
-            color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 15),
-      Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          // ignore: prefer_const_literals_to_create_immutables
-          boxShadow: [
-            const BoxShadow(
-                color: Colors.black38, blurRadius: 5, offset: Offset(0, 2)),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Contreña',
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        height: 60,
-        child: TextField(
-          controller: passwordTextController,
-          obscureText: true,
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.only(top: 15),
-              prefixIcon: Icon(Icons.lock, color: HexColor('#E64A19')),
-              hintText: 'Contraseña',
-              hintStyle: TextStyle(color: HexColor('#212121'))),
-        ),
-      )
-    ],
-  );
-}
+        const SizedBox(height: 15),
+        Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
+                  color: Colors.black38, blurRadius: 5, offset: Offset(0, 2)),
+            ],
+          ),
+          height: 60,
+          child: TextField(
+            controller: passwordTextController,
+            obscureText: true,
+            style: const TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(top: 15),
+                prefixIcon: Icon(Icons.lock, color: HexColor('#E64A19')),
+                hintText: 'Contraseña',
+                hintStyle: TextStyle(color: HexColor('#212121'))),
+          ),
+        )
+      ],
+    );
+  }
 
   Widget buildEmail() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      const Text(
-        'Correo electronico',
-        style: TextStyle(
-            color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 15),
-      Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          // ignore: prefer_const_literals_to_create_immutables
-          boxShadow: [
-            const BoxShadow(
-                color: Colors.black38, blurRadius: 5, offset: Offset(0, 2)),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Correo electronico',
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        height: 60,
-        child: TextField(
-          controller: emailTextController,
-          keyboardType: TextInputType.emailAddress,
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.only(top: 15),
-              prefixIcon: Icon(Icons.email, color: HexColor('#E64A19')),
-              hintText: 'Dirección de correo',
-              hintStyle: TextStyle(color: HexColor('#212121'))),
-        ),
-      )
-    ],
-  );
-}
+        const SizedBox(height: 15),
+        Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
+                  color: Colors.black38, blurRadius: 5, offset: Offset(0, 2)),
+            ],
+          ),
+          height: 60,
+          child: TextField(
+            controller: emailTextController,
+            keyboardType: TextInputType.emailAddress,
+            style: const TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(top: 15),
+                prefixIcon: Icon(Icons.email, color: HexColor('#E64A19')),
+                hintText: 'Dirección de correo',
+                hintStyle: TextStyle(color: HexColor('#212121'))),
+          ),
+        )
+      ],
+    );
+  }
 
   Widget buildBtnSingUp() {
     return GestureDetector(
@@ -149,48 +165,49 @@ class _LoginState extends State<Login> {
 
   void submit() async {
     if (validate()) {
-      LoginRequestModel model =
-          LoginRequestModel(email: emailTextController.text, password: passwordTextController.text);
+      LoginRequestModel model = LoginRequestModel(
+          email: emailTextController.text,
+          password: passwordTextController.text);
       final response = await APIService.login(model);
-      if(response == 0){
-        Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => const SecondPage()));
-      }else if(response == 1){
+      if (response == 0) {
+        // ignore: use_build_context_synchronously
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const SecondPage()));
+      } else if (response == 1) {
         showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: const Text('Error'),
-                          content: const Text('Usuario o contraseña incorrecta'),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Ok')),
-                          ],
-                        ));
-      }else{
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text('Error'),
+                  content: const Text('Usuario o contraseña incorrecta'),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Ok')),
+                  ],
+                ));
+      } else {
         showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: const Text('Error'),
-                          content: const Text('Ocurrió un error. Intente más tarde'),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Ok')),
-                          ],
-                        ));
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text('Error'),
+                  content: const Text('Ocurrió un error. Intente más tarde'),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Ok')),
+                  ],
+                ));
       }
     }
   }
 
-
   bool validate() {
     RegExp emailValidator = RegExp(
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
     if (emailTextController.text == '' || passwordTextController.text == '') {
       showDialog(
@@ -228,32 +245,30 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildBtnLogin() {
-  return Container(
-    padding: const EdgeInsets.symmetric(vertical: 25),
-    width: double.infinity,
-    child: ElevatedButton(
-      style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 25),
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
           ),
+          minimumSize:
+              MaterialStateProperty.all<Size>(const Size(double.infinity, 50)),
+          backgroundColor:
+              MaterialStateProperty.all<Color>(HexColor('#E64A19')),
         ),
-        minimumSize:
-            MaterialStateProperty.all<Size>(const Size(double.infinity, 50)),
-        backgroundColor: MaterialStateProperty.all<Color>(HexColor('#E64A19')),
-      ),
-      onPressed: () => submit(),
-      child: const Text(
-        'Ingresar',
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 18
+        onPressed: () => submit(),
+        child: const Text(
+          'Ingresar',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

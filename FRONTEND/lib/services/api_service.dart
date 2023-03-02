@@ -7,7 +7,6 @@ import 'package:integrador/models/login_request_model.dart';
 import 'package:integrador/services/shared_service.dart';
 
 class APIService {
-  static var client = http.Client();
 
   static Future<int> login(LoginRequestModel model) async {
     Uri url = Uri.http(Config.apiURL, Config.loginAPI);
@@ -20,7 +19,7 @@ class APIService {
     try {
       final response = await http.post(url, headers: header, body: dataBody).timeout(const Duration(seconds: 3));
       if (response.statusCode == 200) {
-        await SharedService.setLogginDetails(loginResponseModel(response.body, model.getEmail()));
+        await SharedService.setLogginDetails(loginResponseModel(response.body));
         return 0;
       } else {
         return 1;
@@ -28,5 +27,22 @@ class APIService {
     } catch (e) {
       return 2;
     }
+  }
+
+  static Future<bool> isValidToken(String token) async {
+    Uri url = Uri.http(Config.apiURL, Config.isValidTokenAPI);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    final response = await http.post(url, headers: header, body: jsonEncode({'token': token})).timeout(const Duration(seconds: 3));
+    print(response.body);
+    print(response);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
   }
 }

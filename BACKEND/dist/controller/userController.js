@@ -80,16 +80,24 @@ class UserController {
                 let decodedToken;
                 try {
                     decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+                    console.log(decodedToken);
                 }
                 catch (_a) {
-                    return res.json({ 'error': true, message: 'e104' });
+                    return res.status(401).send({
+                        error: 'Invalid token'
+                    });
                 }
                 if (!decodedToken.id) {
-                    return res.json({ 'error': true, message: 'e104' });
+                    return res.status(401).send({
+                        error: 'Invalid token'
+                    });
                 }
-                return res.json({ 'error': false, message: 'Token valid' });
+                console.log(decodedToken);
+                return res.status(200).send({ message: 'Token valid' });
             }
-            return res.json({ 'error': true, message: 'e104' });
+            return res.status(400).send({
+                error: 'Missin data'
+            });
         };
         this.userModel = new userModel_1.default();
     }
