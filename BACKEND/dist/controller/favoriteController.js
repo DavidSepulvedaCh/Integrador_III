@@ -59,9 +59,6 @@ class FavoriteController {
             /* ======================== For to remove the ids ===================== */
             for (let i = 0; i < currentIds.length; i++) {
                 const id = currentIds[i];
-                console.log('before id');
-                console.log(id);
-                console.log('after id');
                 if (ids.includes(id)) {
                     continue;
                 }
