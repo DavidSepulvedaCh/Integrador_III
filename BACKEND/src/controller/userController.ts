@@ -66,7 +66,7 @@ class UserController {
                 return res.status(401).json({ error: response.error });
             }
             let token = this.generateToken(response.id, email, response.name);
-            res.status(200).json({ name: response.name, token: token, messagge: response.success });
+            res.status(200).json({ id: response.id, name: response.name, email: email, token: token, messagge: response.success });
         });
     }
 
@@ -74,8 +74,9 @@ class UserController {
         const token = jwt.sign(
             { id: id, email: email, name: name },
             process.env.TOKEN_KEY,
-            { expiresIn: "2h" }
+            { expiresIn: "7d" }
         );
+        console.log(token);
         return token;
     }
 
@@ -85,18 +86,16 @@ class UserController {
             let decodedToken: any;
             try {
                 decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-                console.log(decodedToken);
             } catch {
                 return res.status(401).send({
                     error: 'Invalid token'
                 });
             }
-            if (!decodedToken.id) {
+            if (!decodedToken.id || !decodedToken.email || !decodedToken.name) {
                 return res.status(401).send({
                     error: 'Invalid token'
                 });
             }
-            console.log(decodedToken);
             return res.status(200).send({ message: 'Token valid' });
         }
         return res.status(400).send({

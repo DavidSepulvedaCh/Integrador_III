@@ -2,11 +2,11 @@ import MongoDBC from "../mongoDB/mongoDBC";
 import UserSchema from "../mongoDB/schemas/userSchema";
 import bcryptjs from "bcryptjs";
 
-class UserModel{
+class UserModel {
 
     private MongoDBC: MongoDBC;
 
-    constructor(){
+    constructor() {
         this.MongoDBC = new MongoDBC();
     }
 
@@ -14,21 +14,21 @@ class UserModel{
         this.MongoDBC.connection();
         let userDetails = new UserSchema({
             email: email,
-            name: name, 
+            name: name,
             password: password
         });
         const userExists = await this.MongoDBC.UserSchema.findOne(
             {
-                email: {$eq: email}
+                email: { $eq: email }
             }
         );
-        if(userExists != null){
+        if (userExists != null) {
             return fn({
                 error: 'Email already exists'
             });
         }
         const newUser = await userDetails.save();
-        if(newUser._id){
+        if (newUser._id) {
             return fn({
                 success: 'Register success',
                 id: newUser._id
@@ -43,16 +43,16 @@ class UserModel{
         this.MongoDBC.connection();
         const userExists = await this.MongoDBC.UserSchema.findOne(
             {
-                email: {$eq: email}
+                email: { $eq: email }
             }
         );
-        if(userExists == null){
+        if (userExists == null) {
             return fn({
                 error: 'Email or password incorrect'
             });
         }
         let compare = bcryptjs.compareSync(password, userExists.password);
-        if(!compare){
+        if (!compare) {
             return fn({
                 error: 'Email or password incorrect'
             });
@@ -62,6 +62,15 @@ class UserModel{
             id: userExists._id,
             name: userExists.name
         });
+    }
+
+    public getUserById = async (id: string): Promise<boolean> => {
+        try {
+            const userExists = await this.MongoDBC.UserSchema.findById(id);
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }
 

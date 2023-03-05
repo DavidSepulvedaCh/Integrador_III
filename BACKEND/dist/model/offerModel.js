@@ -30,6 +30,15 @@ class OfferModel {
                 });
             }
         });
+        this.getByIds = (idsList, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            let offer = yield this.MongoDBC.OfferSchema.find({
+                _id: { $in: idsList }
+            });
+            return fn({
+                offers: offer
+            });
+        });
         this.getByCity = (city, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             const products = yield this.MongoDBC.OfferSchema.find({
@@ -60,6 +69,15 @@ class OfferModel {
             return fn({
                 error: 'Register error'
             });
+        });
+        this.offerExists = (id) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const offerExists = yield this.MongoDBC.OfferSchema.findById(id);
+                return true;
+            }
+            catch (error) {
+                return false;
+            }
         });
         this.MongoDBC = new mongoDBC_1.default();
     }

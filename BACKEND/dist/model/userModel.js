@@ -65,6 +65,15 @@ class UserModel {
                 name: userExists.name
             });
         });
+        this.getUserById = (id) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userExists = yield this.MongoDBC.UserSchema.findById(id);
+                return true;
+            }
+            catch (error) {
+                return false;
+            }
+        });
         this.MongoDBC = new mongoDBC_1.default();
     }
 }

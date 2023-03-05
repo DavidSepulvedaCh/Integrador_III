@@ -1,11 +1,11 @@
 import MongoDBC from "../mongoDB/mongoDBC";
 import OfferSchema from "../mongoDB/schemas/offerSchema";
 
-class OfferModel{
+class OfferModel {
 
     private MongoDBC: MongoDBC;
 
-    constructor(){
+    constructor() {
         this.MongoDBC = new MongoDBC();
     }
 
@@ -23,11 +23,23 @@ class OfferModel{
         }
     }
 
+    public getByIds = async (idsList: string, fn: Function) => {
+        this.MongoDBC.connection();
+        let offer = await this.MongoDBC.OfferSchema.find(
+            {
+                _id: { $in: idsList}
+            }
+        );
+        return fn({
+            offers: offer
+        });
+    }
+
     public getByCity = async (city: string, fn: Function) => {
         this.MongoDBC.connection();
         const products = await this.MongoDBC.OfferSchema.find(
             {
-                city: {$eq: city}
+                city: { $eq: city }
             }
         );
         fn(products);
@@ -46,7 +58,7 @@ class OfferModel{
             });
         }
         const newOffer = await offerDetails.save();
-        if(newOffer._id){
+        if (newOffer._id) {
             return fn({
                 success: 'Register success',
                 id: newOffer._id
@@ -55,6 +67,15 @@ class OfferModel{
         return fn({
             error: 'Register error'
         });
+    }
+
+    public offerExists = async (id: string): Promise<boolean> => {
+        try {
+            const offerExists = await this.MongoDBC.OfferSchema.findById(id);
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }
 

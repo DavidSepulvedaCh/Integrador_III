@@ -23,7 +23,7 @@ class _SecondPageState extends State<SecondPage> {
         title: const Text('V I S T A  #2'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () {
               //Función para logout
             },

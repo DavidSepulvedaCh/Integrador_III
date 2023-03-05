@@ -174,6 +174,7 @@ class _LoginState extends State<Login> {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const SecondPage()));
       } else if (response == 1) {
+        // ignore: use_build_context_synchronously
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -188,6 +189,7 @@ class _LoginState extends State<Login> {
                   ],
                 ));
       } else {
+        // ignore: use_build_context_synchronously
         showDialog(
             context: context,
             builder: (context) => AlertDialog(

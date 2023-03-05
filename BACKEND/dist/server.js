@@ -28,6 +28,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importStar(require("express"));
 const mongoRoute_1 = __importDefault(require("./route/mongoRoute"));
+const Middlewares_1 = __importDefault(require("./middlewares/Middlewares"));
+const express_unless_1 = require("express-unless");
 class Server {
     constructor() {
         this.route = () => {
@@ -41,6 +43,13 @@ class Server {
     config() {
         this.backend.set('port', process.env.PORT || 3000);
         this.backend.use((0, express_1.json)());
+        Middlewares_1.default.unless = express_unless_1.unless;
+        this.backend.use(Middlewares_1.default.unless({
+            path: [
+                { url: '/api/users/login', methods: ['POST'] },
+                { url: '/api/users/register', methods: ['POST'] }
+            ]
+        }));
     }
     start() {
         this.backend.listen(this.backend.get('port'), () => {
