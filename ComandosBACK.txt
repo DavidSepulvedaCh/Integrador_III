@@ -1,11 +1,3 @@
-Crear archivo .env
---- .env ---
-NODE_ENV='development'
-PORT= 1802
-USER = 'userIntegrador'
-PASS = 'proyecto3'
-DBNAME = 'proyectoIntegrador3'
-TOKEN_KEY = "x4TvWrxRyr751awUqTbVcqzLl5dTMu085eN9p5y"
 -- COMANDOS --
 npm install express
 npm install mongoose
