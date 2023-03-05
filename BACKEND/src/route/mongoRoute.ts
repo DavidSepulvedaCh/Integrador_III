@@ -28,7 +28,7 @@ class MongoRoute{
         this.router.post('/offers/getById', this.offerController.getById);
         this.router.post('/favorites/addFavorite', this.favoriteController.addFavorite);
         this.router.post('/favorites/removeFavorite', this.favoriteController.removeFavorite);
-        this.router.post('/favorites/getFavorites', this.favoriteController.getFavorites);
+        this.router.post('/favorites', this.favoriteController.getFavorites);
     }
 }
 

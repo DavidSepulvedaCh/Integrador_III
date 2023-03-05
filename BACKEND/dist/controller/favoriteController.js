@@ -18,36 +18,36 @@ const userModel_1 = __importDefault(require("../model/userModel"));
 class FavoriteController {
     constructor() {
         this.addFavorite = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { id_user, id_offer } = req.body;
-            if (!id_user || !id_offer) {
+            const { idUser, idOffer } = req.body;
+            if (!idUser || !idOffer) {
                 return res.status(400).send({
                     error: 'Missing data'
                 });
             }
-            if (typeof id_user !== 'string' || typeof id_offer !== 'string') {
+            if (typeof idUser !== 'string' || typeof idOffer !== 'string') {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
-            var favoriteExists = yield this.favoritesModel.favoriteExists(id_user, id_offer);
+            var favoriteExists = yield this.favoritesModel.favoriteExists(idUser, idOffer);
             if (favoriteExists) {
-                return res.status(400).send({
+                return res.status(410).send({
                     error: 'Favorite already exists'
                 });
             }
-            var userExists = yield this.userModel.getUserById(id_user);
+            var userExists = yield this.userModel.getUserById(idUser);
             if (!userExists) {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
-            var offerExists = yield this.offerModel.offerExists(id_offer);
+            var offerExists = yield this.offerModel.offerExists(idOffer);
             if (!offerExists) {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
-            this.favoritesModel.addFavorite(id_user, id_offer, (response) => {
+            this.favoritesModel.addFavorite(idUser, idOffer, (response) => {
                 if (response.error) {
                     return res.status(400).send({
                         error: response.error
@@ -57,24 +57,24 @@ class FavoriteController {
             });
         });
         this.removeFavorite = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { id_user, id_offer } = req.body;
-            if (!id_user || !id_offer) {
+            const { idUser, idOffer } = req.body;
+            if (!idUser || !idOffer) {
                 return res.status(400).send({
                     error: 'Missing data'
                 });
             }
-            if (typeof id_user !== 'string' || typeof id_offer !== 'string') {
+            if (typeof idUser !== 'string' || typeof idOffer !== 'string') {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
-            var favoriteExists = yield this.favoritesModel.favoriteExists(id_user, id_offer);
+            var favoriteExists = yield this.favoritesModel.favoriteExists(idUser, idOffer);
             if (!favoriteExists) {
                 return res.status(400).send({
                     error: 'Favorite no exists'
                 });
             }
-            this.favoritesModel.removeFavorite(id_user, id_offer, (response) => {
+            this.favoritesModel.removeFavorite(idUser, idOffer, (response) => {
                 if (response.deletedCount != 1) {
                     return res.status(400).send({
                         error: response.error
@@ -84,20 +84,20 @@ class FavoriteController {
             });
         });
         this.getFavorites = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { id_user } = req.body;
-            if (!id_user) {
+            const { idUser } = req.body;
+            if (!idUser) {
                 return res.status(400).send({
                     error: 'Missing data'
                 });
             }
-            if (typeof id_user !== 'string') {
+            if (typeof idUser !== 'string') {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
             var ids_offers;
-            yield this.favoritesModel.getFavorites(id_user, (response) => {
-                ids_offers = response.map((element) => element.id_offer);
+            yield this.favoritesModel.getFavorites(idUser, (response) => {
+                ids_offers = response.map((element) => element.idOffer);
             });
             if (ids_offers.length == 0) {
                 return res.status(200).json({ offers: ids_offers });

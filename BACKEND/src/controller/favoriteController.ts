@@ -16,36 +16,36 @@ class FavoriteController {
     }
 
     public addFavorite = async (req: Request, res: Response) => {
-        const { id_user, id_offer } = req.body;
-        if(!id_user || !id_offer){
+        const { idUser, idOffer } = req.body;
+        if(!idUser || !idOffer){
             return res.status(400).send({
                 error: 'Missing data'
             });
         }
-        if(typeof id_user !== 'string' || typeof id_offer !== 'string'){
+        if(typeof idUser !== 'string' || typeof idOffer !== 'string'){
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        var favoriteExists: boolean = await this.favoritesModel.favoriteExists(id_user, id_offer);
+        var favoriteExists: boolean = await this.favoritesModel.favoriteExists(idUser, idOffer);
         if(favoriteExists){
-            return res.status(400).send({
+            return res.status(410).send({
                 error: 'Favorite already exists'
             });
         }
-        var userExists: boolean = await this.userModel.getUserById(id_user);
+        var userExists: boolean = await this.userModel.getUserById(idUser);
         if(!userExists){
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        var offerExists: boolean = await this.offerModel.offerExists(id_offer);
+        var offerExists: boolean = await this.offerModel.offerExists(idOffer);
         if(!offerExists){
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        this.favoritesModel.addFavorite(id_user, id_offer, (response: any) => {
+        this.favoritesModel.addFavorite(idUser, idOffer, (response: any) => {
             if(response.error){
                 return res.status(400).send({
                     error: response.error
@@ -56,24 +56,24 @@ class FavoriteController {
     }
 
     public removeFavorite = async (req: Request, res: Response) => {
-        const { id_user, id_offer } = req.body;
-        if(!id_user || !id_offer){
+        const { idUser, idOffer } = req.body;
+        if(!idUser || !idOffer){
             return res.status(400).send({
                 error: 'Missing data'
             });
         }
-        if(typeof id_user !== 'string' || typeof id_offer !== 'string'){
+        if(typeof idUser !== 'string' || typeof idOffer !== 'string'){
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        var favoriteExists: boolean = await this.favoritesModel.favoriteExists(id_user, id_offer);
+        var favoriteExists: boolean = await this.favoritesModel.favoriteExists(idUser, idOffer);
         if(!favoriteExists){
             return res.status(400).send({
                 error: 'Favorite no exists'
             });
         }
-        this.favoritesModel.removeFavorite(id_user, id_offer, (response: any) => {
+        this.favoritesModel.removeFavorite(idUser, idOffer, (response: any) => {
             if(response.deletedCount != 1){
                 return res.status(400).send({
                     error: response.error
@@ -84,20 +84,20 @@ class FavoriteController {
     }
 
     public getFavorites = async (req: Request, res: Response) => {
-        const { id_user } = req.body;
-        if(!id_user){
+        const { idUser } = req.body;
+        if(!idUser){
             return res.status(400).send({
                 error: 'Missing data'
             });
         }
-        if(typeof id_user !== 'string'){
+        if(typeof idUser !== 'string'){
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
         var ids_offers: any;
-        await this.favoritesModel.getFavorites(id_user, (response: any) => {
-            ids_offers = response.map((element: { id_offer: any; }) => element.id_offer);
+        await this.favoritesModel.getFavorites(idUser, (response: any) => {
+            ids_offers = response.map((element: { idOffer: any; }) => element.idOffer);
         });
         if(ids_offers.length == 0){
             return res.status(200).json({offers: ids_offers});
