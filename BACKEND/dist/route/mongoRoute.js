@@ -14,6 +14,7 @@ class MongoRoute {
             this.router.post('/users/isValidToken', this.userController.isLogged);
             this.router.post('/users/register', this.userController.register);
             this.router.post('/offers/register', this.offerController.register);
+            this.router.post('/offers', this.offerController.getOffers);
             this.router.post('/offers/getByCity', this.offerController.getByCity);
             this.router.post('/offers/getById', this.offerController.getById);
             this.router.post('/favorites/addFavorite', this.favoriteController.addFavorite);

@@ -23,6 +23,12 @@ class OfferModel {
         }
     }
 
+    public getOffers = async (fn: Function) => {
+        this.MongoDBC.connection();
+        const products = await this.MongoDBC.OfferSchema.find();
+        fn(products);
+    }
+
     public getByIds = async (idsList: string, fn: Function) => {
         this.MongoDBC.connection();
         let offer = await this.MongoDBC.OfferSchema.find(

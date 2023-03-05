@@ -32,6 +32,12 @@ class OfferController {
         });
     }
 
+    public getOffers = (req: Request, res: Response) => {
+        this.offerModel.getOffers((products: any) => {
+            res.status(200).json(products);
+        });
+    }
+
     public getByCity = (req: Request, res: Response) => {
         const { city } = req.body;
         if(!city){

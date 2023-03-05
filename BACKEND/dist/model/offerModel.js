@@ -30,6 +30,11 @@ class OfferModel {
                 });
             }
         });
+        this.getOffers = (fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            const products = yield this.MongoDBC.OfferSchema.find();
+            fn(products);
+        });
         this.getByIds = (idsList, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             let offer = yield this.MongoDBC.OfferSchema.find({

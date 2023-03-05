@@ -28,6 +28,11 @@ class OfferController {
                 return res.json({ offer: response.offer });
             });
         };
+        this.getOffers = (req, res) => {
+            this.offerModel.getOffers((products) => {
+                res.status(200).json(products);
+            });
+        };
         this.getByCity = (req, res) => {
             const { city } = req.body;
             if (!city) {
