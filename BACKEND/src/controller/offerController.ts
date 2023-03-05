@@ -10,25 +10,38 @@ class OfferController {
         this.offerModel = new OfferModel();
     }
 
-    public getById = (req: Request, res: Response) => {
-        const { id } = req.body;
-        if(!id){
+    public getByListIds = (req: Request, res: Response) => {
+        const { idsOffers } = req.body;
+        if (!idsOffers) {
             return res.status(400).send({
                 error: 'Missing data'
             });
         }
-        if(typeof id !== 'string'){
+        this.offerModel.getByIds(idsOffers, (response: any) => {
+            return res.status(200).send(response);
+        });
+    }
+
+
+    public getById = (req: Request, res: Response) => {
+        const { id } = req.body;
+        if (!id) {
+            return res.status(400).send({
+                error: 'Missing data'
+            });
+        }
+        if (typeof id !== 'string') {
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
         this.offerModel.getById(id, (response: any) => {
-            if(response.error){
+            if (response.error) {
                 return res.status(400).send({
                     error: response.error
                 });
             }
-            return res.json({offer: response.offer});
+            return res.status(200).json({ offer: response.offer });
         });
     }
 
@@ -40,12 +53,12 @@ class OfferController {
 
     public getByCity = (req: Request, res: Response) => {
         const { city } = req.body;
-        if(!city){
+        if (!city) {
             return res.status(400).send({
                 error: 'Missing data'
             });
         }
-        if(typeof city !== 'string'){
+        if (typeof city !== 'string') {
             return res.status(400).send({
                 error: 'Invalid data'
             });
@@ -81,18 +94,18 @@ class OfferController {
             });
         }
         let { price } = req.body;
-        if(!address || !name || !description || !photo || !price || !id_seller || !city){
+        if (!address || !name || !description || !photo || !price || !id_seller || !city) {
             return res.status(400).send({
                 error: 'Missing data'
             });
         }
         price = Number(price);
-        if(typeof address !== 'string' || typeof name !== 'string' || typeof description !== 'string' || typeof photo !== 'string' || Number.isNaN(price) || typeof id_seller !== 'string' || typeof city !== 'string'){
+        if (typeof address !== 'string' || typeof name !== 'string' || typeof description !== 'string' || typeof photo !== 'string' || Number.isNaN(price) || typeof id_seller !== 'string' || typeof city !== 'string') {
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        if(address.length <= 1 || name.length <= 1 || description.length <= 1 || photo.length <= 1 || id_seller.length <= 1 || city.length <= 1 || price < 1){
+        if (address.length <= 1 || name.length <= 1 || description.length <= 1 || photo.length <= 1 || id_seller.length <= 1 || city.length <= 1 || price < 1) {
             return res.status(400).send({
                 error: 'Invalid data'
             });

@@ -17,9 +17,11 @@ class MongoRoute {
             this.router.post('/offers', this.offerController.getOffers);
             this.router.post('/offers/getByCity', this.offerController.getByCity);
             this.router.post('/offers/getById', this.offerController.getById);
+            this.router.post('/offers/getByListIds', this.offerController.getByListIds);
+            this.router.post('/favorites', this.favoriteController.getFavorites);
+            this.router.post('/favorites/updateFavorites', this.favoriteController.updateFavorites);
             this.router.post('/favorites/addFavorite', this.favoriteController.addFavorite);
             this.router.post('/favorites/removeFavorite', this.favoriteController.removeFavorite);
-            this.router.post('/favorites', this.favoriteController.getFavorites);
         };
         this.router = (0, express_1.Router)();
         this.userController = new userController_1.default();

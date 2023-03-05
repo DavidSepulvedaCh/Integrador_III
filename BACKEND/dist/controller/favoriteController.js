@@ -17,6 +17,66 @@ const offerModel_1 = __importDefault(require("../model/offerModel"));
 const userModel_1 = __importDefault(require("../model/userModel"));
 class FavoriteController {
     constructor() {
+        this.updateFavorites = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const ids = req.body.ids;
+            const { idUser } = req.body;
+            if (!ids || !idUser) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            const currentFavorites = yield new Promise((resolve, reject) => {
+                this.favoritesModel.getFavorites(idUser, (favorites) => {
+                    resolve(favorites);
+                });
+            });
+            const currentIds = currentFavorites.map((favorite) => favorite.id_offer);
+            /* ======================== For to add the ids ===================== */
+            if (ids.length > 0) {
+                for (let i = 0; i < ids.length; i++) {
+                    const id = ids[i];
+                    if (currentIds.includes(id)) {
+                        continue;
+                    }
+                    else {
+                        var offerExists = yield this.offerModel.offerExists(id);
+                        if (!offerExists) {
+                            return res.status(400).send({
+                                error: 'Invalid data'
+                            });
+                        }
+                        this.favoritesModel.addFavorite(idUser, id, (response) => {
+                            if (response.error) {
+                                return res.status(400).send({
+                                    error: response.error
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+            console.log(currentIds);
+            /* ======================== For to remove the ids ===================== */
+            for (let i = 0; i < currentIds.length; i++) {
+                const id = currentIds[i];
+                console.log('before id');
+                console.log(id);
+                console.log('after id');
+                if (ids.includes(id)) {
+                    continue;
+                }
+                else {
+                    this.favoritesModel.removeFavorite(idUser, id, (response) => {
+                        if (response.deletedCount != 1) {
+                            return res.status(400).send({
+                                error: response.error
+                            });
+                        }
+                    });
+                }
+            }
+            return res.status(200).json({ 'success': 'Favorites update successful' });
+        });
         this.addFavorite = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { idUser, idOffer } = req.body;
             if (!idUser || !idOffer) {
@@ -97,7 +157,7 @@ class FavoriteController {
             }
             var ids_offers;
             yield this.favoritesModel.getFavorites(idUser, (response) => {
-                ids_offers = response.map((element) => element.idOffer);
+                ids_offers = response.map((element) => element.id_offer);
             });
             if (ids_offers.length == 0) {
                 return res.status(200).json({ offers: ids_offers });

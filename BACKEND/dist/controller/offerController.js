@@ -7,6 +7,17 @@ const offerModel_1 = __importDefault(require("../model/offerModel"));
 const jwt = require('jsonwebtoken');
 class OfferController {
     constructor() {
+        this.getByListIds = (req, res) => {
+            const { idsOffers } = req.body;
+            if (!idsOffers) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            this.offerModel.getByIds(idsOffers, (response) => {
+                return res.status(200).send(response);
+            });
+        };
         this.getById = (req, res) => {
             const { id } = req.body;
             if (!id) {
@@ -25,7 +36,7 @@ class OfferController {
                         error: response.error
                     });
                 }
-                return res.json({ offer: response.offer });
+                return res.status(200).json({ offer: response.offer });
             });
         };
         this.getOffers = (req, res) => {
