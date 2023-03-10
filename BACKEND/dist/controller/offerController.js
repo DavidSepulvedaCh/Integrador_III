@@ -62,7 +62,7 @@ class OfferController {
         };
         this.register = (req, res) => {
             const { address, name, description, photo, city } = req.body;
-            let id_seller = '';
+            let idSeller = '';
             const token = req.body.token;
             if (token) {
                 let decodedToken;
@@ -79,7 +79,7 @@ class OfferController {
                         error: 'Missing data'
                     });
                 }
-                id_seller = decodedToken.id;
+                idSeller = decodedToken.id;
             }
             else {
                 return res.status(400).send({
@@ -87,23 +87,23 @@ class OfferController {
                 });
             }
             let { price } = req.body;
-            if (!address || !name || !description || !photo || !price || !id_seller || !city) {
+            if (!address || !name || !description || !photo || !price || !idSeller || !city) {
                 return res.status(400).send({
                     error: 'Missing data'
                 });
             }
             price = Number(price);
-            if (typeof address !== 'string' || typeof name !== 'string' || typeof description !== 'string' || typeof photo !== 'string' || Number.isNaN(price) || typeof id_seller !== 'string' || typeof city !== 'string') {
+            if (typeof address !== 'string' || typeof name !== 'string' || typeof description !== 'string' || typeof photo !== 'string' || Number.isNaN(price) || typeof idSeller !== 'string' || typeof city !== 'string') {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
-            if (address.length <= 1 || name.length <= 1 || description.length <= 1 || photo.length <= 1 || id_seller.length <= 1 || city.length <= 1 || price < 1) {
+            if (address.length <= 1 || name.length <= 1 || description.length <= 1 || photo.length <= 1 || idSeller.length <= 1 || city.length <= 1 || price < 1) {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
-            this.offerModel.register(address, name, description, photo, price, id_seller, city, (response) => {
+            this.offerModel.register(address, name, description, photo, price, idSeller, city, (response) => {
                 if (response.error) {
                     return res.status(409).json({ error: response.error });
                 }

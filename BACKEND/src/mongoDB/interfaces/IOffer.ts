@@ -6,7 +6,7 @@ export default interface IOffer extends Document {
     description: String, 
     photo: String, 
     price: Number, 
-    id_seller: String, 
+    idSeller: String, 
     city: String, 
     date: Date
 }

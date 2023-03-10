@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const FavoriteSchema = new mongoose_1.Schema({
-    id_user: {
+    idUser: {
         type: String,
         required: true
     },
-    id_offer: {
+    idOffer: {
         type: String,
         required: true
     }

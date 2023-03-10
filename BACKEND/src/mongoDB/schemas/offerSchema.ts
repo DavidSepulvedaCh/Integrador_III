@@ -22,7 +22,7 @@ const OfferSchema = new Schema({
         type: Number,
         required: true
     },
-    id_seller: {
+    idSeller: {
         type: String,
         required: true
     },

@@ -16,11 +16,11 @@ const mongoDBC_1 = __importDefault(require("../mongoDB/mongoDBC"));
 const favoriteSchema_1 = __importDefault(require("../mongoDB/schemas/favoriteSchema"));
 class FavoritesModel {
     constructor() {
-        this.addFavorite = (id_user, id_offer, fn) => __awaiter(this, void 0, void 0, function* () {
+        this.addFavorite = (idUser, idOffer, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             let favoriteDetails = new favoriteSchema_1.default({
-                id_user: id_user,
-                id_offer: id_offer
+                idUser: idUser,
+                idOffer: idOffer
             });
             const newFavorite = yield favoriteDetails.save();
             if (newFavorite._id) {
@@ -33,25 +33,25 @@ class FavoritesModel {
                 error: 'Register error'
             });
         });
-        this.removeFavorite = (id_user, id_offer, fn) => __awaiter(this, void 0, void 0, function* () {
+        this.removeFavorite = (idUser, idOffer, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             const deleteFavorite = yield this.MongoDBC.FavoriteSchema.deleteOne({
-                id_user: id_user,
-                id_offer: id_offer
+                idUser: idUser,
+                idOffer: idOffer
             });
             fn(deleteFavorite);
         });
-        this.getFavorites = (id_user, fn) => __awaiter(this, void 0, void 0, function* () {
+        this.getFavorites = (idUser, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             const favorites = yield this.MongoDBC.FavoriteSchema.find({
-                id_user: { $eq: id_user }
+                idUser: { $eq: idUser }
             });
             fn(favorites);
         });
-        this.favoriteExists = (id_user, id_offer) => __awaiter(this, void 0, void 0, function* () {
+        this.favoriteExists = (idUser, idOffer) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             const favorite = yield this.MongoDBC.FavoriteSchema.find({
-                id_offer: { $eq: id_offer }
+                idOffer: { $eq: idOffer }
             });
             if (favorite.length > 0) {
                 return true;

@@ -2,11 +2,11 @@ import IFavorite from "mongoDB/interfaces/IFavorite";
 import { Schema, model } from "mongoose";
 
 const FavoriteSchema = new Schema({
-    id_user: {
+    idUser: {
         type: String,
         required: true
     },
-    id_offer: {
+    idOffer: {
         type: String,
         required: true
     }

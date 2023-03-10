@@ -51,13 +51,13 @@ class OfferModel {
             });
             fn(products);
         });
-        this.register = (address, name, description, photo, price, id_seller, city, fn) => __awaiter(this, void 0, void 0, function* () {
+        this.register = (address, name, description, photo, price, idSeller, city, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             let offerDetails = new offerSchema_1.default({
-                address: address, name: name, description: description, photo: photo, price: price, id_seller: id_seller, city: city
+                address: address, name: name, description: description, photo: photo, price: price, idSeller: idSeller, city: city
             });
             try {
-                yield this.MongoDBC.UserSchema.findById(id_seller);
+                yield this.MongoDBC.UserSchema.findById(idSeller);
             }
             catch (error) {
                 return fn({

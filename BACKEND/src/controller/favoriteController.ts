@@ -28,7 +28,7 @@ class FavoriteController {
                 resolve(favorites);
             });
         });
-        const currentIds: any[] = currentFavorites.map((favorite: any) => favorite.id_offer);
+        const currentIds: any[] = currentFavorites.map((favorite: any) => favorite.idOffer);
 
         /* ======================== For to add the ids ===================== */
 
@@ -54,7 +54,6 @@ class FavoriteController {
                 }
             }
         }
-        console.log(currentIds);
         /* ======================== For to remove the ids ===================== */
         for (let i = 0; i < currentIds.length; i++) {
             const id = currentIds[i];
@@ -155,7 +154,7 @@ class FavoriteController {
         }
         var ids_offers: any;
         await this.favoritesModel.getFavorites(idUser, (response: any) => {
-            ids_offers = response.map((element: { id_offer: any; }) => element.id_offer);
+            ids_offers = response.map((element: { idOffer: any; }) => element.idOffer);
         });
         if (ids_offers.length == 0) {
             return res.status(200).json({ offers: ids_offers });

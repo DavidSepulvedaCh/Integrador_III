@@ -51,13 +51,13 @@ class OfferModel {
         fn(products);
     }
 
-    public register = async (address: string, name: string, description: string, photo: string, price: number, id_seller: string, city: string, fn: Function) => {
+    public register = async (address: string, name: string, description: string, photo: string, price: number, idSeller: string, city: string, fn: Function) => {
         this.MongoDBC.connection();
         let offerDetails = new OfferSchema({
-            address: address, name: name, description: description, photo: photo, price: price, id_seller: id_seller, city: city
+            address: address, name: name, description: description, photo: photo, price: price, idSeller: idSeller, city: city
         });
         try {
-            await this.MongoDBC.UserSchema.findById(id_seller);
+            await this.MongoDBC.UserSchema.findById(idSeller);
         } catch (error) {
             return fn({
                 error: 'Invalid id'

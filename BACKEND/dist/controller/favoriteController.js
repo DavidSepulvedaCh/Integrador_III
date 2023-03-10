@@ -30,7 +30,7 @@ class FavoriteController {
                     resolve(favorites);
                 });
             });
-            const currentIds = currentFavorites.map((favorite) => favorite.id_offer);
+            const currentIds = currentFavorites.map((favorite) => favorite.idOffer);
             /* ======================== For to add the ids ===================== */
             if (ids.length > 0) {
                 for (let i = 0; i < ids.length; i++) {
@@ -55,7 +55,6 @@ class FavoriteController {
                     }
                 }
             }
-            console.log(currentIds);
             /* ======================== For to remove the ids ===================== */
             for (let i = 0; i < currentIds.length; i++) {
                 const id = currentIds[i];
@@ -154,7 +153,7 @@ class FavoriteController {
             }
             var ids_offers;
             yield this.favoritesModel.getFavorites(idUser, (response) => {
-                ids_offers = response.map((element) => element.id_offer);
+                ids_offers = response.map((element) => element.idOffer);
             });
             if (ids_offers.length == 0) {
                 return res.status(200).json({ offers: ids_offers });
