@@ -1,4 +1,3 @@
-import 'package:api_cache_manager/api_cache_manager.dart';
 import 'package:integrador/models/login_response_model.dart';
 import 'package:integrador/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,9 +21,13 @@ class SharedService{
   }
 
   static Future<void> setLogginDetails(LoginResponseModel model) async {
+    var id = model.id ?? 'default';
+    var email = model.email ?? 'default';
     var name= model.name ?? 'default';
     var token = model.token ?? 'default';
-    if(name!= 'default' && token != 'default'){
+    if(name!= 'default' && token != 'default' && email != 'default' && id != 'default'){
+      await prefs.setString('id', id);
+      await prefs.setString('email', email);
       await prefs.setString('name', name);
       await prefs.setString('token', token);
     }

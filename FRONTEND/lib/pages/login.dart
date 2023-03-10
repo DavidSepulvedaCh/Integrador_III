@@ -1,8 +1,5 @@
 import 'package:integrador/routes/imports.dart';
 import 'package:integrador/models/login_request_model.dart';
-import 'package:integrador/services/api_service.dart';
-import 'package:integrador/pages/welcome.dart';
-import 'package:integrador/services/shared_service.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -12,25 +9,94 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
-  @override
-  void initState() {
-    super.initState();
-    isLoggedIn();
-  }
-
-  isLoggedIn() async {
-    var session = await SharedService.isLoggedIn();
-    if (session) {
-      // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, '/secondPage');
-    }
-  }
-
+  bool isRememberMe = false;
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
 
-  bool isRememberMe = false;
+  /* ==================Functions================= */
+  void submit() async {
+    if (validate()) {
+      LoginRequestModel model = LoginRequestModel(
+          email: emailTextController.text,
+          password: passwordTextController.text);
+      final response = await APIService.login(model);
+      if (response == 0) {
+        // ignore: use_build_context_synchronously
+        Functions.loginSuccess(context);
+      } else if (response == 1) {
+        // ignore: use_build_context_synchronously
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text('Error'),
+                  content: const Text('Usuario o contraseña incorrecta'),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Ok')),
+                  ],
+                ));
+      } else {
+        // ignore: use_build_context_synchronously
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text('Error'),
+                  content: const Text('Ocurrió un error. Intente más tarde'),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Ok')),
+                  ],
+                ));
+      }
+    }
+  }
+
+  bool validate() {
+    RegExp emailValidator = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+
+    if (emailTextController.text == '' || passwordTextController.text == '') {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Debes llenar todos los campos'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Ok')),
+                ],
+              ));
+      return false;
+    }
+    if (!emailValidator.hasMatch(emailTextController.text)) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Email inválido'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Ok')),
+                ],
+              ));
+      return false;
+    }
+    return true;
+  }
+
+  /* ===============WIDGET'S===================== */
   Widget buildRememberPass() {
     return SizedBox(
       height: 20,
@@ -161,89 +227,6 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  void submit() async {
-    if (validate()) {
-      LoginRequestModel model = LoginRequestModel(
-          email: emailTextController.text,
-          password: passwordTextController.text);
-      final response = await APIService.login(model);
-      if (response == 0) {
-        // ignore: use_build_context_synchronously
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const SecondPage()));
-      } else if (response == 1) {
-        // ignore: use_build_context_synchronously
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('Error'),
-                  content: const Text('Usuario o contraseña incorrecta'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Ok')),
-                  ],
-                ));
-      } else {
-        // ignore: use_build_context_synchronously
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('Error'),
-                  content: const Text('Ocurrió un error. Intente más tarde'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Ok')),
-                  ],
-                ));
-      }
-    }
-  }
-
-  bool validate() {
-    RegExp emailValidator = RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-
-    if (emailTextController.text == '' || passwordTextController.text == '') {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('Error'),
-                content: const Text('Debes llenar todos los campos'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Ok')),
-                ],
-              ));
-      return false;
-    }
-    if (!emailValidator.hasMatch(emailTextController.text)) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('Error'),
-                content: const Text('Email inválido'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Ok')),
-                ],
-              ));
-      return false;
-    }
-    return true;
   }
 
   Widget buildBtnLogin() {

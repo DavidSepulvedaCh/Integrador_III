@@ -9,3 +9,13 @@ export 'package:integrador/widgets/passR.dart'; // Widget de input repetir contr
 export 'package:integrador/widgets/userName.dart'; // Widget de input de nombre de usuaro
 export 'package:integrador/widgets/btnRegister.dart'; // Widget del btn de registro
 export 'package:integrador/pages/login.dart'; // Pantalla de login
+export 'package:integrador/middlewares/isLogged_middleware.dart';
+export 'package:integrador/models/offers.dart';
+export 'package:integrador/services/shared_service.dart';
+export 'package:integrador/services/sqliteDB.dart';
+export 'package:integrador/services/api_service.dart';
+export 'package:integrador/widgets/buttonFavorite.dart';
+export 'package:integrador/widgets/listOffers.dart';
+export 'package:integrador/widgets/gridOffers.dart';
+export 'package:integrador/pages/system/favorites.dart';
+export 'package:integrador/services/functions.dart';
