@@ -20,4 +20,47 @@ class Functions {
     // ignore: use_build_context_synchronously
     Navigator.pushNamed(context, '/index');
   }
+
+  static bool validate(BuildContext context, String email, String password) {
+    RegExp emailValidator = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+
+    if (email == '' || password == '') {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Debes llenar todos los campos'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Ok')),
+                ],
+              ));
+      return false;
+    }
+    if (!emailValidator.hasMatch(email)) {
+      customShowDialog(context, 'Error', 'Email inválido');
+      return false;
+    }
+    return true;
+  }
+
+  static Future<dynamic> customShowDialog(BuildContext context, String title, String content){
+    return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(title),
+                content: Text(content),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Ok')),
+                ],
+              ));
+  }
 }

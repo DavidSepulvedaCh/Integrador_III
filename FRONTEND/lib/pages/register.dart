@@ -9,6 +9,63 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   bool terminos = false;
+  TextEditingController nameTextController = TextEditingController();
+  TextEditingController emailTextController = TextEditingController();
+  TextEditingController passwordOneTextController = TextEditingController();
+  TextEditingController passwordTwoTextController = TextEditingController();
+
+  bool validate(){
+    if(nameTextController.text == ''){
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Debes llenar todos los campos'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Ok')),
+                ],
+              ));
+      return false;
+    }
+    if(passwordOneTextController.text != passwordTwoTextController.text){
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Las contraseñas no coinciden'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Ok')),
+                ],
+              ));
+      return false;
+    }
+    if(passwordOneTextController.text.length < 8){
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Error'),
+                content: const Text('La contraseña debe tener mínimo 8 caracteres'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Ok')),
+                ],
+              ));
+      return false;
+    }
+    return true;
+  }
+
   Widget builTerminos() {
     return SizedBox(
       height: 20,
@@ -109,13 +166,13 @@ class _RegisterState extends State<Register> {
                             fontFamily: 'Open Sans'),
                       ),
                       const SizedBox(height: 48),
-                      buildUserName(),
+                      CustomTextField(textEditingController: nameTextController, hintText: 'Nombre completo', icon: Icons.person),
                       const SizedBox(height: 30),
-                      // buildEmail(),
+                      CustomTextField(textEditingController: emailTextController, hintText: 'Dirección de correo', icon: Icons.email),
                       const SizedBox(height: 30),
-                      // buildPassword(),
+                      PasswordField(textEditingController: passwordOneTextController, hintText: 'Contraseña'),
                       const SizedBox(height: 30),
-                      buildPasswordRep(),
+                      PasswordField(textEditingController: passwordTwoTextController, hintText: 'Repite la contraseña'),
                       const SizedBox(height: 15),
                       builTerminos(),
                       const SizedBox(height: 20),

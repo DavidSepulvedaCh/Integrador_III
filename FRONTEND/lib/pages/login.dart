@@ -15,7 +15,7 @@ class _LoginState extends State<Login> {
 
   /* ==================Functions================= */
   void submit() async {
-    if (validate()) {
+    if (Functions.validate(context, emailTextController.text, passwordTextController.text)) {
       LoginRequestModel model = LoginRequestModel(
           email: emailTextController.text,
           password: passwordTextController.text);
@@ -55,45 +55,6 @@ class _LoginState extends State<Login> {
                 ));
       }
     }
-  }
-
-  bool validate() {
-    RegExp emailValidator = RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-
-    if (emailTextController.text == '' || passwordTextController.text == '') {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('Error'),
-                content: const Text('Debes llenar todos los campos'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Ok')),
-                ],
-              ));
-      return false;
-    }
-    if (!emailValidator.hasMatch(emailTextController.text)) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('Error'),
-                content: const Text('Email inválido'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Ok')),
-                ],
-              ));
-      return false;
-    }
-    return true;
   }
 
   /* ===============WIDGET'S===================== */
@@ -229,32 +190,6 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget buildBtnLogin() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 25),
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-          ),
-          minimumSize:
-              MaterialStateProperty.all<Size>(const Size(double.infinity, 50)),
-          backgroundColor:
-              MaterialStateProperty.all<Color>(HexColor('#E64A19')),
-        ),
-        onPressed: () => submit(),
-        child: const Text(
-          'Ingresar',
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -294,7 +229,7 @@ class _LoginState extends State<Login> {
                       const SizedBox(height: 25),
                       buildRememberPass(),
                       const SizedBox(height: 25),
-                      buildBtnLogin(),
+                      ButtonOne(onClick: submit, text: 'Ingresar'),
                       buildBtnSingUp(),
                     ],
                   ),
