@@ -40,7 +40,7 @@ class UserController {
                 return res.status(409).json({ error: response.error });
             }
             let token = this.generateToken(response.id, email, name);
-            res.json({ token: token, messagge: response.success });
+            res.json({ id: response.id, name: name, email: email, token: token, messagge: response.success });
         });
     }
 

@@ -1,5 +1,4 @@
 import 'package:integrador/routes/imports.dart';
-import 'package:integrador/models/login_request_model.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -25,34 +24,10 @@ class _LoginState extends State<Login> {
         Functions.loginSuccess(context);
       } else if (response == 1) {
         // ignore: use_build_context_synchronously
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('Error'),
-                  content: const Text('Usuario o contraseña incorrecta'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Ok')),
-                  ],
-                ));
+        CustomShowDialog.make(context, 'Error', 'Usuario o contraseña incorrecta');
       } else {
         // ignore: use_build_context_synchronously
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('Error'),
-                  content: const Text('Ocurrió un error. Intente más tarde'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Ok')),
-                  ],
-                ));
+        CustomShowDialog.make(context, 'Error', 'Ocurrió un error. Intente más tarde');
       }
     }
   }

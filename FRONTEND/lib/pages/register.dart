@@ -15,59 +15,21 @@ class _RegisterState extends State<Register> {
   TextEditingController passwordTwoTextController = TextEditingController();
 
   void register() async{
-
-  }
-
-  bool validate(){
-    if(nameTextController.text == ''){
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('Error'),
-                content: const Text('Debes llenar todos los campos'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Ok')),
-                ],
-              ));
-      return false;
+    if(!Functions.validateRegister(context, nameTextController.text, emailTextController.text, passwordOneTextController.text, passwordTwoTextController.text, terminos)){
+      return;
     }
-    if(passwordOneTextController.text != passwordTwoTextController.text){
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('Error'),
-                content: const Text('Las contraseñas no coinciden'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Ok')),
-                ],
-              ));
-      return false;
+    RegisterRequestModel model = RegisterRequestModel(name: nameTextController.text, email: emailTextController.text, password: passwordOneTextController.text);
+    final response = await APIService.register(model);
+    if (response == 0) {
+      // ignore: use_build_context_synchronously
+      await Functions.loginSuccess(context);
+    } else if (response == 1) {
+      // ignore: use_build_context_synchronously
+      CustomShowDialog.make(context, 'Error', 'Email ya registrado');
+    } else {
+      // ignore: use_build_context_synchronously
+      CustomShowDialog.make(context, 'Error', 'Ocurrió un error. Intente más tarde');
     }
-    if(passwordOneTextController.text.length < 8){
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('Error'),
-                content: const Text('La contraseña debe tener mínimo 8 caracteres'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Ok')),
-                ],
-              ));
-      return false;
-    }
-    return true;
   }
 
   Widget builTerminos() {

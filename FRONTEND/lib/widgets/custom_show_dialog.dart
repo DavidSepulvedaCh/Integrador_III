@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomShowDialog {
 
-  static Future<dynamic> customShowDialog(BuildContext context, String title, String content){
+  static Future<dynamic> make(BuildContext context, String title, String content){
     return showDialog(
           context: context,
           builder: (context) => AlertDialog(

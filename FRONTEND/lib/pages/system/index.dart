@@ -65,7 +65,7 @@ class _IndexState extends State<Index> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Offeros'),
+        title: const Text('Lista de ofertas'),
         backgroundColor: Colors.deepOrange,
         automaticallyImplyLeading: false,
       ),
