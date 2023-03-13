@@ -14,6 +14,10 @@ class _RegisterState extends State<Register> {
   TextEditingController passwordOneTextController = TextEditingController();
   TextEditingController passwordTwoTextController = TextEditingController();
 
+  void register() async{
+
+  }
+
   bool validate(){
     if(nameTextController.text == ''){
       showDialog(
@@ -176,7 +180,7 @@ class _RegisterState extends State<Register> {
                       const SizedBox(height: 15),
                       builTerminos(),
                       const SizedBox(height: 20),
-                      buildBtnRegister(),
+                      ButtonOne(onClick: register, text: 'Registrar'),
                       buildBtnSingIn()
                     ],
                   ),
