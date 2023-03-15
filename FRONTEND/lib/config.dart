@@ -1,5 +1,5 @@
 class Config{
-  static const String apiURL = '10.153.82.19:1802';
+  static const String apiURL = '10.153.82.81:1802';
   static const String loginAPI = '/api/users/login';
   static const String registerAPI = '/api/users/register';
   static const String isValidTokenAPI = '/api/users/isValidToken';

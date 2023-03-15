@@ -1,27 +1,22 @@
 import 'package:integrador/routes/imports.dart';
 
 // ignore: must_be_immutable
-class PasswordField extends StatefulWidget {
+class PasswordField extends StatelessWidget {
   TextEditingController textEditingController;
   String hintText;
+  String labelText;
 
   PasswordField(
-      {super.key, required this.textEditingController, required this.hintText});
-
-  @override
-  State<PasswordField> createState() => _PasswordFieldState();
-}
-
-class _PasswordFieldState extends State<PasswordField> {
-
+      {super.key, required this.textEditingController, required this.labelText, required this.hintText});
+  
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const Text(
-          'Contreña',
-          style: TextStyle(
+        Text(
+          labelText,
+          style: const TextStyle(
               color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 15),
@@ -38,14 +33,14 @@ class _PasswordFieldState extends State<PasswordField> {
           ),
           height: 60,
           child: TextField(
-            controller: widget.textEditingController,
+            controller: textEditingController,
             obscureText: true,
             style: const TextStyle(color: Colors.black),
             decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.only(top: 15),
                 prefixIcon: Icon(Icons.lock, color: HexColor('#E64A19')),
-                hintText: widget.hintText,
+                hintText: hintText,
                 hintStyle: TextStyle(color: HexColor('#212121'))),
           ),
         )

@@ -1,19 +1,14 @@
 import 'package:integrador/routes/imports.dart';
 
 // ignore: must_be_immutable
-class ButtonOne extends StatefulWidget {
+class ButtonOne extends StatelessWidget {
   Function onClick;
   String text;
 
   ButtonOne(
       {super.key, required this.onClick, required this.text});
 
-  @override
-  State<ButtonOne> createState() => _ButtonOneState();
-}
-
-class _ButtonOneState extends State<ButtonOne> {
-
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,9 +25,9 @@ class _ButtonOneState extends State<ButtonOne> {
             MaterialStateProperty.all<Size>(const Size(double.infinity, 50)),
         backgroundColor: MaterialStateProperty.all<Color>(HexColor('#E64A19')),
       ),
-      onPressed: () => widget.onClick(),
+      onPressed: () => onClick(),
       child: Text(
-        widget.text,
+        text,
         style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
@@ -41,5 +36,5 @@ class _ButtonOneState extends State<ButtonOne> {
       ),
     ),
   );
-}
+  }
 }
