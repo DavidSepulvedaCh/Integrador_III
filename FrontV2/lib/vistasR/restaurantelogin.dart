@@ -1,4 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class LoginRestaurante extends StatefulWidget {
   const LoginRestaurante({super.key});
@@ -8,69 +12,204 @@ class LoginRestaurante extends StatefulWidget {
 }
 
 class _LoginRestauranteState extends State<LoginRestaurante> {
+  static const fondo = Color.fromARGB(192, 235, 235, 235);
+  static const barraNavegacionColor = Color.fromARGB(255, 250, 140, 44);
+  static const backContainer = Color.fromARGB(181, 29, 29, 29);
+  static const backBoxS = Color.fromARGB(80, 226, 207, 191);
+
+  Widget buildEmail() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Correo electronico',
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 15),
+        Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: backContainer,
+            borderRadius: BorderRadius.circular(10),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
+                  color: backBoxS, blurRadius: 5, offset: Offset(0, 2)),
+            ],
+          ),
+          height: 60,
+          child: TextField(
+            keyboardType: TextInputType.emailAddress,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(top: 15),
+                prefixIcon:
+                    Icon(Icons.email, color: Color.fromARGB(255, 245, 99, 14)),
+                hintText: 'Dirección de correo',
+                hintStyle: const TextStyle(color: Colors.white)),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget buildPassword() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Contreña',
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 15),
+        Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: backContainer,
+            borderRadius: BorderRadius.circular(10),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
+                  color: backBoxS, blurRadius: 5, offset: Offset(0, 2)),
+            ],
+          ),
+          height: 60,
+          // ignore: prefer_const_constructors
+          child: TextField(
+            obscureText: true,
+            style: const TextStyle(color: Colors.white),
+            // ignore: prefer_const_constructors
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(top: 15),
+                prefixIcon: const Icon(Icons.lock,
+                    color: Color.fromARGB(255, 245, 99, 14)),
+                hintText: 'Contraseña',
+                hintStyle: const TextStyle(color: Colors.white)),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget buildBtnSingUp() {
+    return GestureDetector(
+      onTap: () {
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => const Register()));
+      },
+      child: RichText(
+        text: const TextSpan(
+          children: [
+            TextSpan(
+              text: "¿No tienes una cuenta?",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w100),
+            ),
+            TextSpan(
+              text: " Registrate!",
+              style: TextStyle(
+                  color: Colors.deepOrange,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildBtnLogin() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 25),
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          minimumSize:
+              MaterialStateProperty.all<Size>(const Size(double.infinity, 50)),
+          backgroundColor:
+              MaterialStateProperty.all<Color>(HexColor('#E64A19')),
+        ),
+        onPressed: () => print('Accion'),
+        child: const Text(
+          'Ingresar',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        toolbarHeight: 75,
-        centerTitle: true,
-        title: const Text(
-          'FoodHub',
-          style: TextStyle(color: Colors.orangeAccent),
-        ),
-        leading: IconButton(
-            color: Colors.orangeAccent,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back)),
-      ),
-      backgroundColor: Colors.orangeAccent,
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 100,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 35),
-              child: const TextField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                    icon: Icon(Icons.email),
-                    hintText: 'ejemplo@correo.com',
-                    labelText: 'Correo electrónico'),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: GestureDetector(
+          child: Stack(
+            children: <Widget>[
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('loginVendedor.jpg'),
+                      fit: BoxFit.cover),
+                ),
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 45,
+                    vertical: 90,
+                  ),
+                  child: Stack(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          const Text(
+                            'Inicio de Sesión',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 40,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: 'Open Sans'),
+                          ),
+                          const SizedBox(height: 48),
+                          buildEmail(),
+                          const SizedBox(height: 48),
+                          buildPassword(),
+                          const SizedBox(height: 25),
+                          buildBtnLogin(),
+                          buildBtnSingUp(),
+                        ],
+                      ),
+                      Positioned(
+                        top: -10,
+                        right: -10,
+                        child: IconButton(
+                          icon: Icon(Icons.exit_to_app),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/home');
+                          },
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-                padding: const EdgeInsets.symmetric(horizontal: 35),
-                child: const TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      icon: Icon(Icons.password),
-                      hintText: 'password',
-                      labelText: 'Contraseña'),
-                )),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/restauranteregistro');
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-              child: const Text(
-                'Registrarse',
-                style: TextStyle(color: Colors.orangeAccent),
-              ),
-            ),
-            IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/restaurantehome');
-                },
-                icon: const Icon(Icons.login))
-          ],
+            ],
+          ),
         ),
       ),
     );
