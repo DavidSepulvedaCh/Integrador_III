@@ -98,7 +98,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
   Widget buildBtnSingUp() {
     return GestureDetector(
       onTap: () {
-        //Navigator.push(context, MaterialPageRoute(builder: (context) => const Register()));
+        Navigator.pushNamed(context, '/restauranteregistro');
       },
       child: RichText(
         text: const TextSpan(
@@ -139,7 +139,9 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
           backgroundColor:
               MaterialStateProperty.all<Color>(HexColor('#E64A19')),
         ),
-        onPressed: () => print('Accion'),
+        onPressed: (){
+          Navigator.pushNamed(context, '/restaurantehome');
+        },
         child: const Text(
           'Ingresar',
           style: TextStyle(
