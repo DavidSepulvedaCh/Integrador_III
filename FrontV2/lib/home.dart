@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'widgets/filtroprecio.dart';
 import 'widgets/oferta.dart';
+import 'widgets/zona.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -54,6 +56,10 @@ class Home extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const [ZonaBottomSheet()],
             ),
             Expanded(
               child: ListView.builder(
