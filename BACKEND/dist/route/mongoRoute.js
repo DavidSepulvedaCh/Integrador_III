@@ -10,6 +10,10 @@ const favoriteController_1 = __importDefault(require("../controller/favoriteCont
 class MongoRoute {
     constructor() {
         this.config = () => {
+            this.router.post('/users/pruebaBiometricToken', this.userController.pruebaBiometricToken);
+            this.router.post('/users/register/biometric', this.userController.registerBiometric);
+            this.router.post('/users/login/biometric', this.userController.biometricLogin);
+            this.router.post('/users/remove/biometric', this.userController.removeBiometric);
             this.router.post('/users/login', this.userController.login);
             this.router.post('/users/isValidToken', this.userController.isLogged);
             this.router.post('/users/register', this.userController.register);

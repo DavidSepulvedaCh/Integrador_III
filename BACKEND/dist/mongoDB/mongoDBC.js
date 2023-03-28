@@ -7,6 +7,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const userSchema_1 = __importDefault(require("./schemas/userSchema"));
 const offerSchema_1 = __importDefault(require("./schemas/offerSchema"));
 const favoriteSchema_1 = __importDefault(require("./schemas/favoriteSchema"));
+const biometricLoginUserData_1 = __importDefault(require("./schemas/biometricLoginUserData"));
 const dotenv_1 = __importDefault(require("dotenv"));
 class MongoDBC {
     constructor() {
@@ -15,6 +16,7 @@ class MongoDBC {
         this.UserSchema = userSchema_1.default;
         this.OfferSchema = offerSchema_1.default;
         this.FavoriteSchema = favoriteSchema_1.default;
+        this.BiometricLoginUserDataSchema = biometricLoginUserData_1.default;
     }
     connection() {
         mongoose_1.default.connect(this.uri)

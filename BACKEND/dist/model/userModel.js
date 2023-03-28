@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoDBC_1 = __importDefault(require("../mongoDB/mongoDBC"));
 const userSchema_1 = __importDefault(require("../mongoDB/schemas/userSchema"));
+const biometricLoginUserData_1 = __importDefault(require("../mongoDB/schemas/biometricLoginUserData"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 class UserModel {
     constructor() {
@@ -62,6 +63,7 @@ class UserModel {
             return fn({
                 success: 'Login success',
                 id: userExists._id,
+                email: email,
                 name: userExists.name
             });
         });
@@ -73,6 +75,79 @@ class UserModel {
             catch (error) {
                 return false;
             }
+        });
+        this.registerBiometric = (email, password, token, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            const userExists = yield this.MongoDBC.UserSchema.findOne({
+                email: { $eq: email }
+            });
+            if (userExists == null) {
+                return fn({
+                    error: 'Email or password incorrect'
+                });
+            }
+            console.log('Before comparar contraseñas');
+            let compare = bcryptjs_1.default.compareSync(password, userExists.password);
+            console.log('Comparando contraseñas');
+            if (!compare) {
+                return fn({
+                    error: 'Email or password incorrect'
+                });
+            }
+            let biometricLoginUserDataDetails = new biometricLoginUserData_1.default({
+                email: email,
+                password: password,
+                token: token
+            });
+            try {
+                const newUser = yield biometricLoginUserDataDetails.save();
+                if (newUser._id) {
+                    return fn({
+                        success: 'Register success'
+                    });
+                }
+            }
+            catch (error) {
+                return fn({
+                    error: error,
+                    message: 'Token already exists'
+                });
+            }
+            return fn({
+                error: 'Register error'
+            });
+        });
+        this.biometricLogin = (token, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            const userExists = yield this.MongoDBC.BiometricLoginUserDataSchema.findOne({
+                token: { $eq: token }
+            });
+            this.login(userExists.email, userExists.password, fn);
+        });
+        this.pruebaBiometricLogin = (email, password, token, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            let biometricLoginUserDataDetails = new biometricLoginUserData_1.default({
+                email: email,
+                password: password,
+                token: token
+            });
+            try {
+                const newUser = yield biometricLoginUserDataDetails.save();
+                if (newUser._id) {
+                    return fn({
+                        success: 'Register success',
+                        id: newUser._id
+                    });
+                }
+            }
+            catch (error) {
+                return fn({
+                    error: error
+                });
+            }
+            return fn({
+                error: 'Register error'
+            });
         });
         this.MongoDBC = new mongoDBC_1.default();
     }

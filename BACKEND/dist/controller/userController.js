@@ -74,6 +74,72 @@ class UserController {
                 res.status(200).json({ id: response.id, name: response.name, email: email, token: token, messagge: response.success });
             });
         };
+        this.registerBiometric = (req, res) => {
+            const { email, password, token } = req.body;
+            if (!token) {
+                return res.status(400).send({ error: 'Missing token' });
+            }
+            let decodedToken;
+            try {
+                decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+            }
+            catch (_a) {
+                return res.status(401).send({
+                    error: 'Invalid token'
+                });
+            }
+            if (!decodedToken.id || !decodedToken.email || !decodedToken.name) {
+                return res.status(401).send({
+                    error: 'Invalid token'
+                });
+            }
+            if (email != decodedToken.email) {
+                return res.status(402).send({
+                    error: 'Email or password incorrect'
+                });
+            }
+            const generatedToken = jwt.sign({ email: email }, process.env.TOKEN_KEY);
+            console.log('Before register');
+            this.userModel.registerBiometric(email, password, generatedToken, (response) => {
+                if (response.error) {
+                    console.log('Inside error');
+                    if (response.message) {
+                        return res.status(409).json({ error: response.message });
+                    }
+                    if (response.error == 'Email or password incorrect') {
+                        return res.status(402).send({
+                            error: 'Email or password incorrect'
+                        });
+                    }
+                    return res.status(400).json({ error: response.error });
+                }
+                if (response.success) {
+                    return res.status(200).json({ token: generatedToken });
+                }
+            });
+        };
+        this.biometricLogin = (req, res) => {
+            const { token } = req.body;
+            this.userModel.biometricLogin(token, (response) => {
+                if (response.error) {
+                    return res.status(401).json({ error: response.error });
+                }
+                let token = this.generateToken(response.id, response.email, response.name);
+                res.status(200).json({ id: response.id, name: response.name, email: response.email, token: token, messagge: response.success });
+            });
+        };
+        this.pruebaBiometricToken = (req, res) => {
+            const { email, password, token } = req.body;
+            this.userModel.pruebaBiometricLogin(email, password, token, (response) => {
+                if (response.error) {
+                    return res.status(401).json({ error: response.error });
+                }
+                return res.status(200).json({ id: response.id });
+            });
+        };
+        this.removeBiometric = (req, res) => {
+            const { token } = req.body;
+        };
         this.isLogged = (req, res) => {
             const token = req.body.token;
             if (token) {
@@ -101,7 +167,6 @@ class UserController {
     }
     generateToken(id, email, name) {
         const token = jwt.sign({ id: id, email: email, name: name }, process.env.TOKEN_KEY, { expiresIn: "7d" });
-        console.log(token);
         return token;
     }
 }
