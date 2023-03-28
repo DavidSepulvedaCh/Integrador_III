@@ -40,22 +40,37 @@ class _IndexState extends State<Index> {
     });
     switch (index) {
       case 0:
-      setState(() {
-          view = ListOffers(offers: offerss);
-        });
+        setState(
+          () {
+            view = const ZonaBottomSheet();
+            view = ListOffers(offers: offerss);
+          },
+        );
         break;
       case 1:
-        setState(() {
-          view = GridOffers(offers: offerss);
-        });
+        setState(
+          () {
+            view = GridOffers(offers: offerss);
+          },
+        );
         break;
       case 2:
-        setState(() {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const Favorites()));
-        });
+        setState(
+          () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const Favorites()));
+          },
+        );
         break;
       case 3:
+        setState(
+          () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const LoginRestaurante()));
+          },
+        );
+        break;
+      case 4:
         Functions.logout(context);
         break;
     }
@@ -88,6 +103,10 @@ class _IndexState extends State<Index> {
           const BottomNavigationBarItem(
             icon: Icon(Icons.favorite, color: Colors.deepOrange),
             label: 'Favoritos',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.restaurant, color: Colors.deepOrange),
+            label: 'Restaurante',
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.logout, color: Colors.deepOrange),
