@@ -97,10 +97,8 @@ class UserController {
             { email: email },
             process.env.TOKEN_KEY
         );
-        console.log('Before register');
         this.userModel.registerBiometric(email, password, generatedToken, (response: any) => {
             if (response.error) {
-                console.log('Inside error');
                 if (response.message) {
                     return res.status(409).json({ error: response.message });
                 }
@@ -118,8 +116,8 @@ class UserController {
     }
 
     public biometricLogin = (req: Request, res: Response) => {
-        const { token } = req.body;
-        this.userModel.biometricLogin(token, (response: any) => {
+        const { biometricToken } = req.body;
+        this.userModel.biometricLogin(biometricToken, (response: any) => {
             if (response.error) {
                 return res.status(401).json({ error: response.error });
             }
@@ -128,19 +126,17 @@ class UserController {
         });
     }
 
-    public pruebaBiometricToken = (req: Request, res: Response) => {
-        const { email, password, token } = req.body;
-        this.userModel.pruebaBiometricLogin(email, password, token, (response: any) => {
-            if (response.error) {
-                return res.status(401).json({ error: response.error });
-            }
-            return res.status(200).json({ id: response.id });
-        });
-    }
-
     public removeBiometric = (req: Request, res: Response) => {
-        const { token } = req.body;
-        
+        const { biometricToken } = req.body;
+        console.log(biometricToken);
+        this.userModel.removeBiometricLogin(biometricToken, (remove: any) => {
+            console.log(remove);
+            if(remove.deletedCount == 1){
+                console.log('inside if');
+                return res.status(200).send();
+            }
+            return res.status(401).send();
+        });
     }
 
     private generateToken(id: string, email: string, name: string) {

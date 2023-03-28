@@ -99,10 +99,8 @@ class UserController {
                 });
             }
             const generatedToken = jwt.sign({ email: email }, process.env.TOKEN_KEY);
-            console.log('Before register');
             this.userModel.registerBiometric(email, password, generatedToken, (response) => {
                 if (response.error) {
-                    console.log('Inside error');
                     if (response.message) {
                         return res.status(409).json({ error: response.message });
                     }
@@ -119,8 +117,8 @@ class UserController {
             });
         };
         this.biometricLogin = (req, res) => {
-            const { token } = req.body;
-            this.userModel.biometricLogin(token, (response) => {
+            const { biometricToken } = req.body;
+            this.userModel.biometricLogin(biometricToken, (response) => {
                 if (response.error) {
                     return res.status(401).json({ error: response.error });
                 }
@@ -128,17 +126,17 @@ class UserController {
                 res.status(200).json({ id: response.id, name: response.name, email: response.email, token: token, messagge: response.success });
             });
         };
-        this.pruebaBiometricToken = (req, res) => {
-            const { email, password, token } = req.body;
-            this.userModel.pruebaBiometricLogin(email, password, token, (response) => {
-                if (response.error) {
-                    return res.status(401).json({ error: response.error });
-                }
-                return res.status(200).json({ id: response.id });
-            });
-        };
         this.removeBiometric = (req, res) => {
-            const { token } = req.body;
+            const { biometricToken } = req.body;
+            console.log(biometricToken);
+            this.userModel.removeBiometricLogin(biometricToken, (remove) => {
+                console.log(remove);
+                if (remove.deletedCount == 1) {
+                    console.log('inside if');
+                    return res.status(200).send();
+                }
+                return res.status(401).send();
+            });
         };
         this.isLogged = (req, res) => {
             const token = req.body.token;

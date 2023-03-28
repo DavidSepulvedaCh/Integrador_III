@@ -87,9 +87,7 @@ class UserModel {
                 error: 'Email or password incorrect'
             });
         }
-        console.log('Before comparar contraseñas');
         let compare = bcryptjs.compareSync(password, userExists.password);
-        console.log('Comparando contraseñas');
         if (!compare) {
             return fn({
                 error: 'Email or password incorrect'
@@ -97,7 +95,7 @@ class UserModel {
         }
         let biometricLoginUserDataDetails = new biometricLoginUserData({
             email: email,
-            password: password,
+            password: userExists.password,
             token: token
         });
         try {
@@ -120,37 +118,44 @@ class UserModel {
 
     public biometricLogin = async (token: string, fn: Function) => {
         this.MongoDBC.connection();
+        const userExistsToken = await this.MongoDBC.BiometricLoginUserDataSchema.findOne(
+            {
+                token: { $eq: token }
+            }
+        );
+        const userExists = await this.MongoDBC.UserSchema.findOne(
+            {
+                email: { $eq: userExistsToken.email }
+            }
+        );
+        if (userExists == null) {
+            return fn({
+                error: 'Email or password incorrect'
+            });
+        }
+        return fn({
+            success: 'Login success',
+            id: userExists._id,
+            email: userExists.email,
+            name: userExists.name
+        });
+    }
+
+    public removeBiometricLogin =async (token: string, fn: Function) => {
+        this.MongoDBC.connection();
         const userExists = await this.MongoDBC.BiometricLoginUserDataSchema.findOne(
             {
                 token: { $eq: token }
             }
         );
-        this.login(userExists.email, userExists.password, fn);
-    }
-
-    public pruebaBiometricLogin = async (email: string, password: string, token: string, fn: Function) => {
-        this.MongoDBC.connection();
-        let biometricLoginUserDataDetails = new biometricLoginUserData({
-            email: email,
-            password: password,
-            token: token
-        });
-        try {
-            const newUser = await biometricLoginUserDataDetails.save();
-            if (newUser._id) {
-                return fn({
-                    success: 'Register success',
-                    id: newUser._id
-                });
-            }
-        } catch (error) {
-            return fn({
-                error: error
-            });
+        if(userExists){
+            const remove = await this.MongoDBC.BiometricLoginUserDataSchema.deleteOne(
+                {
+                    token: { $eq: token }
+                }
+            );
+            fn(remove);
         }
-        return fn({
-            error: 'Register error'
-        });
     }
 }
 

@@ -86,9 +86,7 @@ class UserModel {
                     error: 'Email or password incorrect'
                 });
             }
-            console.log('Before comparar contraseñas');
             let compare = bcryptjs_1.default.compareSync(password, userExists.password);
-            console.log('Comparando contraseñas');
             if (!compare) {
                 return fn({
                     error: 'Email or password incorrect'
@@ -96,7 +94,7 @@ class UserModel {
             }
             let biometricLoginUserDataDetails = new biometricLoginUserData_1.default({
                 email: email,
-                password: password,
+                password: userExists.password,
                 token: token
             });
             try {
@@ -119,35 +117,35 @@ class UserModel {
         });
         this.biometricLogin = (token, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
-            const userExists = yield this.MongoDBC.BiometricLoginUserDataSchema.findOne({
+            const userExistsToken = yield this.MongoDBC.BiometricLoginUserDataSchema.findOne({
                 token: { $eq: token }
             });
-            this.login(userExists.email, userExists.password, fn);
-        });
-        this.pruebaBiometricLogin = (email, password, token, fn) => __awaiter(this, void 0, void 0, function* () {
-            this.MongoDBC.connection();
-            let biometricLoginUserDataDetails = new biometricLoginUserData_1.default({
-                email: email,
-                password: password,
-                token: token
+            const userExists = yield this.MongoDBC.UserSchema.findOne({
+                email: { $eq: userExistsToken.email }
             });
-            try {
-                const newUser = yield biometricLoginUserDataDetails.save();
-                if (newUser._id) {
-                    return fn({
-                        success: 'Register success',
-                        id: newUser._id
-                    });
-                }
-            }
-            catch (error) {
+            if (userExists == null) {
                 return fn({
-                    error: error
+                    error: 'Email or password incorrect'
                 });
             }
             return fn({
-                error: 'Register error'
+                success: 'Login success',
+                id: userExists._id,
+                email: userExists.email,
+                name: userExists.name
             });
+        });
+        this.removeBiometricLogin = (token, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            const userExists = yield this.MongoDBC.BiometricLoginUserDataSchema.findOne({
+                token: { $eq: token }
+            });
+            if (userExists) {
+                const remove = yield this.MongoDBC.BiometricLoginUserDataSchema.deleteOne({
+                    token: { $eq: token }
+                });
+                fn(remove);
+            }
         });
         this.MongoDBC = new mongoDBC_1.default();
     }

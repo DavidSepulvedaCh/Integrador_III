@@ -48,7 +48,7 @@ class Server {
             path: [
                 { url: '/api/users/login', methods: ['POST'] },
                 { url: '/api/users/register', methods: ['POST'] },
-                { url: '/api/users/pruebaBiometricToken', methods: ['POST'] }
+                { url: '/api/users/login/biometric', methods: ['POST'] }
             ]
         }));
     }
