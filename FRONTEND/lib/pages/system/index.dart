@@ -16,6 +16,7 @@ class _IndexState extends State<Index> {
   @override
   void initState() {
     super.initState();
+    _getCurrentLocation();
     setOffers();
   }
 
@@ -42,7 +43,6 @@ class _IndexState extends State<Index> {
       case 0:
         setState(
           () {
-            view = const ZonaBottomSheet();
             view = ListOffers(offers: offerss);
           },
         );
@@ -65,8 +65,10 @@ class _IndexState extends State<Index> {
       case 3:
         setState(
           () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const LoginRestaurante()));
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const LoginRestaurante()));
           },
         );
         break;
