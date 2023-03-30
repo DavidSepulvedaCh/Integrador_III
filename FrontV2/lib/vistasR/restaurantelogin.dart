@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:local_auth/local_auth.dart';
 import '/exports.dart';
 
 class LoginRestaurante extends StatefulWidget {
@@ -12,6 +13,7 @@ class LoginRestaurante extends StatefulWidget {
 
 class _LoginRestauranteState extends State<LoginRestaurante> {
   final FlutterSecureStorage storage = FlutterSecureStorage();
+  final LocalAuthentication auth = LocalAuthentication();
   bool userHasTouchId = false;
 
   static const fondo = Color.fromARGB(192, 235, 235, 235);
@@ -206,7 +208,15 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
                           Visibility(
                             visible: userHasTouchId,
                             child: IconButton(
-                                onPressed: () async {},
+                                onPressed: () async {
+                                  bool touchID = await auth.authenticate(
+                                      localizedReason:
+                                          'Por favor, confirma tu identidad');
+                                  if (touchID) {
+                                    Navigator.pushNamed(
+                                        context, '/restaurantehome');
+                                  }
+                                },
                                 icon: Icon(Icons.fingerprint)),
                           ),
                           buildBtnLogin(),
