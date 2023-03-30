@@ -14,13 +14,13 @@ class ListOffers extends StatelessWidget {
       children: [
         // ignore: prefer_const_constructors
         Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.only(top: 15),
           child: Column(
             // ignore: prefer_const_literals_to_create_immutables
             children: [
               const Text('¡Para mayor facilidad seleccione los filtros de tu preferencia!'),
-              const SizedBox(height: 5),
               const ZonaBottomSheet(),
+              const SizedBox(height: 5),
             ],
           )
         ),

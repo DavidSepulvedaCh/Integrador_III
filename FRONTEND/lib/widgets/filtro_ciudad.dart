@@ -14,7 +14,7 @@ class _ZonaBottomSheetState extends State<ZonaBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 25),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: ElevatedButton.icon(
         style: ButtonStyle(
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(

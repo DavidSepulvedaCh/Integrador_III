@@ -16,7 +16,6 @@ class _IndexState extends State<Index> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
     setOffers();
   }
 
