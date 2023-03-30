@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors
-
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
+import '/exports.dart';
 
 class LoginRestaurante extends StatefulWidget {
   const LoginRestaurante({super.key});
@@ -12,10 +11,24 @@ class LoginRestaurante extends StatefulWidget {
 }
 
 class _LoginRestauranteState extends State<LoginRestaurante> {
+  final FlutterSecureStorage storage = FlutterSecureStorage();
+  bool userHasTouchId = false;
+
   static const fondo = Color.fromARGB(192, 235, 235, 235);
   static const barraNavegacionColor = Color.fromARGB(255, 250, 140, 44);
   static const backContainer = Color.fromARGB(181, 29, 29, 29);
   static const backBoxS = Color.fromARGB(80, 226, 207, 191);
+
+  void initState() {
+    getSecureStorage();
+  }
+
+  void getSecureStorage() async {
+    final isUsingBio = await storage.read(key: 'usingBiometric');
+    setState(() {
+      userHasTouchId = isUsingBio == 'true';
+    });
+  }
 
   Widget buildEmail() {
     return Column(
@@ -81,7 +94,6 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
           child: TextField(
             obscureText: true,
             style: const TextStyle(color: Colors.white),
-            // ignore: prefer_const_constructors
             decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.only(top: 15),
@@ -111,7 +123,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
                   fontWeight: FontWeight.w100),
             ),
             TextSpan(
-              text: " Registrate!",
+              text: " Regístrate!",
               style: TextStyle(
                   color: Colors.deepOrange,
                   fontSize: 18,
@@ -139,7 +151,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
           backgroundColor:
               MaterialStateProperty.all<Color>(HexColor('#E64A19')),
         ),
-        onPressed: (){
+        onPressed: () {
           Navigator.pushNamed(context, '/restaurantehome');
         },
         child: const Text(
@@ -191,6 +203,12 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
                           const SizedBox(height: 48),
                           buildPassword(),
                           const SizedBox(height: 25),
+                          Visibility(
+                            visible: userHasTouchId,
+                            child: IconButton(
+                                onPressed: () async {},
+                                icon: Icon(Icons.fingerprint)),
+                          ),
                           buildBtnLogin(),
                           buildBtnSingUp(),
                         ],

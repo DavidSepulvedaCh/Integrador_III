@@ -16,6 +16,14 @@ class HomeRestaurante extends StatelessWidget {
           'Restaurante',
           style: TextStyle(color: Colors.orangeAccent),
         ),
+        actions: [
+          IconButton(
+              color: Colors.orangeAccent,
+              onPressed: () {
+                Navigator.pushNamed(context, '/restauranteperfil');
+              },
+              icon: const Icon(Icons.settings))
+        ],
         leading: IconButton(
             color: Colors.orangeAccent,
             onPressed: () {

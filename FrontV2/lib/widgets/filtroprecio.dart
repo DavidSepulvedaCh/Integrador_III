@@ -7,7 +7,7 @@ class PriceFilter extends StatefulWidget {
 
 class _PriceFilterState extends State<PriceFilter> {
   RangeValues _currentRangeValues = const RangeValues(0, 50000);
-  // El 1000 es el valor máximo, debe ser igual en ambos lados, max y los atributos
+  // El 50000 es el valor máximo, debe ser igual en ambos lados, max y los atributos
   @override
   Widget build(BuildContext context) {
     return Container(
