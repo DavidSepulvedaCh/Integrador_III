@@ -9,12 +9,43 @@ class PerfilRestaurante extends StatefulWidget {
 }
 
 class _PerfilRestauranteState extends State<PerfilRestaurante> {
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   final LocalAuthentication auth = LocalAuthentication();
-  bool _isChecked = false;
+
+  TextEditingController emailTextController = TextEditingController();
+  TextEditingController passwordTextController = TextEditingController();
+  late bool usingBiometric;
+  String btnText = '';
+
+  @override
+  void initState() {
+    isUsingBiometric();
+    super.initState();
+  }
+
+  void isUsingBiometric() async {
+    final biometric = await SecureStorageService.isUsingBiometric2();
+    setState(() {
+      usingBiometric = biometric;
+    });
+  }
+
+  void desactivar(BuildContext context) async {
+    final res = await APIservice.removeBiometric();
+    if (res) {
+      setState(() {
+        usingBiometric = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (usingBiometric) {
+      btnText = 'Deshabilitar datos biométricos';
+    } else {
+      btnText = 'Habilitar datos biométricos';
+    }
     return Scaffold(
       backgroundColor: Colors.orangeAccent,
       appBar: AppBar(
@@ -29,55 +60,7 @@ class _PerfilRestauranteState extends State<PerfilRestaurante> {
           IconButton(
               color: Colors.orangeAccent,
               onPressed: () async {
-                if (_isChecked == true) {
-                  bool touchID = await auth.authenticate(
-                      localizedReason: 'Por favor, confirma tu identidad');
-                  if (touchID) {
-                    // ignore: use_build_context_synchronously
-                    showModalBottomSheet(
-                      isDismissible: false,
-                      context: context,
-                      builder: (context) {
-                        return StatefulBuilder(builder:
-                            ((BuildContext context, StateSetter setState) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: 20),
-                              TextField(
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Correo',
-                                    hintText: 'daniel_patino@gmail.com'),
-                              ),
-                              const SizedBox(height: 20),
-                              TextField(
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Contraseña',
-                                    hintText: 'pruebaPassword'),
-                                obscureText: true,
-                              ),
-                              ElevatedButton(
-                                child: const Text('Aceptar'),
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/restaurantehome');
-                                },
-                              ),
-                            ],
-                          );
-                        }));
-                      },
-                    );
-                  }
-
-                  storage.write(key: 'usingBiometric', value: 'true');
-                  print('SI');
-                } else {
-                  storage.write(key: 'usingBiometric', value: 'false');
-                  print('NO');
-                  Navigator.pushNamed(context, '/restaurantehome');
-                }
+                Navigator.pushNamed(context, '/restaurantehome');
               },
               icon: const Icon(Icons.save))
         ],
@@ -127,23 +110,106 @@ class _PerfilRestauranteState extends State<PerfilRestaurante> {
               ),
             ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Checkbox(
-                  value: _isChecked,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _isChecked = newValue!;
-                    });
-                  },
-                ),
-                const Text('Habilitar inicio de sesión con huella')
-              ],
-            ),
+            ElevatedButton(
+                onPressed: () async {
+                  bool touchID = await auth.authenticate(
+                      localizedReason: 'Por favor, confirma tu identidad');
+                  // ignore: use_build_context_synchronously
+                  showModalBottomSheet(
+                    isDismissible: false,
+                    context: context,
+                    builder: (context) {
+                      return StatefulBuilder(builder:
+                          ((BuildContext context, StateSetter setState) {
+                        return Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            TextField(
+                              controller: emailTextController,
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Correo',
+                                  hintText: 'daniel_patino@gmail.com'),
+                            ),
+                            const SizedBox(height: 20),
+                            TextField(
+                              controller: passwordTextController,
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Contraseña',
+                                  hintText: 'pruebaPassword'),
+                              obscureText: true,
+                            ),
+                            ElevatedButton(
+                              child: const Text('Aceptar'),
+                              onPressed: () {
+                                if (usingBiometric) {
+                                  submit(emailTextController.text,
+                                      passwordTextController.text);
+                                  storage.write(
+                                      key: 'biometricToken', value: null);
+                                } else {
+                                  submitFP(emailTextController.text,
+                                      passwordTextController.text);
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      }));
+                    },
+                  );
+                },
+                child: Text(btnText)),
           ],
         ),
       ),
     );
+  }
+
+  void registerFingerPrint(String email, String password) async {
+    int response = await APIservice.biometricRegister(email, password);
+    if (response == 1) {
+      setState(() {
+        usingBiometric = (response == 1);
+      });
+    }
+  }
+
+  void submit(email, password) async {
+    LoginRequestModel model =
+        LoginRequestModel(email: email, password: password);
+    final response = await APIservice.login(model);
+    if (response == 0) {
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, '/restaurantehome');
+    } else if (response == 1) {
+      // ignore: use_build_context_synchronously
+      CustomShowDialog.make(
+          context, 'Error', 'Usuario o contraseña incorrecta');
+    } else {
+      // ignore: use_build_context_synchronously
+      CustomShowDialog.make(
+          context, 'Error', 'Ocurrió un error. Intente más tarde');
+    }
+  }
+
+  void submitFP(email, password) async {
+    LoginRequestModel model =
+        LoginRequestModel(email: email, password: password);
+    final response = await APIservice.login(model);
+    if (response == 0) {
+      registerFingerPrint(email, password);
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, '/restaurantehome');
+    } else if (response == 1) {
+      // ignore: use_build_context_synchronously
+      CustomShowDialog.make(
+          context, 'Error', 'Usuario o contraseña incorrecta');
+    } else {
+      // ignore: use_build_context_synchronously
+      CustomShowDialog.make(
+          context, 'Error', 'Ocurrió un error. Intente más tarde');
+    }
   }
 }

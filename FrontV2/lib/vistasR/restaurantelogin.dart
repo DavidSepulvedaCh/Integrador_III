@@ -16,19 +16,28 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
   final LocalAuthentication auth = LocalAuthentication();
   bool userHasTouchId = false;
 
+  TextEditingController emailTextController = TextEditingController();
+  TextEditingController passwordTextController = TextEditingController();
   static const fondo = Color.fromARGB(192, 235, 235, 235);
   static const barraNavegacionColor = Color.fromARGB(255, 250, 140, 44);
   static const backContainer = Color.fromARGB(181, 29, 29, 29);
   static const backBoxS = Color.fromARGB(80, 226, 207, 191);
 
+  @override
   void initState() {
+    super.initState();
     getSecureStorage();
+    buildBiometrics();
   }
 
   void getSecureStorage() async {
-    final isUsingBio = await storage.read(key: 'usingBiometric');
+    final isUsingBio = await storage.read(key: 'biometricToken');
     setState(() {
-      userHasTouchId = isUsingBio == 'true';
+      if (isUsingBio != null) {
+        userHasTouchId = true;
+      } else {
+        userHasTouchId = false;
+      }
     });
   }
 
@@ -55,6 +64,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
           ),
           height: 60,
           child: TextField(
+            controller: emailTextController,
             keyboardType: TextInputType.emailAddress,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
@@ -94,6 +104,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
           height: 60,
           // ignore: prefer_const_constructors
           child: TextField(
+            controller: passwordTextController,
             obscureText: true,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
@@ -154,7 +165,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
               MaterialStateProperty.all<Color>(HexColor('#E64A19')),
         ),
         onPressed: () {
-          Navigator.pushNamed(context, '/restaurantehome');
+          submit(emailTextController.text, passwordTextController.text);
         },
         child: const Text(
           'Ingresar',
@@ -209,13 +220,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
                             visible: userHasTouchId,
                             child: IconButton(
                                 onPressed: () async {
-                                  bool touchID = await auth.authenticate(
-                                      localizedReason:
-                                          'Por favor, confirma tu identidad');
-                                  if (touchID) {
-                                    Navigator.pushNamed(
-                                        context, '/restaurantehome');
-                                  }
+                                  authenticateFingerPrint();
                                 },
                                 icon: Icon(Icons.fingerprint)),
                           ),
@@ -243,5 +248,40 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
         ),
       ),
     );
+  }
+
+  void submit(email, password) async {
+    LoginRequestModel model =
+        LoginRequestModel(email: email, password: password);
+    final response = await APIservice.login(model);
+    if (response == 0) {
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, '/restaurantehome');
+    } else if (response == 1) {
+      // ignore: use_build_context_synchronously
+      CustomShowDialog.make(
+          context, 'Error', 'Usuario o contraseña incorrecta');
+    } else {
+      // ignore: use_build_context_synchronously
+      CustomShowDialog.make(
+          context, 'Error', 'Ocurrió un error. Intente más tarde');
+    }
+  }
+
+  buildBiometrics() async {
+    final response = await SecureStorageService.isUsingBiometric2();
+    setState(() {
+      userHasTouchId = response;
+    });
+  }
+
+  void authenticateFingerPrint() async {
+    final auth = await LocalAuth.authenticate();
+    if (auth) {
+      final response = await APIservice.biometricLogin();
+      if (response) {
+        Navigator.pushNamed(context, '/restaurantehome');
+      }
+    }
   }
 }

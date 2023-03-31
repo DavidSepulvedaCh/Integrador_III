@@ -10,11 +10,16 @@ class APIservice {
   };
 
   static Future<int> login(LoginRequestModel model) async {
-    final url = Uri.http(Config.apiURL, Config.loginAPI);
+    Uri url = Uri.http(Config.apiURL, Config.loginAPI);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
     final dataBody = json.encode(model.toJson());
     try {
       final response = await http
-          .post(url, headers: headers, body: dataBody)
+          .post(url, headers: header, body: dataBody)
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         await Shared.setLogginDetails(loginResponseModel(response.body));
@@ -23,6 +28,7 @@ class APIservice {
         return 1;
       }
     } catch (e) {
+      print(e);
       return 2;
     }
   }
@@ -154,9 +160,7 @@ class APIservice {
         await Shared.setLogginDetails(loginDetails);
         return true;
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
 
     return false;
   }

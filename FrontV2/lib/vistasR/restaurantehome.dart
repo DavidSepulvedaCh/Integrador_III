@@ -1,3 +1,4 @@
+import 'package:app_vendedor/exports.dart';
 import 'package:flutter/material.dart';
 import '../widgets/ofertarestaurante.dart';
 
@@ -27,7 +28,7 @@ class HomeRestaurante extends StatelessWidget {
         leading: IconButton(
             color: Colors.orangeAccent,
             onPressed: () {
-              Navigator.pushNamed(context, '/home');
+              logout(context);
             },
             icon: const Icon(Icons.logout)),
       ),
@@ -44,5 +45,10 @@ class HomeRestaurante extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  void logout(context) {
+    Shared.prefs.clear();
+    Navigator.pushNamed(context, '/home');
   }
 }

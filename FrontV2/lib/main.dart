@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:app_vendedor/exports.dart';
 import 'package:get/get.dart';
 import '/vistasR/nuevapromo.dart';
 import 'home.dart';
@@ -7,7 +7,10 @@ import 'vistasR/restaurantelogin.dart';
 import 'vistasR/restauranteperfil.dart';
 import 'vistasR/restauranteregistro.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Shared.setUp();
+  await SecureStorageService.setUp();
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,

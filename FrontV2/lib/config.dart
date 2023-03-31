@@ -1,5 +1,5 @@
-class Config{
-  static const String apiURL = '10.153.82.136:1802';
+class Config {
+  static const String apiURL = '192.168.1.15:1802';
   static const String loginAPI = '/api/users/login';
   static const String registerBiometric = '/api/users/register/biometric';
   static const String loginBiometric = '/api/users/login/biometric';
