@@ -19,6 +19,9 @@ class Login extends StatelessWidget {
         if (response == 0) {
           // ignore: use_build_context_synchronously
           Functions.loginSuccess(context);
+        } else if (response == 10){
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacementNamed(context, '/restaurantIndex');
         } else if (response == 1) {
           // ignore: use_build_context_synchronously
           CustomShowDialog.make(

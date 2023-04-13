@@ -22,13 +22,15 @@ class SharedService{
 
   static Future<void> setLogginDetails(LoginResponseModel model) async {
     var id = model.id ?? 'default';
-    var email = model.email ?? 'default';
     var name= model.name ?? 'default';
+    var email = model.email ?? 'default';
+    var role = model.role ?? 'default';
     var token = model.token ?? 'default';
-    if(name!= 'default' && token != 'default' && email != 'default' && id != 'default'){
+    if(name!= 'default' && token != 'default' && email != 'default' && id != 'default' && role != 'default'){
       await prefs.setString('id', id);
       await prefs.setString('email', email);
       await prefs.setString('name', name);
+      await prefs.setString('role', role);
       await prefs.setString('token', token);
     }
   }

@@ -6,7 +6,7 @@ class Functions {
     await SQLiteDB.deleteFavorites();
     SharedService.prefs.clear();
     // ignore: use_build_context_synchronously
-    Navigator.pushNamed(context, '/login');
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   static Future<void> updateFavorites() async {
@@ -18,27 +18,30 @@ class Functions {
     List<Offer> favorites = await APIService.getFavorites();
     await SQLiteDB.saveFavorites(favorites);
     // ignore: use_build_context_synchronously
-    Navigator.pushNamed(context, '/index');
+    Navigator.pushReplacementNamed(context, '/index');
   }
 
-  static bool validateRegister(BuildContext context, String name, String email, String password, String password2, bool terminos){
-    if(name == ''){
+  static bool validateRegister(BuildContext context, String name, String email,
+      String password, String password2, bool terminos) {
+    if (name == '') {
       CustomShowDialog.make(context, 'Error', 'Debes llenar todos los campos');
       return false;
     }
-    if(password != password2){
+    if (password != password2) {
       CustomShowDialog.make(context, 'Error', 'Las contraseñas no coinciden');
       return false;
     }
-    if(password.length < 8){
-      CustomShowDialog.make(context, 'Error', 'La contraseña debe tener mínimo 8 caracteres');
+    if (password.length < 8) {
+      CustomShowDialog.make(
+          context, 'Error', 'La contraseña debe tener mínimo 8 caracteres');
       return false;
     }
-    if(!terminos){
-      CustomShowDialog.make(context, 'Error', 'Debes aceptar los términos y condiciones');
+    if (!terminos) {
+      CustomShowDialog.make(
+          context, 'Error', 'Debes aceptar los términos y condiciones');
       return false;
     }
-    if(!validate(context, email, password)){
+    if (!validate(context, email, password)) {
       return false;
     }
     return true;
@@ -49,19 +52,7 @@ class Functions {
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
     if (email == '' || password == '') {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text('Error'),
-                content: const Text('Debes llenar todos los campos'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Ok')),
-                ],
-              ));
+      customShowDialog(context, 'Error', 'Debes llenar todos los campos');
       return false;
     }
     if (!emailValidator.hasMatch(email)) {
@@ -71,19 +62,20 @@ class Functions {
     return true;
   }
 
-  static Future<dynamic> customShowDialog(BuildContext context, String title, String content){
+  static Future<dynamic> customShowDialog(
+      BuildContext context, String title, String content) {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text(title),
-                content: Text(content),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Ok')),
-                ],
-              ));
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(title),
+              content: Text(content),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Ok')),
+              ],
+            ));
   }
 }

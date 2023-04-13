@@ -17,9 +17,8 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jwt = require('jsonwebtoken');
 class UserController {
     constructor() {
-        this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.personRegister = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { email, name, password } = req.body;
-            let emailValidator = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             if (!email || !name || !password) {
                 return res.status(400).send({
                     error: 'Missing data'
@@ -35,18 +34,13 @@ class UserController {
                     error: 'Invalid data'
                 });
             }
-            if (!emailValidator.test(email)) {
-                return res.status(400).send({
-                    error: 'Invalid data'
-                });
-            }
             const passwordEncrypt = yield bcryptjs_1.default.hash(password, 8);
             this.userModel.register(email, name, passwordEncrypt, (response) => {
                 if (response.error) {
                     return res.status(409).json({ error: response.error });
                 }
-                let token = this.generateToken(response.id, email, name);
-                res.json({ id: response.id, name: name, email: email, token: token, messagge: response.success });
+                let token = this.generateToken(response.id, email, name, 'person');
+                res.json({ id: response.id, name: name, email: email, role: 'person', token: token, messagge: response.success });
             });
         });
         this.login = (req, res) => {
@@ -70,8 +64,8 @@ class UserController {
                 if (response.error) {
                     return res.status(401).json({ error: response.error });
                 }
-                let token = this.generateToken(response.id, email, response.name);
-                res.status(200).json({ id: response.id, name: response.name, email: email, token: token, messagge: response.success });
+                let token = this.generateToken(response.id, email, response.name, response.role);
+                res.status(200).json({ id: response.id, name: response.name, email: email, role: response.role, token: token, messagge: response.success });
             });
         };
         this.registerBiometric = (req, res) => {
@@ -98,7 +92,7 @@ class UserController {
                     error: 'Email or password incorrect'
                 });
             }
-            const generatedToken = jwt.sign({ email: email }, process.env.TOKEN_KEY);
+            const generatedToken = jwt.sign({ id: decodedToken.id, email: email }, process.env.TOKEN_KEY);
             this.userModel.registerBiometric(email, password, generatedToken, (response) => {
                 if (response.error) {
                     if (response.message) {
@@ -122,17 +116,14 @@ class UserController {
                 if (response.error) {
                     return res.status(401).json({ error: response.error });
                 }
-                let token = this.generateToken(response.id, response.email, response.name);
+                let token = this.generateToken(response.id, response.email, response.name, response.role);
                 res.status(200).json({ id: response.id, name: response.name, email: response.email, token: token, messagge: response.success });
             });
         };
         this.removeBiometric = (req, res) => {
             const { biometricToken } = req.body;
-            console.log(biometricToken);
             this.userModel.removeBiometricLogin(biometricToken, (remove) => {
-                console.log(remove);
                 if (remove.deletedCount == 1) {
-                    console.log('inside if');
                     return res.status(200).send();
                 }
                 return res.status(401).send();
@@ -163,8 +154,8 @@ class UserController {
         };
         this.userModel = new userModel_1.default();
     }
-    generateToken(id, email, name) {
-        const token = jwt.sign({ id: id, email: email, name: name }, process.env.TOKEN_KEY, { expiresIn: "7d" });
+    generateToken(id, email, name, role) {
+        const token = jwt.sign({ id: id, email: email, name: name, role: role }, process.env.TOKEN_KEY, { expiresIn: "7d" });
         return token;
     }
 }

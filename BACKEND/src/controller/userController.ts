@@ -11,9 +11,8 @@ class UserController {
         this.userModel = new UserModel();
     }
 
-    public register = async (req: Request, res: Response) => {
+    public personRegister = async (req: Request, res: Response) => {
         const { email, name, password } = req.body;
-        let emailValidator = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (!email || !name || !password) {
             return res.status(400).send({
                 error: 'Missing data'
@@ -29,18 +28,13 @@ class UserController {
                 error: 'Invalid data'
             });
         }
-        if (!emailValidator.test(email)) {
-            return res.status(400).send({
-                error: 'Invalid data'
-            });
-        }
         const passwordEncrypt: String = await bcryptjs.hash(password, 8);
         this.userModel.register(email, name, passwordEncrypt, (response: any) => {
             if (response.error) {
                 return res.status(409).json({ error: response.error });
             }
-            let token = this.generateToken(response.id, email, name);
-            res.json({ id: response.id, name: name, email: email, token: token, messagge: response.success });
+            let token = this.generateToken(response.id, email, name, 'person');
+            res.json({ id: response.id, name: name, email: email, role: 'person', token: token, messagge: response.success });
         });
     }
 
@@ -65,8 +59,8 @@ class UserController {
             if (response.error) {
                 return res.status(401).json({ error: response.error });
             }
-            let token = this.generateToken(response.id, email, response.name);
-            res.status(200).json({ id: response.id, name: response.name, email: email, token: token, messagge: response.success });
+            let token = this.generateToken(response.id, email, response.name, response.role);
+            res.status(200).json({ id: response.id, name: response.name, email: email, role: response.role, token: token, messagge: response.success });
         });
     }
 
@@ -94,7 +88,7 @@ class UserController {
             });
         }
         const generatedToken = jwt.sign(
-            { email: email },
+            { id: decodedToken.id, email: email },
             process.env.TOKEN_KEY
         );
         this.userModel.registerBiometric(email, password, generatedToken, (response: any) => {
@@ -121,27 +115,24 @@ class UserController {
             if (response.error) {
                 return res.status(401).json({ error: response.error });
             }
-            let token = this.generateToken(response.id, response.email, response.name);
+            let token = this.generateToken(response.id, response.email, response.name, response.role);
             res.status(200).json({ id: response.id, name: response.name, email: response.email, token: token, messagge: response.success });
         });
     }
 
     public removeBiometric = (req: Request, res: Response) => {
         const { biometricToken } = req.body;
-        console.log(biometricToken);
         this.userModel.removeBiometricLogin(biometricToken, (remove: any) => {
-            console.log(remove);
             if(remove.deletedCount == 1){
-                console.log('inside if');
                 return res.status(200).send();
             }
             return res.status(401).send();
         });
     }
 
-    private generateToken(id: string, email: string, name: string) {
+    private generateToken(id: string, email: string, name: string, role: string) {
         const token = jwt.sign(
-            { id: id, email: email, name: name },
+            { id: id, email: email, name: name, role: role },
             process.env.TOKEN_KEY,
             { expiresIn: "7d" }
         );

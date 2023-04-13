@@ -23,7 +23,8 @@ class UserModel {
             let userDetails = new userSchema_1.default({
                 email: email,
                 name: name,
-                password: password
+                password: password,
+                role: 'person'
             });
             const userExists = yield this.MongoDBC.UserSchema.findOne({
                 email: { $eq: email }
@@ -64,7 +65,8 @@ class UserModel {
                 success: 'Login success',
                 id: userExists._id,
                 email: email,
-                name: userExists.name
+                name: userExists.name,
+                role: userExists.role
             });
         });
         this.getUserById = (id) => __awaiter(this, void 0, void 0, function* () {
@@ -132,7 +134,8 @@ class UserModel {
                 success: 'Login success',
                 id: userExists._id,
                 email: userExists.email,
-                name: userExists.name
+                name: userExists.name,
+                role: userExists.role
             });
         });
         this.removeBiometricLogin = (token, fn) => __awaiter(this, void 0, void 0, function* () {

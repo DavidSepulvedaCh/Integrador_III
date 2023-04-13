@@ -15,7 +15,7 @@ class MongoRoute {
             this.router.post('/users/remove/biometric', this.userController.removeBiometric);
             this.router.post('/users/login', this.userController.login);
             this.router.post('/users/isValidToken', this.userController.isLogged);
-            this.router.post('/users/register', this.userController.register);
+            this.router.post('/users/person/register', this.userController.personRegister);
             this.router.post('/offers/register', this.offerController.register);
             this.router.post('/offers', this.offerController.getOffers);
             this.router.post('/offers/getByCity', this.offerController.getByCity);

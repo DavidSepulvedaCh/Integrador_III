@@ -9,6 +9,7 @@ class Index extends StatefulWidget {
 
 class _IndexState extends State<Index> {
   late Widget view = Container();
+  List<Offer> offerss = <Offer>[];
   int _currentIndex = 0;
 
   /* ==================Functions================= */
@@ -28,7 +29,7 @@ class _IndexState extends State<Index> {
     });
   }
 
-  List<Offer> offerss = <Offer>[];
+  
   Future<List<Offer>> getOffers() async {
     var register = await APIService.getOffers();
     return register;

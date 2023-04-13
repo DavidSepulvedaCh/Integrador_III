@@ -23,7 +23,6 @@ export 'package:integrador/widgets/filtro_ciudad.dart';
 export 'package:integrador/widgets/filtro_precio.dart';
 export 'package:integrador/pages/restaurant_login.dart';
 export 'package:integrador/pages/restaurant_home.dart';
-export 'package:integrador/pages/restaurant_login.dart';
 export 'package:integrador/widgets/oferts_restaurant.dart';
 export 'package:geolocator/geolocator.dart';
 export 'package:geocoding/geocoding.dart';

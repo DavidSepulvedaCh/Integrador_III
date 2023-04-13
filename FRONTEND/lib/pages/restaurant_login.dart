@@ -140,7 +140,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
               MaterialStateProperty.all<Color>(HexColor('#E64A19')),
         ),
         onPressed: () {
-          Navigator.pushNamed(context, '/indexRestaurante');
+          Navigator.pushNamed(context, '/restaurantIndex');
         },
         child: const Text(
           'Ingresar',

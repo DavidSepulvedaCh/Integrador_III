@@ -16,7 +16,8 @@ class UserModel {
         let userDetails = new UserSchema({
             email: email,
             name: name,
-            password: password
+            password: password,
+            role: 'person'
         });
         const userExists = await this.MongoDBC.UserSchema.findOne(
             {
@@ -62,7 +63,8 @@ class UserModel {
             success: 'Login success',
             id: userExists._id,
             email: email,
-            name: userExists.name
+            name: userExists.name,
+            role: userExists.role
         });
     }
 
@@ -137,7 +139,8 @@ class UserModel {
             success: 'Login success',
             id: userExists._id,
             email: userExists.email,
-            name: userExists.name
+            name: userExists.name,
+            role: userExists.role
         });
     }
 

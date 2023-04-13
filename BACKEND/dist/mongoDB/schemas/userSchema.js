@@ -14,6 +14,10 @@ const UserSchema = new mongoose_1.Schema({
     password: {
         type: String,
         required: true
+    },
+    role: {
+        type: String,
+        required: true
     }
 });
 exports.default = (0, mongoose_1.model)('users', UserSchema);

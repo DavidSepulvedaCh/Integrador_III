@@ -22,11 +22,13 @@ class APIService {
       if (response.statusCode == 200) {
         await SharedService.setLogginDetails(loginResponseModel(response.body));
         return 0;
-      } else {
+      } else if(response.statusCode == 409) {
         return 1;
+      } else {
+        return 2;
       }
     } catch (e) {
-      return 2;
+      return 3;
     }
   }
 
@@ -43,8 +45,14 @@ class APIService {
           .post(url, headers: header, body: dataBody)
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
-        await SharedService.setLogginDetails(loginResponseModel(response.body));
-        return 0;
+        LoginResponseModel model = loginResponseModel(response.body);
+        await SharedService.setLogginDetails(model);
+        if(model.role == 'person'){
+          return  0;
+        } else if(model.role == 'restaurant'){
+          return 10;
+        }
+        return 2;
       } else {
         return 1;
       }

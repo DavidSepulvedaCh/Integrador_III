@@ -21,7 +21,7 @@ class _IsLoggedMiddlewareState extends State<IsLoggedMiddleware> {
       Functions.loginSuccess(context);
     } else {
       // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/login');
     }
   }
 

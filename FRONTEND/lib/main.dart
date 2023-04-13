@@ -15,14 +15,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'FoodHub',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/index',
+      initialRoute: '/',
       routes: {
         '/':(context) => const IsLoggedMiddleware(),
         '/login':(context) => const Login(),
         '/signUp':(context) => const Register(),
         '/index': ((context) => const Index()),
         '/restaurant':(context) => const LoginRestaurante(),
-        '/indexRestaurante':(context) => const HomeRestaurante()
+        '/restaurantIndex':(context) => const HomeRestaurante()
       },
     );
   }

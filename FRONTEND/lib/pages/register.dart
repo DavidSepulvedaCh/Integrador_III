@@ -26,6 +26,9 @@ class _RegisterState extends State<Register> {
     } else if (response == 1) {
       // ignore: use_build_context_synchronously
       CustomShowDialog.make(context, 'Error', 'Email ya registrado');
+    } else if(response == 2){
+      // ignore: use_build_context_synchronously
+      CustomShowDialog.make(context, 'Error', 'No se pudo registrar el email');
     } else {
       // ignore: use_build_context_synchronously
       CustomShowDialog.make(context, 'Error', 'Ocurrió un error. Intente más tarde');
