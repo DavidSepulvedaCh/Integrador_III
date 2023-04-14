@@ -106,6 +106,33 @@ class APIService {
     }
   }
 
+  static Future<List<Offer>> getOffersByPriceRange(int minPrice, int maxPrice) async {
+    Uri url = Uri.http(Config.apiURL, Config.getOfferByPriceRange);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    try {
+      final response = await http
+          .post(url,
+              headers: header,
+              body: jsonEncode({'minPrice': minPrice, 'maxPrice': maxPrice, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        List<dynamic> jsonList = jsonDecode(response.body);
+        List<Offer> offerList =
+            jsonList.map((json) => Offer.fromJson(json)).toList();
+        return offerList;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+
   static Future<double> getMaxPriceAllOffers() async {
     Uri url = Uri.http(Config.apiURL, Config.getMaxPriceAllOffers);
     final header = {

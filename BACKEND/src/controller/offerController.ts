@@ -123,6 +123,14 @@ class OfferController {
             return res.status(200).send(response);
         });
     }
+
+    public getByPriceRange = (req: Request, res: Response) => {
+        console.log('Get by price range');
+        const { minPrice, maxPrice } = req.body;
+        this.offerModel.getByPriceRange(minPrice, maxPrice, (response: any) => {
+            res.status(200).json(response);
+        });
+    }
 }
 
 export default OfferController;

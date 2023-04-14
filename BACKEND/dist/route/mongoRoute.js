@@ -16,12 +16,13 @@ class MongoRoute {
             this.router.post('/users/login', this.userController.login);
             this.router.post('/users/isValidToken', this.userController.isLogged);
             this.router.post('/users/person/register', this.userController.personRegister);
-            this.router.post('/offers/register', this.offerController.register);
             this.router.post('/offers', this.offerController.getOffers);
+            this.router.post('/offers/register', this.offerController.register);
             this.router.post('/offers/getByCity', this.offerController.getByCity);
             this.router.post('/offers/getById', this.offerController.getById);
             this.router.post('/offers/getByListIds', this.offerController.getByListIds);
             this.router.post('/offers/getMaxPriceAllOffers', this.offerController.getMaxPriceAllOffers);
+            this.router.post('/offers/getByPriceRange', this.offerController.getByPriceRange);
             this.router.post('/favorites', this.favoriteController.getFavorites);
             this.router.post('/favorites/updateFavorites', this.favoriteController.updateFavorites);
             this.router.post('/favorites/addFavorite', this.favoriteController.addFavorite);

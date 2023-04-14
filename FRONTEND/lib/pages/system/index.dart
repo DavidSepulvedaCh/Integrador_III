@@ -8,10 +8,16 @@ class Index extends StatefulWidget {
 }
 
 class _IndexState extends State<Index> {
+  String typeOfView = 'list';
   late Widget view = Container();
   List<Offer> offerss = <Offer>[];
   int _currentIndex = 0;
   double maxPrice = 0;
+
+  /* ================ Filter's variables ========= */
+  late PriceFilter priceFilter;
+  String selectedValue = '';
+  String eleccion = '';
 
   /* ==================Functions================= */
 
@@ -33,6 +39,22 @@ class _IndexState extends State<Index> {
 
   Future<List<Offer>> getOffers() async {
     var register = await APIService.getOffers();
+    return register;
+  }
+
+  Future<void> setOffersByPriceRange() async {
+    await getOffersByPriceRange().then((value) {
+      setState(() {
+        offerss.clear();
+        offerss.addAll(value);
+        view = ListOffers(offers: offerss);
+      });
+    });
+  }
+
+  Future<List<Offer>> getOffersByPriceRange() async {
+    var register = await APIService.getOffersByPriceRange(
+        priceFilter.getMinPrice(), priceFilter.getMaxPrice());
     return register;
   }
 
@@ -58,6 +80,7 @@ class _IndexState extends State<Index> {
         setState(
           () {
             view = ListOffers(offers: offerss);
+            typeOfView = 'list';
           },
         );
         break;
@@ -65,6 +88,7 @@ class _IndexState extends State<Index> {
         setState(
           () {
             view = GridOffers(offers: offerss);
+            typeOfView = 'grid';
           },
         );
         break;
@@ -92,6 +116,94 @@ class _IndexState extends State<Index> {
     }
   }
 
+  /* ================= Filter's functions ============= */
+
+  void showModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: ((BuildContext context, StateSetter setState) {
+            return Column(
+              children: <Widget>[
+                const SizedBox(height: 15),
+                RadioListTile(
+                    title: const Text('Bucaramanga'),
+                    value: 'Bucaramanga',
+                    selected: selectedValue == 'Bucaramanga',
+                    groupValue: selectedValue,
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() => selectedValue = value);
+                      }
+                    }),
+                RadioListTile(
+                    title: const Text('Piedecuesta'),
+                    value: 'Piedecuesta',
+                    selected: selectedValue == 'Piedecuesta',
+                    groupValue: selectedValue,
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() => selectedValue = value);
+                      }
+                    }),
+                RadioListTile(
+                    title: const Text('Girón'),
+                    value: 'Girón',
+                    selected: selectedValue == 'Girón',
+                    groupValue: selectedValue,
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() => selectedValue = value);
+                      }
+                    }),
+                RadioListTile(
+                    title: const Text('Floridablanca'),
+                    value: 'Floridablanca',
+                    selected: selectedValue == 'Floridablanca',
+                    groupValue: selectedValue,
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() => selectedValue = value);
+                      }
+                    }),
+                priceFilter = PriceFilter(
+                    maxPrice: maxPrice, rangeValues: RangeValues(0, maxPrice)),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(HexColor('#E64A19')),
+                  ),
+                  child: const Text('Aceptar'),
+                  onPressed: () async {
+                    if (selectedValue.isEmpty) {
+                      await setOffersByPriceRange();
+                      setState(() {
+                        if (typeOfView == 'list') {
+                          view = ListOffers(offers: offerss);
+                        } else {
+                          view = GridOffers(offers: offerss);
+                        }
+                      });
+                    }else{
+                    }
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context, selectedValue);
+                  },
+                ),
+              ],
+            );
+          }),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +221,31 @@ class _IndexState extends State<Index> {
                 children: [
                   const Text(
                       '¡Para mayor facilidad seleccione los filtros de tu preferencia!'),
-                  ZonaBottomSheet(maxPrice: maxPrice),
+                  Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: ElevatedButton.icon(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                HexColor('#E64A19')),
+                          ),
+                          label: const Text(
+                            'Filtros',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                          ),
+                          icon: const Icon(Icons.filter_list),
+                          onPressed: () {
+                            showModal();
+                          })),
+                  // ZonaBottomSheet(maxPrice: maxPrice),
                 ],
               )),
           Flexible(child: view)

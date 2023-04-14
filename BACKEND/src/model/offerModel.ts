@@ -97,6 +97,14 @@ class OfferModel {
             maxPrice: maxPrice
         });
     }
+
+    public getByPriceRange = async (minPrice: number, maxPrice: number, fn: Function) => {
+        this.MongoDBC.connection();
+        let offers = await this.MongoDBC.OfferSchema.find(
+            { price: { $gte: minPrice, $lte: maxPrice } }
+        );
+        fn(offers);
+    }
 }
 
 export default OfferModel;

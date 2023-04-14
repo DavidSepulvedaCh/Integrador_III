@@ -10,6 +10,7 @@ class ZonaBottomSheet extends StatefulWidget {
 }
 
 class _ZonaBottomSheetState extends State<ZonaBottomSheet> {
+  late PriceFilter priceFilter;
   String selectedValue = '';
   String eleccion = '';
 
@@ -82,7 +83,7 @@ class _ZonaBottomSheetState extends State<ZonaBottomSheet> {
                               setState(() => selectedValue = value);
                             }
                           }),
-                      PriceFilter(maxPrice: widget.maxPrice),
+                      priceFilter = PriceFilter(maxPrice: widget.maxPrice, rangeValues: RangeValues(0, widget.maxPrice)),
                       ElevatedButton(
                         style: ButtonStyle(
                           shape:
@@ -96,6 +97,11 @@ class _ZonaBottomSheetState extends State<ZonaBottomSheet> {
                         ),
                         child: const Text('Aceptar'),
                         onPressed: () {
+                          final minPrice = priceFilter.getMinPrice();
+                          final maxPrice = priceFilter.getMaxPrice();
+                          print(minPrice);
+                          print(maxPrice);
+                          print(eleccion);
                           setState(() {
                             eleccion = selectedValue;
                           });
@@ -110,6 +116,7 @@ class _ZonaBottomSheetState extends State<ZonaBottomSheet> {
           ).then((value) {
             if (value != null) {
               setState(() {
+                print("value " + value);
                 eleccion = value;
               });
             }

@@ -122,6 +122,11 @@ class OfferModel {
                 maxPrice: maxPrice
             });
         });
+        this.getByPriceRange = (minPrice, maxPrice, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            let offers = yield this.MongoDBC.OfferSchema.find({ price: { $gte: minPrice, $lte: maxPrice } });
+            fn(offers);
+        });
         this.MongoDBC = new mongoDBC_1.default();
     }
 }
