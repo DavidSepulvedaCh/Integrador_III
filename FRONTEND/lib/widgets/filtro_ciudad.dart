@@ -1,7 +1,9 @@
 import 'package:integrador/routes/imports.dart';
 
 class ZonaBottomSheet extends StatefulWidget {
-  const ZonaBottomSheet({super.key});
+  double maxPrice;
+
+  ZonaBottomSheet({super.key, required this.maxPrice});
 
   @override
   State<ZonaBottomSheet> createState() => _ZonaBottomSheetState();
@@ -80,7 +82,7 @@ class _ZonaBottomSheetState extends State<ZonaBottomSheet> {
                               setState(() => selectedValue = value);
                             }
                           }),
-                      PriceFilter(),
+                      PriceFilter(maxPrice: widget.maxPrice),
                       ElevatedButton(
                         style: ButtonStyle(
                           shape:

@@ -117,6 +117,12 @@ class OfferController {
             res.json({ messagge: response.success });
         });
     }
+
+    public getMaxPriceAllOffers = (req: Request, res: Response) => {
+        this.offerModel.getMaxPriceAllOffers((response: any) => {
+            return res.status(200).send(response);
+        });
+    }
 }
 
 export default OfferController;

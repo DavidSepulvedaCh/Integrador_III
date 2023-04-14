@@ -6,7 +6,6 @@ import 'package:integrador/models/login_response_model.dart';
 import 'package:integrador/routes/imports.dart';
 
 class APIService {
-
   static Future<int> register(RegisterRequestModel model) async {
     Uri url = Uri.http(Config.apiURL, Config.registerAPI);
     final header = {
@@ -22,7 +21,7 @@ class APIService {
       if (response.statusCode == 200) {
         await SharedService.setLogginDetails(loginResponseModel(response.body));
         return 0;
-      } else if(response.statusCode == 409) {
+      } else if (response.statusCode == 409) {
         return 1;
       } else {
         return 2;
@@ -47,9 +46,9 @@ class APIService {
       if (response.statusCode == 200) {
         LoginResponseModel model = loginResponseModel(response.body);
         await SharedService.setLogginDetails(model);
-        if(model.role == 'person'){
-          return  0;
-        } else if(model.role == 'restaurant'){
+        if (model.role == 'person') {
+          return 0;
+        } else if (model.role == 'restaurant') {
           return 10;
         }
         return 2;
@@ -104,6 +103,30 @@ class APIService {
       }
     } catch (e) {
       return [];
+    }
+  }
+
+  static Future<double> getMaxPriceAllOffers() async {
+    Uri url = Uri.http(Config.apiURL, Config.getMaxPriceAllOffers);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    try {
+      final response = await http
+          .post(url, headers: header, body: jsonEncode({'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        var maxPrice = double.parse(jsonResponse['maxPrice'].toString());
+        return maxPrice;
+      } else {
+        return -1;
+      }
+    } catch (e) {
+      return -1;
     }
   }
 

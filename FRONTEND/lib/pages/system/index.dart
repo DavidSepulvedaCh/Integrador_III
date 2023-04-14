@@ -11,6 +11,7 @@ class _IndexState extends State<Index> {
   late Widget view = Container();
   List<Offer> offerss = <Offer>[];
   int _currentIndex = 0;
+  double maxPrice = 0;
 
   /* ==================Functions================= */
 
@@ -18,6 +19,7 @@ class _IndexState extends State<Index> {
   void initState() {
     super.initState();
     setOffers();
+    setMaxPrice();
   }
 
   Future<void> setOffers() async {
@@ -29,10 +31,22 @@ class _IndexState extends State<Index> {
     });
   }
 
-  
   Future<List<Offer>> getOffers() async {
     var register = await APIService.getOffers();
     return register;
+  }
+
+  Future<void> setMaxPrice() async {
+    await getMaxPrice().then((value) {
+      setState(() {
+        maxPrice = value;
+      });
+    });
+  }
+
+  Future<double> getMaxPrice() async {
+    var maxPriceApi = await APIService.getMaxPriceAllOffers();
+    return maxPriceApi;
   }
 
   void _onItemTapped(int index) {
@@ -86,8 +100,20 @@ class _IndexState extends State<Index> {
         backgroundColor: Colors.deepOrange,
         automaticallyImplyLeading: false,
       ),
-      body: Center(
-        child: view,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Column(
+                children: [
+                  const Text(
+                      '¡Para mayor facilidad seleccione los filtros de tu preferencia!'),
+                  ZonaBottomSheet(maxPrice: maxPrice),
+                ],
+              )),
+          Flexible(child: view)
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

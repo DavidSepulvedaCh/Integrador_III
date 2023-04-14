@@ -33,7 +33,7 @@ class OfferModel {
         this.MongoDBC.connection();
         let offer = await this.MongoDBC.OfferSchema.find(
             {
-                _id: { $in: idsList}
+                _id: { $in: idsList }
             }
         );
         return fn({
@@ -82,6 +82,20 @@ class OfferModel {
         } catch (error) {
             return false;
         }
+    }
+
+    public getMaxPriceAllOffers = async (fn: Function) => {
+        this.MongoDBC.connection();
+        const cursor = await this.MongoDBC.OfferSchema.aggregate([
+            { $group: { _id: null, maxPrice: { $max: "$price" } } }
+        ]);
+        let maxPrice = -Infinity;
+        for await (const result of cursor) {
+            maxPrice = result.maxPrice;
+        }
+        return fn({
+            maxPrice: maxPrice
+        });
     }
 }
 

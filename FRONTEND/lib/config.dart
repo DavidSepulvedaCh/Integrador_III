@@ -7,4 +7,5 @@ class Config{
   static const String getOfferById = '/api/offers/getById';
   static const String updateFavorite = '/api/favorites/updateFavorites';
   static const String getFavorites = '/api/favorites';
+  static const String getMaxPriceAllOffers = 'api/offers/getMaxPriceAllOffers';
 }
