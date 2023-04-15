@@ -3,40 +3,80 @@ import 'package:flutter/material.dart';
 class OfertaRestaurante extends StatelessWidget {
   const OfertaRestaurante({super.key});
 
+  static const titulo = Color.fromARGB(209, 31, 32, 31);
+  static const descripcion = Color.fromARGB(255, 34, 34, 34);
+  static const restaurante = Color.fromARGB(218, 65, 65, 65);
+  static const precio = Color.fromARGB(255, 197, 101, 10);
+  static const borrar = Color.fromARGB(255, 36, 36, 35);
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-          side: const BorderSide(width: 2)),
+      
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      clipBehavior: Clip.antiAlias,
       child: Container(
-        color: Colors.black,
         padding: const EdgeInsets.all(10),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              width: 100,
-              height: 100,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                'https://bit.ly/3mTInGh',
+                width: 115,
+                height: 115,
+                fit: BoxFit.cover,
+              ),
             ),
-            Expanded(
-                child: Column(
+
+            const SizedBox(width: 15),
+
+            
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Promoción',
-                    style: TextStyle(color: Colors.orangeAccent)),
-                const Text('Descripción',
-                    style: TextStyle(color: Colors.orangeAccent)),
-                const Text('Restaurante',
-                    style: TextStyle(color: Colors.orangeAccent)),
-                const Text('Precio',
-                    style: TextStyle(color: Colors.orangeAccent)),
+                const Text(
+                  'Hamburguesa especial 2x1',
+                  style: TextStyle(
+                      color: titulo, fontSize: 20, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  'Combo de hamburguesas 2x1 + gaseosas',
+                  style: TextStyle(
+                    color: descripcion,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.justify,
+                  maxLines: 5,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 3),
+                const Text(
+                  'Comics Pizaa',
+                  style: TextStyle(
+                    color: restaurante,
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                const Text(
+                  '20.000 COP',
+                  style: TextStyle(
+                    color: precio,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 IconButton(
-                  onPressed: () {},
                   icon: const Icon(Icons.delete),
-                  color: Colors.orangeAccent,
-                )
+                  onPressed: () {},
+                  color: borrar,
+                ),
               ],
-            ))
+            )
           ],
         ),
       ),
