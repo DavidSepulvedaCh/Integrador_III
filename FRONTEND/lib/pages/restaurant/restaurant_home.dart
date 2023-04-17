@@ -35,7 +35,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
             preferredSize: const Size.fromHeight(60),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              height: _isAppBarHidden ? 0 : 80,
+              height: _isAppBarHidden ? 0 : 95,
               child: AppBar(
                 backgroundColor: Colors.deepOrange,
                 title: const Text(

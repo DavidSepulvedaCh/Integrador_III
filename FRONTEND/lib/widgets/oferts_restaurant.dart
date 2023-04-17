@@ -32,14 +32,22 @@ class OfertaRestaurante extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Hamburguesa especial 2x1',
-                  style: TextStyle(
-                      color: titulo, fontSize: 20, fontWeight: FontWeight.w800),
+                const SizedBox(
+                  width: 220,
+                  child: Text(
+                    'Hamburguesa especial 2x1 prueba titulo largo lorem ipsumn',
+                    style: TextStyle(
+                        color: titulo,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800),
+                    textAlign: TextAlign.justify,
+                    maxLines: 2, // Limita el texto a dos líneas
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 const SizedBox(height: 5),
                 const SizedBox(
-                  width: 300, // Ancho máximo para el widget Text
+                  width: 200, // Ancho máximo para el widget Text
                   child: Text(
                     'Combo de hamburguesas 2x1 + gaseosas de 300ml',
                     style: TextStyle(

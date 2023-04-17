@@ -181,7 +181,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('signUpRest.jpg'), fit: BoxFit.cover),
+                      image: AssetImage('assets/signUpRest.jpg'), fit: BoxFit.cover),
                 ),
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),

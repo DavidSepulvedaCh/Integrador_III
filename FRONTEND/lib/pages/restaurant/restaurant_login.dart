@@ -98,7 +98,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
   Widget buildBtnSingUp() {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/signUpRestaurant|');
+        Navigator.pushNamed(context, '/signUpRestaurant');
       },
       child: RichText(
         text: const TextSpan(
@@ -164,7 +164,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('loginVendedor.jpg'),
+                      image: AssetImage('assets/loginVendedor.jpg'),
                       fit: BoxFit.cover),
                 ),
                 child: SingleChildScrollView(
