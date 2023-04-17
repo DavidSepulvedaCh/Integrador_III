@@ -1,4 +1,5 @@
-import 'package:integrador/pages/newProm.dart';
+import 'package:integrador/pages/restaurant_register.dart';
+import 'package:integrador/widgets/newProm.dart';
 import 'package:integrador/pages/system/index.dart';
 import 'package:integrador/routes/imports.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -25,9 +26,10 @@ class MyApp extends StatelessWidget {
         '/':(context) => const IsLoggedMiddleware(),
         '/login':(context) => const Login(),
         '/signUp':(context) => const Register(),
+        '/signUpRestaurant':(context) => const RegisterRestaurant(),
         '/index': ((context) => const Index()),
         '/restaurant':(context) => const LoginRestaurante(),
-        '/restaurantIndex':(context) =>  HomeRestaurante(),
+        '/restaurantIndex':(context) =>  const HomeRestaurante(),
         '/nuevapromocion': (context) => const NuevaPromo(),
       },
     );
