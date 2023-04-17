@@ -12,7 +12,6 @@ class OfertaRestaurante extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       clipBehavior: Clip.antiAlias,
       child: Container(
@@ -29,10 +28,7 @@ class OfertaRestaurante extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-
             const SizedBox(width: 15),
-
-            
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -42,15 +38,18 @@ class OfertaRestaurante extends StatelessWidget {
                       color: titulo, fontSize: 20, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  'Combo de hamburguesas 2x1 + gaseosas',
-                  style: TextStyle(
-                    color: descripcion,
-                    fontSize: 16,
+                const SizedBox(
+                  width: 300, // Ancho máximo para el widget Text
+                  child: Text(
+                    'Combo de hamburguesas 2x1 + gaseosas de 300ml',
+                    style: TextStyle(
+                      color: descripcion,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.justify,
+                    maxLines: 2, // Limita el texto a dos líneas
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  textAlign: TextAlign.justify,
-                  maxLines: 5,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 3),
                 const Text(
@@ -76,7 +75,7 @@ class OfertaRestaurante extends StatelessWidget {
                   color: borrar,
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

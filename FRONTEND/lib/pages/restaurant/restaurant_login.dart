@@ -98,7 +98,7 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
   Widget buildBtnSingUp() {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/restauranteregistro');
+        Navigator.pushNamed(context, '/signUpRestaurant|');
       },
       child: RichText(
         text: const TextSpan(

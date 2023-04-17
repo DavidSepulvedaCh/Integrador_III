@@ -1,4 +1,3 @@
-import 'package:integrador/pages/restaurant_register.dart';
 import 'package:integrador/widgets/newProm.dart';
 import 'package:integrador/pages/system/index.dart';
 import 'package:integrador/routes/imports.dart';

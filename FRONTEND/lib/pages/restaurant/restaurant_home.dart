@@ -35,7 +35,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
             preferredSize: const Size.fromHeight(60),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              height: _isAppBarHidden ? 0 : 60,
+              height: _isAppBarHidden ? 0 : 80,
               child: AppBar(
                 backgroundColor: Colors.deepOrange,
                 title: const Text(
@@ -86,9 +86,13 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                         children: [
                           // ignore: prefer_const_constructors
                           SizedBox(height: 20),
-                          const Text(
-                            'Nombre del resturante',
-                            style: TextStyle(fontSize: 16),
+                          const SizedBox(
+                            width: 190,
+                            child: Text(
+                              'Nombre del resturante',
+                              maxLines: 1,
+                              style: TextStyle(fontSize: 16),
+                            ),
                           ),
                           const Text(
                             'Bucaramanga, Santander',
@@ -99,7 +103,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                     ],
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
               ],
             ),
           ),
