@@ -61,7 +61,8 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                 leading: IconButton(
                   color: Colors.white,
                   onPressed: () {
-                    Navigator.pushNamed(context, '/index');
+                    SharedService.prefs.clear();
+                    Navigator.pushNamed(context, '/login');
                   },
                   icon: const Icon(Icons.logout),
                 ),
@@ -95,19 +96,19 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                       const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          SizedBox(height: 20),
+                        children: [
+                          const SizedBox(height: 20),
                           SizedBox(
                             width: 190,
                             child: Text(
-                              'Nombre del resturante',
+                              _restaurantName,
                               maxLines: 1,
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ),
                           Text(
-                            'Bucaramanga, Santander',
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                            _restaurantAddress,
+                            style: const TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                         ],
                       ),

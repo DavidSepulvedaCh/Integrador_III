@@ -61,7 +61,7 @@ class APIService {
     }
   }
 
-  static Future<bool> isValidToken(String token) async {
+  static Future<int> isValidToken(String token) async {
     Uri url = Uri.http(Config.apiURL, Config.isValidTokenAPI);
     final header = {
       "Access-Control-Allow-Origin": "*",
@@ -73,12 +73,14 @@ class APIService {
           .post(url, headers: header, body: jsonEncode({'token': token}))
           .timeout(const Duration(seconds: 3));
       if (response.statusCode == 200) {
-        return true;
+        var jsonResponse = jsonDecode(response.body);
+        var role = jsonResponse['role'].toString();
+        return role == "person" ? 0 : 1;
       } else {
-        return false;
+        return -1;
       }
     } catch (e) {
-      return false;
+      return -1;
     }
   }
 

@@ -15,14 +15,15 @@ class _IsLoggedMiddlewareState extends State<IsLoggedMiddleware> {
   }
 
   isLoggedIn() async {
-    var session = await SharedService.isLoggedIn();
-    if (session) {
-      // ignore: use_build_context_synchronously
-      Functions.loginSuccess(context);
-    } else {
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, '/login');
-    }
+    await SharedService.isLoggedIn().then((value) => {
+      if(value == 0){
+        Functions.loginSuccess(context)
+      } else if (value == 1){
+        Navigator.pushReplacementNamed(context, '/restaurantIndex')
+      } else {
+        Navigator.pushReplacementNamed(context, '/login')
+      }
+    });
   }
 
   @override

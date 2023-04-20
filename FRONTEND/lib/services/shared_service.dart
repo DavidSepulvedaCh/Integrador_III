@@ -11,13 +11,13 @@ class SharedService{
     prefs = await SharedPreferences.getInstance();
   }
   
-  static Future<bool> isLoggedIn() async {
+  static Future<int> isLoggedIn() async {
     bool isKeyExists = prefs.containsKey('token');
     if(isKeyExists){
       String token = prefs.getString('token') ?? 'default';
       return await APIService.isValidToken(token);
     }else{
-      return false;
+      return -1;
     }
   }
 
@@ -39,12 +39,12 @@ class SharedService{
   static Future<void> setRestaurantDetails(RestaurantDetailsResponse model) async {
     var latitude = model.latitude ?? 'default';
     var longitude = model.longitude ?? 'default';
-    var adress = model.adress ?? 'default';
+    var address = model.address ?? 'default';
     if(longitude!= 'default' && latitude != 'default' ){
       await prefs.setString('latitude', latitude);
       await prefs.setString('longitude', longitude);
-      if(adress != 'default'){
-        await prefs.setString('adress', adress);
+      if(address != 'default'){
+        await prefs.setString('address', address);
       }
     }
   }

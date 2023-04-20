@@ -30,7 +30,7 @@ class UserController {
             });
         }
         const passwordEncrypt: String = await bcryptjs.hash(password, 8);
-        this.userModel.register(email, name, passwordEncrypt, (response: any) => {
+        this.userModel.register(email, name, passwordEncrypt, "person", (response: any) => {
             if (response.error) {
                 return res.status(409).json({ error: response.error });
             }
@@ -64,7 +64,7 @@ class UserController {
             address: address
         });
         let token: String;
-        await this.userModel.register(email, name, passwordEncrypt, (response: any) => {
+        await this.userModel.register(email, name, passwordEncrypt, "restaurant", (response: any) => {
             if (response.error) {
                 return res.status(409).json({ error: response.error });
             }
@@ -216,12 +216,12 @@ class UserController {
                     error: 'Invalid token'
                 });
             }
-            if (!decodedToken.id || !decodedToken.email || !decodedToken.name) {
+            if (!decodedToken.id || !decodedToken.email || !decodedToken.name || !decodedToken.role) {
                 return res.status(401).send({
                     error: 'Invalid token'
                 });
             }
-            return res.status(200).send({ message: 'Token valid' });
+            return res.status(200).send({ role: decodedToken.role, message: 'Token valid' });
         }
         return res.status(400).send({
             error: 'Missin data'
