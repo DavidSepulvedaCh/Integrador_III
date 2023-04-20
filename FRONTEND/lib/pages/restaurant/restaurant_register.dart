@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:integrador/routes/imports.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,7 +28,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     Uri uri = Uri.https(
       "maps.googleapis.com",
       '/maps/api/place/autocomplete/json',
-      {"input": query, "key": apiKey},
+      {"input": query, "components": "country:co", "key": apiKey},
     );
     String? response = await NetworkUtiliti.fetchUrl(uri);
     if (response != null) {
@@ -168,6 +170,82 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     );
   }
 
+  void abrirModal() {
+    showModalBottomSheet(
+      context: context,
+      //isScrollControlled: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setSate) {
+            return Container(
+              height: 1000,
+              width: 800,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      const Text("¡Elige la ubicacion de tu restaurante!"),
+                      const SizedBox(height: 20),
+                      TextField(
+                        onChanged: (value) {
+                          placeAutocomplete(value);
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'Buscar ubicación',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: placePredictions.length,
+                      itemBuilder: (context, index) => LocationListTile(
+                        press: () async {
+                          final location = await getLocationFromAddress(
+                              placePredictions[index].description!);
+                          setState(() {
+                            selectedLocation =
+                                placePredictions[index].description!;
+                            selectedLocationLatLng =
+                                LatLng(location.latitude, location.longitude);
+                          });
+                          Navigator.pop(context);
+                        },
+                        location: placePredictions[index].description!,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange,
+                      onPrimary: Colors.white,
+                      textStyle: const TextStyle(fontSize: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 17, horizontal: 40),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cerrar'),
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,7 +259,8 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('assets/signUpRest.jpg'), fit: BoxFit.cover),
+                      image: AssetImage('assets/signUpRest.jpg'),
+                      fit: BoxFit.cover),
                 ),
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -216,27 +295,25 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                           hintText: 'Nombre del restaurante',
                           icon: Icons.local_restaurant_outlined),
                       const SizedBox(height: 30),
-                      Container(
-                        color: Colors.white,
-                        child: Form(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                placeAutocomplete(value);
-                              },
-                              textInputAction: TextInputAction.search,
-                              decoration: const InputDecoration(
-                                hintText: "Ingresa su ubicación...",
-                                prefixIcon: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 0),
-                                  child: (Icon(Icons.location_searching)),
-                                ),
-                              ),
-                            ),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.location_on),
+                        label: Text(
+                            selectedLocation ?? 'Ubicación del Restaurante'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          onPrimary: Colors.deepOrange,
+                          textStyle: const TextStyle(fontSize: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 17, horizontal: 40),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+                        onPressed: () {
+                          abrirModal();
+                        },
                       ),
+                      const SizedBox(height: 35),
                       CustomTextField(
                           textEditingController: emailTextController,
                           labelText: 'Correo electrónico',
