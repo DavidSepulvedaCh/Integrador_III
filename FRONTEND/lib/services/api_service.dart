@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:integrador/config.dart';
 import 'package:integrador/models/login_response_model.dart';
+import 'package:integrador/models/restaurant_details_response.dart';
 import 'package:integrador/routes/imports.dart';
 
 class APIService {
@@ -234,6 +235,32 @@ class APIService {
       }
     } catch (e) {
       return [];
+    }
+  }
+
+  static Future<bool> getRestaurantDetails() async {
+    Uri url = Uri.http(Config.apiURL, Config.getRestaurantDetails);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    var id = SharedService.prefs.getString('id');
+    try {
+      final response = await http
+          .post(url,
+              headers: header, body: jsonEncode({'idUser': id, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        RestaurantDetailsResponse model = restaurantDetailsResponse(response.body);
+        await SharedService.setRestaurantDetails(model);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
     }
   }
 }

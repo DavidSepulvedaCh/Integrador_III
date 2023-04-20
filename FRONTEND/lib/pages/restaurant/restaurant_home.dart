@@ -8,13 +8,17 @@ class HomeRestaurante extends StatefulWidget {
 }
 
 class _HomeRestauranteState extends State<HomeRestaurante> {
+  
   final _scrollController = ScrollController();
 
   bool _isAppBarHidden = false;
+  String _restaurantName = "";
+  String _restaurantAddress = "";
 
   @override
   void initState() {
     super.initState();
+    getRestaurantDetails();
     _scrollController.addListener(() {
       final isAppBarHidden = _scrollController.offset > 0;
       if (isAppBarHidden != _isAppBarHidden) {
@@ -22,6 +26,14 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
           _isAppBarHidden = isAppBarHidden;
         });
       }
+    });
+  }
+
+  Future<void> getRestaurantDetails() async {
+    await APIService.getRestaurantDetails();
+    setState(() {
+      _restaurantName = SharedService.prefs.getString('name') ?? "Restaurante";
+      _restaurantAddress = SharedService.prefs.getString('address') ?? "Colombia";
     });
   }
 

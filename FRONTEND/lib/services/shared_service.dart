@@ -1,4 +1,5 @@
 import 'package:integrador/models/login_response_model.dart';
+import 'package:integrador/models/restaurant_details_response.dart';
 import 'package:integrador/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,4 +36,16 @@ class SharedService{
     }
   }
 
+  static Future<void> setRestaurantDetails(RestaurantDetailsResponse model) async {
+    var latitude = model.latitude ?? 'default';
+    var longitude = model.longitude ?? 'default';
+    var adress = model.adress ?? 'default';
+    if(longitude!= 'default' && latitude != 'default' ){
+      await prefs.setString('latitude', latitude);
+      await prefs.setString('longitude', longitude);
+      if(adress != 'default'){
+        await prefs.setString('adress', adress);
+      }
+    }
+  }
 }
