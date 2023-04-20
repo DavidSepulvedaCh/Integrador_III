@@ -83,10 +83,9 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                       const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // ignore: prefer_const_constructors
+                        children: const [
                           SizedBox(height: 20),
-                          const SizedBox(
+                          SizedBox(
                             width: 190,
                             child: Text(
                               'Nombre del resturante',
@@ -94,7 +93,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
-                          const Text(
+                          Text(
                             'Bucaramanga, Santander',
                             style: TextStyle(fontSize: 14, color: Colors.grey),
                           ),

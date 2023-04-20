@@ -1,6 +1,7 @@
 import { Request, response, Response } from "express";
 import UserModel from "../model/userModel";
 import bcryptjs from "bcryptjs";
+import restaurantSchema from "../mongoDB/schemas/restaurantSchema";
 const jwt = require('jsonwebtoken');
 
 class UserController {
@@ -35,6 +36,71 @@ class UserController {
             }
             let token = this.generateToken(response.id, email, name, 'person');
             res.json({ id: response.id, name: name, email: email, role: 'person', token: token, messagge: response.success });
+        });
+    }
+
+    public restaurantRegister = async (req: Request, res: Response) => {
+        const { email, name, password, latitude, longitude, address } = req.body;
+        if (!email || !name || !password || !latitude || !longitude) {
+            return res.status(400).send({
+                error: 'Missing data'
+            });
+        }
+        if (typeof email !== 'string' || typeof name !== 'string' || typeof password !== 'string' || typeof latitude !== 'string' || typeof longitude !== 'string') {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        if (email.length <= 1 || name.length <= 1 || password.length <= 1 || latitude.length <= 1 || longitude.length <= 1) {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        const passwordEncrypt: String = await bcryptjs.hash(password, 8);
+        let restaurantDetails = new restaurantSchema({
+            idUser: '',
+            latitude: latitude,
+            longitude: longitude,
+            address: address
+        });
+        let token: String;
+        await this.userModel.register(email, name, passwordEncrypt, (response: any) => {
+            if (response.error) {
+                return res.status(409).json({ error: response.error });
+            }
+            token = this.generateToken(response.id, email, name, 'restaurant');
+            restaurantDetails.idUser = response.id;
+        });
+        this.userModel.restaurantRegister(restaurantDetails, (response: any) => {
+            if (response.error) {
+                return res.status(409).json({ error: response.error });
+            }
+            res.json({ id: response.id, name: name, email: email, role: 'restaurant', token: token, messagge: response.success });
+        });
+    }
+
+    public getRestaurantInformationByIdUser = async (req: Request, res: Response) => {
+        const { idUser } = req.body;
+        if (!idUser) {
+            return res.status(400).send({
+                error: 'Missing data'
+            });
+        }
+        if (typeof idUser != "string") {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        if (idUser.length <= 1) {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        this.userModel.getRestaurantInformationByIdUser(idUser, (response: any) => {
+            if (response.error) {
+                return res.status(409).json({ error: response.error });
+            }
+            res.json({ latitude: response.latitude, longitude: response.longitude, address: response.address, messagge: response.success });
         });
     }
 

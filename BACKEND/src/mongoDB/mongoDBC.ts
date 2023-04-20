@@ -4,6 +4,7 @@ import OfferSchema from "./schemas/offerSchema";
 import FavoriteSchema from "./schemas/favoriteSchema";
 import biometricLoginUserData from "./schemas/biometricLoginUserData";
 import dotenv from "dotenv";
+import restaurantSchema from "./schemas/restaurantSchema";
 
 class MongoDBC {
 
@@ -12,6 +13,8 @@ class MongoDBC {
     public OfferSchema: any;
     public FavoriteSchema: any;
     public BiometricLoginUserDataSchema: any;
+    public RestaurantSchema: any;
+
     constructor() {
         dotenv.config();
         this.uri = `mongodb+srv://${process.env.USER}:${process.env.PASS}@cluster0.a87koto.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
@@ -19,6 +22,7 @@ class MongoDBC {
         this.OfferSchema = OfferSchema;
         this.FavoriteSchema = FavoriteSchema;
         this.BiometricLoginUserDataSchema = biometricLoginUserData;
+        this.RestaurantSchema = restaurantSchema;
     }
 
     public connection(){

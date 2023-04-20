@@ -2,6 +2,7 @@ import MongoDBC from "../mongoDB/mongoDBC";
 import UserSchema from "../mongoDB/schemas/userSchema";
 import biometricLoginUserData from "../mongoDB/schemas/biometricLoginUserData";
 import bcryptjs from "bcryptjs";
+import IRestaurant from "../mongoDB/interfaces/IRestaurant";
 
 class UserModel {
 
@@ -144,7 +145,7 @@ class UserModel {
         });
     }
 
-    public removeBiometricLogin =async (token: string, fn: Function) => {
+    public removeBiometricLogin = async (token: string, fn: Function) => {
         this.MongoDBC.connection();
         const userExists = await this.MongoDBC.BiometricLoginUserDataSchema.findOne(
             {
@@ -160,6 +161,46 @@ class UserModel {
             fn(remove);
         }
     }
+
+    public restaurantRegister = async (restaurantDetails: IRestaurant, fn: Function) => {
+        this.MongoDBC.connection();
+        const userExists = await this.MongoDBC.UserSchema.findById(restaurantDetails.idUser);
+        if (userExists == null) {
+            return fn({
+                error: 'User does not exist'
+            });
+        }
+        const newRestaurant = await restaurantDetails.save();
+        if (newRestaurant._id) {
+            return fn({
+                success: 'Register success'
+            })
+        }
+        return fn({
+            error: 'Register error'
+        });
+    }
+
+    public getRestaurantInformationByIdUser = async (idUser: String, fn: Function) => {
+        this.MongoDBC.connection();
+        const restaurantExists = await this.MongoDBC.RestaurantSchema.findOne(
+            {
+                idUser: { $eq: idUser }
+            }
+        );
+        if (restaurantExists == null) {
+            return fn({
+                error: 'User does not exist'
+            });
+        }
+        return fn({
+            success: 'Login success',
+            latitude: restaurantExists.latitude,
+            longitude: restaurantExists.longitude,
+            address: restaurantExists.address
+        });
+    }
+
 }
 
 export default UserModel;

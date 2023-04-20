@@ -150,6 +150,41 @@ class UserModel {
                 fn(remove);
             }
         });
+        this.restaurantRegister = (restaurantDetails, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            const userExists = yield this.MongoDBC.UserSchema.findById(restaurantDetails.idUser);
+            if (userExists == null) {
+                return fn({
+                    error: 'User does not exist'
+                });
+            }
+            const newRestaurant = yield restaurantDetails.save();
+            if (newRestaurant._id) {
+                return fn({
+                    success: 'Register success'
+                });
+            }
+            return fn({
+                error: 'Register error'
+            });
+        });
+        this.getRestaurantInformationByIdUser = (idUser, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            const restaurantExists = yield this.MongoDBC.RestaurantSchema.findOne({
+                idUser: { $eq: idUser }
+            });
+            if (restaurantExists == null) {
+                return fn({
+                    error: 'User does not exist'
+                });
+            }
+            return fn({
+                success: 'Login success',
+                latitude: restaurantExists.latitude,
+                longitude: restaurantExists.longitude,
+                address: restaurantExists.address
+            });
+        });
         this.MongoDBC = new mongoDBC_1.default();
     }
 }
