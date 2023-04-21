@@ -18,13 +18,13 @@ const biometricLoginUserData_1 = __importDefault(require("../mongoDB/schemas/bio
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 class UserModel {
     constructor() {
-        this.register = (email, name, password, fn) => __awaiter(this, void 0, void 0, function* () {
+        this.register = (email, name, password, role, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             let userDetails = new userSchema_1.default({
                 email: email,
                 name: name,
                 password: password,
-                role: 'person'
+                role: role
             });
             const userExists = yield this.MongoDBC.UserSchema.findOne({
                 email: { $eq: email }

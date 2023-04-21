@@ -12,13 +12,13 @@ class UserModel {
         this.MongoDBC = new MongoDBC();
     }
 
-    public register = async (email: String, name: String, password: String, fn: Function) => {
+    public register = async (email: String, name: String, password: String, role: String, fn: Function) => {
         this.MongoDBC.connection();
         let userDetails = new UserSchema({
             email: email,
             name: name,
             password: password,
-            role: 'person'
+            role: role
         });
         const userExists = await this.MongoDBC.UserSchema.findOne(
             {

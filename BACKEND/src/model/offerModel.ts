@@ -105,6 +105,16 @@ class OfferModel {
         );
         fn(offers);
     }
+
+    public getByIdUser = async (idUser: string, fn: Function) => {
+        this.MongoDBC.connection();
+        const offer = await this.MongoDBC.OfferSchema.find(
+            {
+                idSeller: { $eq: idUser }
+            }
+        );
+        fn(offer);
+    }
 }
 
 export default OfferModel;

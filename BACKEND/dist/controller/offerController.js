@@ -122,6 +122,22 @@ class OfferController {
                 res.status(200).json(response);
             });
         };
+        this.getByIdUser = (req, res) => {
+            const { idUser } = req.body;
+            if (!idUser) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            if (typeof idUser !== 'string') {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            this.offerModel.getByIdUser(idUser, (response) => {
+                res.status(200).json(response);
+            });
+        };
         this.offerModel = new offerModel_1.default();
     }
 }

@@ -131,6 +131,23 @@ class OfferController {
             res.status(200).json(response);
         });
     }
+
+    public getByIdUser = (req: Request, res: Response) => {
+        const { idUser } = req.body;
+        if (!idUser) {
+            return res.status(400).send({
+                error: 'Missing data'
+            });
+        }
+        if (typeof idUser !== 'string') {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        this.offerModel.getByIdUser(idUser, (response: any) => {
+            res.status(200).json(response);
+        });
+    }
 }
 
 export default OfferController;

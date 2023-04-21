@@ -14,11 +14,14 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
   bool _isAppBarHidden = false;
   String _restaurantName = "";
   String _restaurantAddress = "";
+  List<Offer> offerss = <Offer>[];
+  late Widget view = Container();
 
   @override
   void initState() {
     super.initState();
     getRestaurantDetails();
+    setOffers();
     _scrollController.addListener(() {
       final isAppBarHidden = _scrollController.offset > 0;
       if (isAppBarHidden != _isAppBarHidden) {
@@ -27,6 +30,20 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
         });
       }
     });
+  }
+
+  Future<void> setOffers() async {
+    await getOffers().then((value) {
+      setState(() {
+        offerss.addAll(value);
+        view = ListOffers(offers: offerss);
+      });
+    });
+  }
+
+  Future<List<Offer>> getOffers() async {
+    var register = await APIService.getOffersByIdUser();
+    return register;
   }
 
   Future<void> getRestaurantDetails() async {
@@ -61,7 +78,8 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                 leading: IconButton(
                   color: Colors.white,
                   onPressed: () {
-                    Navigator.pushNamed(context, '/index');
+                    SharedService.prefs.clear();
+                    Navigator.pushNamed(context, '/login');
                   },
                   icon: const Icon(Icons.logout),
                 ),
@@ -95,19 +113,19 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                       const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          SizedBox(height: 20),
+                        children: [
+                          const SizedBox(height: 20),
                           SizedBox(
                             width: 190,
                             child: Text(
-                              'Nombre del resturante',
+                              _restaurantName,
                               maxLines: 1,
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ),
                           Text(
-                            'Bucaramanga, Santander',
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                            _restaurantAddress,
+                            style: const TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                         ],
                       ),
@@ -121,9 +139,9 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              itemCount: 7,
-              itemBuilder: (context, index) {
-                return const OfertaRestaurante();
+              itemCount: offerss.length,
+              itemBuilder: (BuildContext context, int index) {
+                return OfertaRestaurante(description: offerss[index].description!, photo: offerss[index].photo!, price: offerss[index].price!, restaurantName: _restaurantName, title: offerss[index].name!);
               },
             ),
           ),

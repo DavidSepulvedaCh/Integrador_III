@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'FoodHub',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/index',
+      initialRoute: '/',
       routes: {
         '/':(context) => const IsLoggedMiddleware(),
         '/login':(context) => const Login(),
