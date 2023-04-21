@@ -3,6 +3,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
+
+final cloudinary = CloudinaryPublic('dti2zyzir', 'prueba');
+
+Future<String?> uploadImageToCloudinary(File imageFile) async {
+  try {
+    final response = await cloudinary.uploadFile(
+      CloudinaryFile.fromFile(imageFile.path),
+    );
+
+    return response.secureUrl;
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
 
 class NuevaPromo extends StatefulWidget {
   const NuevaPromo({super.key});
@@ -37,7 +53,7 @@ class _NuevaPromoState extends State<NuevaPromo> {
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-             Text(
+            Text(
               "Nueva Promoción",
               style: TextStyle(
                 color: Colors.white,
@@ -58,7 +74,10 @@ class _NuevaPromoState extends State<NuevaPromo> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              String? imageUrl = await uploadImageToCloudinary(_image!);
+              // imageURL es el enlace de la imagen, se pone en image.network para mostrarla
+              print(imageUrl);
               Navigator.pushNamed(context, '/restaurantIndex');
             },
             icon: const Icon(
