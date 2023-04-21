@@ -28,7 +28,12 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     Uri uri = Uri.https(
       "maps.googleapis.com",
       '/maps/api/place/autocomplete/json',
-      {"input": query, "components": "country:co", "key": apiKey},
+      {
+        "input": query,
+        "components": "country:co",
+        "bounds": "7.0582,-73.0766|7.1707,-73.0604",
+        "key": apiKey
+      },
     );
     String? response = await NetworkUtiliti.fetchUrl(uri);
     if (response != null) {
@@ -43,6 +48,8 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
   }
 
   Position? currentLocation;
+  late double latit;
+  late double longit;
 
   Future<void> _getCurrentLocation() async {
     try {
@@ -52,10 +59,10 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
         currentLocation = position;
         selectedLocation = '${position.latitude}, ${position.longitude}';
         selectedLocationLatLng = LatLng(position.latitude, position.longitude);
+        latit = position.latitude;
+        longit = position.longitude;
       });
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<Location> getLocationFromAddress(String address) async {
@@ -170,6 +177,22 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     );
   }
 
+  Future<String?> getAddress(double latitude, double longitude) async {
+    final url =
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      final results = jsonResponse['results'];
+      if (results.isNotEmpty) {
+        return selectedLocation = results[0]['formatted_address'];
+      }
+    }
+
+    return null;
+  }
+
   void abrirModal() {
     showModalBottomSheet(
       context: context,
@@ -187,6 +210,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                     children: [
                       const SizedBox(height: 30),
                       const Text("¡Elige la ubicacion de tu restaurante!"),
+                      Text("Tu ubicación:  $selectedLocation"),
                       const SizedBox(height: 20),
                       TextField(
                         onChanged: (value) {
@@ -220,21 +244,53 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepOrange,
-                      onPrimary: Colors.white,
-                      textStyle: const TextStyle(fontSize: 16),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 17, horizontal: 40),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepOrange,
+                          onPrimary: Colors.white,
+                          textStyle: const TextStyle(fontSize: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 17, horizontal: 40),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selectedLocation;
+                            _getCurrentLocation();
+                            getAddress(latit, longit);
+                            
+                          });
+                          print("LOCATIONN ==>  $selectedLocation");
+                        },
+                        child: const Text('Utilizar mi ubicación'),
                       ),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Cerrar'),
+                      const SizedBox(width: 20),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepOrange,
+                          onPrimary: Colors.white,
+                          textStyle: const TextStyle(fontSize: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 17, horizontal: 40),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selectedLocation;
+                          });
+                          Navigator.pop(context);
+
+                        },
+                        child: const Text('Cerrar'),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 30),
                 ],
@@ -298,7 +354,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                       ElevatedButton.icon(
                         icon: const Icon(Icons.location_on),
                         label: Text(
-                            selectedLocation ?? 'Ubicación del Restaurante'),
+                            selectedLocation ?? 'Ubicación del Restaurante', ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           onPrimary: Colors.deepOrange,
@@ -310,7 +366,11 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                           ),
                         ),
                         onPressed: () {
-                          abrirModal();
+                          setState(() {
+                            selectedLocation;
+                            abrirModal();
+                          });
+                          
                         },
                       ),
                       const SizedBox(height: 35),
