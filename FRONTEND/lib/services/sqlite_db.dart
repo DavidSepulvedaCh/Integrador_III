@@ -5,11 +5,12 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class SQLiteDB {
+
   static Future<Database> _openDB() async {
     return openDatabase(join(await getDatabasesPath(), 'Offers.db'),
         onCreate: (db, version) {
       return db.execute(
-        "CREATE TABLE offers (id TEXT PRIMARY KEY, address TEXT, name TEXT, description TEXT, photo TEXT, price REAL, idSeller TEXT, city TEXT)",
+        "CREATE TABLE offers (id TEXT PRIMARY KEY, address TEXT, latitude TEXT, longitude TEXT, name TEXT, description TEXT, photo TEXT, price REAL, idSeller TEXT, city TEXT)",
       );
     }, version: 1);
   }
@@ -57,14 +58,15 @@ class SQLiteDB {
     if (idUser == 'default') {
       return [];
     }
-    final List<Map<String, dynamic>> offers =
-        await database.query('offers');
+    final List<Map<String, dynamic>> offers = await database.query('offers');
 
     return List.generate(
         offers.length,
         (index) => Offer(
             id: offers[index]['id'],
             address: offers[index]['address'],
+            latitude: offers[index]['latitude'],
+            longitude: offers[index]['longitude'],
             name: offers[index]['name'],
             description: offers[index]['description'],
             photo: offers[index]['photo'],
@@ -79,8 +81,7 @@ class SQLiteDB {
     if (idUser == 'default') {
       return [];
     }
-    final List<Map<String, dynamic>> offers=
-        await database.query('offers');
+    final List<Map<String, dynamic>> offers = await database.query('offers');
 
     return List.generate(
       offers.length,

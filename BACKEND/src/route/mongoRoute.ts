@@ -35,6 +35,7 @@ class MongoRoute{
         this.router.post('/offers/getMaxPriceAllOffers', this.offerController.getMaxPriceAllOffers);
         this.router.post('/offers/getByPriceRange', this.offerController.getByPriceRange);
         this.router.post('/offers/getByIdUser', this.offerController.getByIdUser);
+        this.router.post('/offers/remove', this.offerController.remove);
         this.router.post('/favorites', this.favoriteController.getFavorites);
         this.router.post('/favorites/updateFavorites', this.favoriteController.updateFavorites);
         this.router.post('/favorites/addFavorite', this.favoriteController.addFavorite);

@@ -33,6 +33,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
   }
 
   Future<void> setOffers() async {
+    offerss.clear();
     await getOffers().then((value) {
       setState(() {
         offerss.addAll(value);
@@ -52,6 +53,13 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
       _restaurantName = SharedService.prefs.getString('name') ?? "Restaurante";
       _restaurantAddress = SharedService.prefs.getString('address') ?? "Colombia";
     });
+  }
+
+  Future<void> removeOffer(String idOffer) async {
+    bool response = await APIService.removeOffer(idOffer);
+    if(response){
+      setOffers();
+    }
   }
 
   @override
@@ -141,7 +149,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
               controller: _scrollController,
               itemCount: offerss.length,
               itemBuilder: (BuildContext context, int index) {
-                return OfertaRestaurante(description: offerss[index].description!, photo: offerss[index].photo!, price: offerss[index].price!, restaurantName: _restaurantName, title: offerss[index].name!);
+                return OfertaRestaurante(removeOffer: removeOffer, id: offerss[index].id!, description: offerss[index].description!, photo: offerss[index].photo!, price: offerss[index].price!, restaurantName: _restaurantName, title: offerss[index].name!);
               },
             ),
           ),

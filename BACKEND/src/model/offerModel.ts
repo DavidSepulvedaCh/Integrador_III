@@ -25,7 +25,7 @@ class OfferModel {
 
     public getOffers = async (fn: Function) => {
         this.MongoDBC.connection();
-        const products = await this.MongoDBC.OfferSchema.find();
+        const products = await this.MongoDBC.OfferSchema.find({ active: true });
         fn(products);
     }
 
@@ -51,10 +51,10 @@ class OfferModel {
         fn(products);
     }
 
-    public register = async (address: string, name: string, description: string, photo: string, price: number, idSeller: string, city: string, fn: Function) => {
+    public register = async (address: string, latitude: string, longitude: string, name: string, description: string, photo: string, price: number, idSeller: string, city: string, fn: Function) => {
         this.MongoDBC.connection();
         let offerDetails = new OfferSchema({
-            address: address, name: name, description: description, photo: photo, price: price, idSeller: idSeller, city: city
+            address: address, latitude: latitude, longitude: longitude, name: name, description: description, photo: photo, price: price, idSeller: idSeller, city: city
         });
         try {
             await this.MongoDBC.UserSchema.findById(idSeller);
@@ -101,7 +101,7 @@ class OfferModel {
     public getByPriceRange = async (minPrice: number, maxPrice: number, fn: Function) => {
         this.MongoDBC.connection();
         let offers = await this.MongoDBC.OfferSchema.find(
-            { price: { $gte: minPrice, $lte: maxPrice } }
+            { price: { $gte: minPrice, $lte: maxPrice }, active: true }
         );
         fn(offers);
     }
@@ -110,10 +110,39 @@ class OfferModel {
         this.MongoDBC.connection();
         const offer = await this.MongoDBC.OfferSchema.find(
             {
-                idSeller: { $eq: idUser }
+                idSeller: { $eq: idUser },
+                active: true
             }
         );
         fn(offer);
+    }
+
+    public remove = async (id: string, fn: Function) => {
+        this.MongoDBC.connection();
+        let offer = null;
+        try {
+            offer = await this.MongoDBC.OfferSchema.findById(id);
+        } catch (error) {
+            return fn({
+                error: 'Invalid id'
+            });
+        }
+        if (offer.active != true) {
+            return fn({
+                error: "Offer isn't active"
+            });
+        }
+        offer.active = false;
+        const result = await offer.save();
+        if(result.active == false){
+            return fn({
+                success: 'Successful remove'
+            })
+        } else {
+            return fn({
+                error: "Delete failed"
+            });
+        }
     }
 }
 

@@ -6,6 +6,14 @@ const OfferSchema = new mongoose_1.Schema({
         type: String,
         required: true
     },
+    latitude: {
+        type: String,
+        required: true
+    },
+    longitude: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -33,6 +41,10 @@ const OfferSchema = new mongoose_1.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    active: {
+        type: Boolean,
+        default: true
     }
 });
 exports.default = (0, mongoose_1.model)('offers', OfferSchema);

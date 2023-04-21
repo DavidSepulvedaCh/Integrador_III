@@ -61,7 +61,7 @@ class OfferController {
             });
         };
         this.register = (req, res) => {
-            const { address, name, description, photo, city } = req.body;
+            const { address, latitude, longitude, name, description, photo, city } = req.body;
             let idSeller = '';
             const token = req.body.token;
             if (token) {
@@ -93,17 +93,17 @@ class OfferController {
                 });
             }
             price = Number(price);
-            if (typeof address !== 'string' || typeof name !== 'string' || typeof description !== 'string' || typeof photo !== 'string' || Number.isNaN(price) || typeof idSeller !== 'string' || typeof city !== 'string') {
+            if (typeof address !== 'string' || typeof name !== 'string' || typeof description !== 'string' || typeof photo !== 'string' || Number.isNaN(price) || typeof idSeller !== 'string' || typeof city !== 'string' || typeof latitude !== 'string' || typeof longitude !== 'string') {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
-            if (address.length <= 1 || name.length <= 1 || description.length <= 1 || photo.length <= 1 || idSeller.length <= 1 || city.length <= 1 || price < 1) {
+            if (address.length <= 1 || name.length <= 1 || description.length <= 1 || photo.length <= 1 || idSeller.length <= 1 || city.length <= 1 || price < 1 || latitude.length < 1 || longitude.length < 1) {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
-            this.offerModel.register(address, name, description, photo, price, idSeller, city, (response) => {
+            this.offerModel.register(address, latitude, longitude, name, description, photo, price, idSeller, city, (response) => {
                 if (response.error) {
                     return res.status(409).json({ error: response.error });
                 }
@@ -135,6 +135,25 @@ class OfferController {
                 });
             }
             this.offerModel.getByIdUser(idUser, (response) => {
+                res.status(200).json(response);
+            });
+        };
+        this.remove = (req, res) => {
+            const { id } = req.body;
+            if (!id) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            if (typeof id !== 'string') {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            this.offerModel.remove(id, (response) => {
+                if (response.error) {
+                    return res.status(409).json({ error: response.error });
+                }
                 res.status(200).json(response);
             });
         };

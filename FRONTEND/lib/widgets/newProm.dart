@@ -36,7 +36,7 @@ class _NuevaPromoState extends State<NuevaPromo> {
   File? _image;
 
   Future<void> _pickImage(ImageSource source) async {
-    final pickedImage = await ImagePicker().getImage(source: source);
+    final pickedImage = await ImagePicker().pickImage(source: source);
     setState(() {
       _image = File(pickedImage!.path);
     });

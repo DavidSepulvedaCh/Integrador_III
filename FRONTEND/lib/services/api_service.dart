@@ -291,4 +291,27 @@ class APIService {
       return false;
     }
   }
+
+  static Future<bool> removeOffer(String idOffer) async {
+    Uri url = Uri.http(Config.apiURL, Config.removeOffer);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    try {
+      final response = await http
+          .post(url,
+              headers: header, body: jsonEncode({'id': idOffer, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

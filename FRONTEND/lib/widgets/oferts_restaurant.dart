@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class OfertaRestaurante extends StatelessWidget {
 
+  Function removeOffer;
+  String id;
   String title;
   String restaurantName;
   String description;
@@ -10,6 +12,8 @@ class OfertaRestaurante extends StatelessWidget {
 
   OfertaRestaurante(
       {super.key,
+      required this.removeOffer,
+      required this.id,
       required this.title,
       required this.restaurantName,
       required this.description,
@@ -92,7 +96,7 @@ class OfertaRestaurante extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () {},
+                  onPressed: () => removeOffer(id),
                   color: deleteColor,
                 ),
               ],

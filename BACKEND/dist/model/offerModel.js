@@ -39,7 +39,7 @@ class OfferModel {
         });
         this.getOffers = (fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
-            const products = yield this.MongoDBC.OfferSchema.find();
+            const products = yield this.MongoDBC.OfferSchema.find({ active: true });
             fn(products);
         });
         this.getByIds = (idsList, fn) => __awaiter(this, void 0, void 0, function* () {
@@ -58,10 +58,10 @@ class OfferModel {
             });
             fn(products);
         });
-        this.register = (address, name, description, photo, price, idSeller, city, fn) => __awaiter(this, void 0, void 0, function* () {
+        this.register = (address, latitude, longitude, name, description, photo, price, idSeller, city, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             let offerDetails = new offerSchema_1.default({
-                address: address, name: name, description: description, photo: photo, price: price, idSeller: idSeller, city: city
+                address: address, latitude: latitude, longitude: longitude, name: name, description: description, photo: photo, price: price, idSeller: idSeller, city: city
             });
             try {
                 yield this.MongoDBC.UserSchema.findById(idSeller);
@@ -124,15 +124,45 @@ class OfferModel {
         });
         this.getByPriceRange = (minPrice, maxPrice, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
-            let offers = yield this.MongoDBC.OfferSchema.find({ price: { $gte: minPrice, $lte: maxPrice } });
+            let offers = yield this.MongoDBC.OfferSchema.find({ price: { $gte: minPrice, $lte: maxPrice }, active: true });
             fn(offers);
         });
         this.getByIdUser = (idUser, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             const offer = yield this.MongoDBC.OfferSchema.find({
-                idSeller: { $eq: idUser }
+                idSeller: { $eq: idUser },
+                active: true
             });
             fn(offer);
+        });
+        this.remove = (id, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            let offer = null;
+            try {
+                offer = yield this.MongoDBC.OfferSchema.findById(id);
+            }
+            catch (error) {
+                return fn({
+                    error: 'Invalid id'
+                });
+            }
+            if (offer.active != true) {
+                return fn({
+                    error: "Offer isn't active"
+                });
+            }
+            offer.active = false;
+            const result = yield offer.save();
+            if (result.active == false) {
+                return fn({
+                    success: 'Successful remove'
+                });
+            }
+            else {
+                return fn({
+                    error: "Delete failed"
+                });
+            }
         });
         this.MongoDBC = new mongoDBC_1.default();
     }
