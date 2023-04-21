@@ -127,6 +127,13 @@ class OfferModel {
             let offers = yield this.MongoDBC.OfferSchema.find({ price: { $gte: minPrice, $lte: maxPrice } });
             fn(offers);
         });
+        this.getByIdUser = (idUser, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            const offer = yield this.MongoDBC.OfferSchema.find({
+                idSeller: { $eq: idUser }
+            });
+            fn(offer);
+        });
         this.MongoDBC = new mongoDBC_1.default();
     }
 }
