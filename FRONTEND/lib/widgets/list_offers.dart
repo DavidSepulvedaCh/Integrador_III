@@ -6,7 +6,7 @@ class ListOffers extends StatelessWidget {
 
   ListOffers({super.key, required this.offers});
 
-  Widget _resena() {
+  /*  Widget _resena() {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -62,7 +62,13 @@ class ListOffers extends StatelessWidget {
         ),
       ),
     );
-  }
+  } */
+
+  static const titulo = Color.fromARGB(255, 13, 14, 13);
+  static const descripcion = Color.fromARGB(255, 34, 34, 34);
+  static const restaurante = Color.fromARGB(218, 65, 65, 65);
+  static const precio = Color.fromARGB(255, 197, 101, 10);
+  static const ubicacion = Color.fromARGB(255, 185, 109, 10);
 
   void _showModal(BuildContext context, int index) {
     showModalBottomSheet(
@@ -205,7 +211,6 @@ class ListOffers extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
                     ],
                   ),
                 ),
@@ -220,78 +225,96 @@ class ListOffers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: offers.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      _showModal(context, index);
-                      print("TOCO=====");
-                    },
-                    child: Card(
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Image.network(offers[index].photo!,
-                                      height: 120,
-                                      width: 150,
-                                      fit: BoxFit.cover),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      offers[index].name!,
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Raleway'),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      offers[index].description!,
-                                      style: const TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          fontFamily: 'Raleway'),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      "\$ ${offers[index].price}",
-                                      style: const TextStyle(
-                                          fontFamily: 'Raleway'),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    ButtonFavorite(idOffer: offers[index].id)
-                                  ],
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: offers.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _showModal(context, index);
+                        print("TOCO=====");
+                      },
+                      child: Card(
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.network(
+                                    offers[index].photo!,
+                                    width: 150,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                              Expanded(
+                                flex: 2,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        offers[index].name!,
+                                        textAlign: TextAlign.left,
+                                        style: const TextStyle(
+                                            color: titulo,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        offers[index].description!,
+                                        style: const TextStyle(
+                                          color: descripcion,
+                                          fontSize: 16,
+                                        ),
+                                        textAlign: TextAlign.justify,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 2),
+                                      const Text(
+                                        'Restaurante name',
+                                        style: TextStyle(
+                                          color: restaurante,
+                                          decoration: TextDecoration.underline,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      Text(
+                                        "\$ ${offers[index].price}",
+                                        style: const TextStyle(
+                                          color: precio,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      ButtonFavorite(idOffer: offers[index].id)
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                ],
-              );
-            },
+                    )
+                  ],
+                );
+              },
+            ),
           ),
-        )
-      ],
-    ));
+        ],
+      ),
+    );
   }
 }
