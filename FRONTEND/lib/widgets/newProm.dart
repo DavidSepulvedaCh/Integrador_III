@@ -98,7 +98,9 @@ class _NuevaPromoState extends State<NuevaPromo> {
         backgroundColor: naranja,
         elevation: 0,
       ),
-      body: Center(
+      body: ListView(
+        children: [
+          Center(
         child: Column(
           children: [
             const SizedBox(
@@ -159,54 +161,64 @@ class _NuevaPromoState extends State<NuevaPromo> {
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 25,
             ),
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 if (_image != null)
                   Image.file(
                     _image!,
-                    width: 200,
-                    height: 200,
+                    width: 250,
+                    height: 250,
                   ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Acción al presionar el botón de subir imagen
-                    _pickImage(ImageSource.gallery);
-                  },
-                  icon: const Icon(Icons.image),
-                  label: const Text('Subir imagen'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: botones,
-                    minimumSize: const Size(150, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                  SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        // Acción al presionar el botón de subir imagen
+                        _pickImage(ImageSource.gallery);
+                      },
+                      icon: const Icon(Icons.image),
+                      label: const Text('Subir imagen'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: botones,
+                        minimumSize: const Size(150, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Acción al presionar el botón de tomar foto
-                    _pickImage(ImageSource.camera);
-                  },
-                  icon: const Icon(Icons.camera_alt),
-                  label: const Text('Tomar foto'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: botones,
-                    minimumSize: const Size(150, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        // Acción al presionar el botón de tomar foto
+                        _pickImage(ImageSource.camera);
+                      },
+                      icon: const Icon(Icons.camera_alt),
+                      label: const Text('Tomar foto'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: botones,
+                        minimumSize: const Size(150, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
+                SizedBox(height: 35)
               ],
             ),
           ],
         ),
       ),
+        ],
+      )
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class OfertaRestaurante extends StatelessWidget {
-
   Function removeOffer;
   String id;
   String title;
@@ -96,7 +95,34 @@ class OfertaRestaurante extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () => removeOffer(id),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title:  Text('¡Eliminar $title!'),
+                          content: const Text('¿Estas seguro de eliminar esta oferta?'),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('Cancelar'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: const Text('Aceptar'),
+                              onPressed: () {
+                                removeOffer(id);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+
+                    
+                  },
                   color: deleteColor,
                 ),
               ],
