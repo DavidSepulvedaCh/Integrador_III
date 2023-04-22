@@ -4,5 +4,6 @@ export default interface IRestaurant extends Document {
     idUser: String,
     latitude: String,
     longitude: String,
-    address: String
+    address: String,
+    city: String
 }

@@ -40,11 +40,15 @@ class SharedService{
     var latitude = model.latitude ?? 'default';
     var longitude = model.longitude ?? 'default';
     var address = model.address ?? 'default';
+    var city = model.city ?? 'default';
     if(longitude!= 'default' && latitude != 'default' ){
       await prefs.setString('latitude', latitude);
       await prefs.setString('longitude', longitude);
       if(address != 'default'){
         await prefs.setString('address', address);
+      }
+      if(city != 'default'){
+        await prefs.setString('city', city);
       }
     }
   }

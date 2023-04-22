@@ -8,6 +8,7 @@ class RestaurantDetailsResponse {
     String? latitude;
     String? longitude;
     String? address;
+    String? city;
 
     RestaurantDetailsResponse({this.latitude, this.longitude, this.address});
 
@@ -15,6 +16,7 @@ class RestaurantDetailsResponse {
         latitude = json['latitude'];
         longitude = json['longitude'];
         address = json['address'];
+        city = json['city'];
     }
 
     Map<String, dynamic> toJson() {
@@ -22,6 +24,7 @@ class RestaurantDetailsResponse {
         data['latitude'] = latitude;
         data['longitude'] = longitude;
         data['adress'] = address;
+        data['city'] = city;
         return data;
     }
 }

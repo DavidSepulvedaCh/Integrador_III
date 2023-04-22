@@ -314,4 +314,35 @@ class APIService {
       return false;
     }
   }
+
+  static Future<bool> createOffer(String name, String description, String price, String imageUrl) async {
+    Uri url = Uri.http(Config.apiURL, Config.createOffer);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    var address = SharedService.prefs.getString('address');
+    var latitude = SharedService.prefs.getString('latitude');
+    var longitude = SharedService.prefs.getString('longitude');
+    var city = SharedService.prefs.getString('city');
+    try {
+      if(token == null || address == null || latitude == null || longitude == null || city == null){
+        return false;
+      }
+      final response = await http
+          .post(url,
+              headers: header, body: jsonEncode({'address': address, 'latitude': latitude, 'longitude': longitude, 
+              'city': city, 'name': name, 'description': description, 'photo': imageUrl, 'price': price, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

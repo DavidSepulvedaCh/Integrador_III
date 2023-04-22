@@ -164,7 +164,8 @@ class UserModel {
 
     public restaurantRegister = async (restaurantDetails: IRestaurant, fn: Function) => {
         this.MongoDBC.connection();
-        const userExists = await this.MongoDBC.UserSchema.findById(restaurantDetails.idUser);
+        try {
+            const userExists = await this.MongoDBC.UserSchema.findById(restaurantDetails.idUser);
         if (userExists == null) {
             return fn({
                 error: 'User does not exist'
@@ -179,6 +180,9 @@ class UserModel {
         return fn({
             error: 'Register error'
         });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     public getRestaurantInformationByIdUser = async (idUser: String, fn: Function) => {
@@ -197,7 +201,8 @@ class UserModel {
             success: 'Login success',
             latitude: restaurantExists.latitude,
             longitude: restaurantExists.longitude,
-            address: restaurantExists.address
+            address: restaurantExists.address,
+            city: restaurantExists.city
         });
     }
 

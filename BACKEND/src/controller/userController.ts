@@ -40,18 +40,18 @@ class UserController {
     }
 
     public restaurantRegister = async (req: Request, res: Response) => {
-        const { email, name, password, latitude, longitude, address } = req.body;
-        if (!email || !name || !password || !latitude || !longitude) {
+        const { email, name, password, latitude, longitude, address, city } = req.body;
+        if (!email || !name || !password || !latitude || !longitude || !city) {
             return res.status(400).send({
                 error: 'Missing data'
             });
         }
-        if (typeof email !== 'string' || typeof name !== 'string' || typeof password !== 'string' || typeof latitude !== 'string' || typeof longitude !== 'string') {
+        if (typeof email !== 'string' || typeof name !== 'string' || typeof password !== 'string' || typeof latitude !== 'string' || typeof longitude !== 'string' || typeof city !== 'string') {
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        if (email.length <= 1 || name.length <= 1 || password.length <= 1 || latitude.length <= 1 || longitude.length <= 1) {
+        if (email.length <= 1 || name.length <= 1 || password.length <= 1 || latitude.length <= 1 || longitude.length <= 1 || city.length <= 1) {
             return res.status(400).send({
                 error: 'Invalid data'
             });
@@ -61,22 +61,28 @@ class UserController {
             idUser: '',
             latitude: latitude,
             longitude: longitude,
-            address: address
+            address: address,
+            city: city
         });
         let token: String;
-        await this.userModel.register(email, name, passwordEncrypt, "restaurant", (response: any) => {
-            if (response.error) {
-                return res.status(409).json({ error: response.error });
-            }
-            token = this.generateToken(response.id, email, name, 'restaurant');
-            restaurantDetails.idUser = response.id;
-        });
-        this.userModel.restaurantRegister(restaurantDetails, (response: any) => {
-            if (response.error) {
-                return res.status(409).json({ error: response.error });
-            }
-            res.json({ id: response.id, name: name, email: email, role: 'restaurant', token: token, messagge: response.success });
-        });
+        try {
+            await this.userModel.register(email, name, passwordEncrypt, "restaurant", (response: any) => {
+                if (response.error) {
+                    return res.status(409).json({ error: response.error });
+                }
+                token = this.generateToken(response.id, email, name, 'restaurant');
+                restaurantDetails.idUser = response.id;
+            });
+            this.userModel.restaurantRegister(restaurantDetails, (response: any) => {
+                if (response.error) {
+                    return res.status(409).json({ error: response.error });
+                }
+                res.json({ id: response.id, name: name, email: email, role: 'restaurant', token: token, messagge: response.success });
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
     public getRestaurantInformationByIdUser = async (req: Request, res: Response) => {
@@ -100,7 +106,7 @@ class UserController {
             if (response.error) {
                 return res.status(409).json({ error: response.error });
             }
-            res.json({ latitude: response.latitude, longitude: response.longitude, address: response.address, messagge: response.success });
+            res.json({ latitude: response.latitude, longitude: response.longitude, address: response.address, city: response.city, messagge: response.success });
         });
     }
 
@@ -189,7 +195,7 @@ class UserController {
     public removeBiometric = (req: Request, res: Response) => {
         const { biometricToken } = req.body;
         this.userModel.removeBiometricLogin(biometricToken, (remove: any) => {
-            if(remove.deletedCount == 1){
+            if (remove.deletedCount == 1) {
                 return res.status(200).send();
             }
             return res.status(401).send();
