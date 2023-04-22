@@ -9,8 +9,9 @@ class Config {
   static const String getOfferByPriceRange = '/api/offers/getByPriceRange';
   static const String getOffersByIdUser = '/api/offers/getByIdUser';
   static const String removeOffer = '/api/offers/remove';
-  static String createOffer = 'api/offers/register';
+  static const String createOffer = 'api/offers/register';
   static const String updateFavorite = '/api/favorites/updateFavorites';
   static const String getFavorites = '/api/favorites';
   static const String getMaxPriceAllOffers = 'api/offers/getMaxPriceAllOffers';
+  static const String registerRestaurant = '/api/users/restaurant/register';
 }

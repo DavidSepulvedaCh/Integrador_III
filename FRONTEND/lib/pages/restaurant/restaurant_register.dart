@@ -46,6 +46,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
   double latit = 00.0;
   double longit = -0.00;
   String? selectedCity;
+  List<String> _allowedCities = ["Girón", "Bucaramanga", "Floridablanca", "Piedecuesta"];
 
   Future<void> _getCurrentLocation() async {
     try {
@@ -91,7 +92,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
   }
 
   Future<String?> getCityFromLocation(double latitude, double longitude) async {
-    const radius = 2000; // Definimos el radio de búsqueda en metros
+    const radius = 5000; // Definimos el radio de búsqueda en metros
     final url =
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=$radius&type=locality&key=$apiKey';
     final response = await http.get(Uri.parse(url));
@@ -116,14 +117,21 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
         terminos)) {
       return;
     }
+    if(!_allowedCities.contains(selectedCity)){
+      CustomShowDialog.make(context, "Error", "Ciudad no válida para uso de la aplicación");
+      return;
+    }
     RegisterRequestModel model = RegisterRequestModel(
         name: nameTextController.text,
         email: emailTextController.text,
         password: passwordOneTextController.text);
-    final response = await APIService.register(model);
+    if(selectedLocation == null || selectedCity == null){
+      CustomShowDialog.make(context, "Error", "No se ha podido obtener la ubicación");
+      return;
+    }
+    final response = await APIService.registerRestaurant(model, latit.toString(), longit.toString(), selectedLocation!, selectedCity!);
     if (response == 0) {
-      // ignore: use_build_context_synchronously
-      await Functions.loginSuccess(context);
+      Navigator.pushReplacementNamed(context, "/restaurantIndex");
     } else if (response == 1) {
       // ignore: use_build_context_synchronously
       CustomShowDialog.make(context, 'Error', 'Email ya registrado');
@@ -248,16 +256,30 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                         press: () async {
                           final location = await getLocationFromAddress(
                               placePredictions[index].description!);
-                          setState(() async {
+                          setState(() {
                             selectedLocation =
                                 placePredictions[index].description!;
-                            latit = location.latitude;
-                            longit = location.longitude;
                             selectedLocationLatLng =
                                 LatLng(location.latitude, location.longitude);
-                            selectedCity = await getCityFromLocation(
-                                location.latitude, location.longitude);
+                            latit = location.latitude;
+                            longit = location.longitude;
                           });
+                          await getCityFromLocation(
+                                  location.latitude, location.longitude)
+                              .then((value) => {
+                                    setState(() {
+                                      if(value == null){
+                                        List<String> miArray = placePredictions[index].description!.split(", ");
+                                        if(miArray.elementAt(miArray.length-2) == "Bogotá"){
+                                          selectedCity = miArray.elementAt(miArray.length-2);
+                                        }else{
+                                          selectedCity = miArray.elementAt(miArray.length-3);
+                                        }
+                                      }else{
+                                        selectedCity = value;
+                                      }
+                                    })
+                                  });
                           Navigator.pop(context);
                         },
                         location: placePredictions[index].description!,

@@ -82,7 +82,7 @@ class UserController {
                     if (response.error) {
                         return res.status(409).json({ error: response.error });
                     }
-                    res.json({ id: response.id, name: name, email: email, role: 'restaurant', token: token, messagge: response.success });
+                    res.json({ id: restaurantDetails.idUser, name: name, email: email, role: 'restaurant', token: token, messagge: response.success });
                 });
             }
             catch (error) {

@@ -345,4 +345,29 @@ class APIService {
       return false;
     }
   }
+
+  static Future<int> registerRestaurant(RegisterRequestModel model, String latitude, String longitude, String address, String city) async {
+    Uri url = Uri.http(Config.apiURL, Config.registerRestaurant);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    try {
+      final response = await http
+          .post(url, headers: header, body: jsonEncode({"email": model.email, "name": model.name, "password": model.password, 
+          "latitude": latitude, "longitude": longitude, "address": address, "city": city}))
+          .timeout(const Duration(seconds: 8));
+      if (response.statusCode == 200) {
+        await SharedService.setLogginDetails(loginResponseModel(response.body));
+        return 0;
+      } else if (response.statusCode == 409) {
+        return 1;
+      } else {
+        return 2;
+      }
+    } catch (e) {
+      return 3;
+    }
+  }
 }

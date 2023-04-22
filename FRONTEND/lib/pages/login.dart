@@ -64,6 +64,36 @@ class Login extends StatelessWidget {
       );
     }
 
+    /* ===============WIDGET'S===================== */
+    Widget buildBtnSingUpRestaurant() {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const RegisterRestaurant()));
+        },
+        child: RichText(
+          text: const TextSpan(
+            children: [
+              TextSpan(
+                text: "¿No tienes una cuenta?",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w100),
+              ),
+              TextSpan(
+                text: " Registrate restaurante!",
+                style: TextStyle(
+                    color: Colors.deepOrange,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -109,6 +139,7 @@ class Login extends StatelessWidget {
                       const SizedBox(height: 25),
                       ButtonOne(onClick: submit, text: 'Ingresar'),
                       buildBtnSingUp(),
+                      buildBtnSingUpRestaurant()
                     ],
                   ),
                 ),
