@@ -34,6 +34,10 @@ const OfferSchema = new mongoose_1.Schema({
         type: String,
         required: true
     },
+    restaurantName: {
+        type: String,
+        required: true
+    },
     city: {
         type: String,
         required: true

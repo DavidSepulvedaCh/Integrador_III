@@ -8,6 +8,7 @@ class Offer{
   String? photo;
   double? price;
   String? idSeller;
+  String? restaurantName;
   String? city;
 
   Offer({
@@ -20,6 +21,7 @@ class Offer{
     this.photo,
     this.price,
     this.idSeller,
+    this.restaurantName,
     this.city
   });
 
@@ -33,11 +35,12 @@ class Offer{
     photo = json["photo"];
     price = json["price"].toDouble();
     idSeller = json['idSeller'];
+    restaurantName = json['restaurantName'];
     city = json['city'];
   }
 
   Map<String, dynamic> toJson(){
     return { 'id': id, 'address': address, 'latitude': latitude, 'longitude': longitude, 'name': name, 'description': description, 'photo': photo, 'price': price,
-    'idSeller': idSeller };
+    'idSeller': idSeller, 'restaurantName': restaurantName, 'city': city };
   }
 }

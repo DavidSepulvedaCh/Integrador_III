@@ -61,10 +61,11 @@ class OfferModel {
         this.register = (address, latitude, longitude, name, description, photo, price, idSeller, city, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             let offerDetails = new offerSchema_1.default({
-                address: address, latitude: latitude, longitude: longitude, name: name, description: description, photo: photo, price: price, idSeller: idSeller, city: city
+                address: address, latitude: latitude, longitude: longitude, name: name, description: description, photo: photo, price: price, idSeller: idSeller, restaurantName: "", city: city
             });
             try {
-                yield this.MongoDBC.UserSchema.findById(idSeller);
+                const user = yield this.MongoDBC.UserSchema.findById(idSeller);
+                offerDetails.restaurantName = user.name;
             }
             catch (error) {
                 return fn({

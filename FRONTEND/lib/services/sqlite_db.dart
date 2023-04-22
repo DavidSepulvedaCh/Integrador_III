@@ -10,7 +10,7 @@ class SQLiteDB {
     return openDatabase(join(await getDatabasesPath(), 'Offers.db'),
         onCreate: (db, version) {
       return db.execute(
-        "CREATE TABLE offers (id TEXT PRIMARY KEY, address TEXT, latitude TEXT, longitude TEXT, name TEXT, description TEXT, photo TEXT, price REAL, idSeller TEXT, city TEXT)",
+        "CREATE TABLE offers (id TEXT PRIMARY KEY, address TEXT, latitude TEXT, longitude TEXT, name TEXT, description TEXT, photo TEXT, price REAL, idSeller TEXT, restaurantName TEXT, city TEXT)",
       );
     }, version: 1);
   }

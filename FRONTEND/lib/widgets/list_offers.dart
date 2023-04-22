@@ -116,24 +116,24 @@ class ListOffers extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Positioned(
+                    Positioned(
                       top: 16,
                       left: 16,
                       child: Text(
-                        'Nombre del restaurante',
-                        style: TextStyle(
+                        offers[index].restaurantName ?? "Nombre restaurante",
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    const Positioned(
+                    Positioned(
                       top: 48,
                       left: 16,
                       child: Text(
-                        'Ubicación del restaurante',
-                        style: TextStyle(
+                        offers[index].address!,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                         ),
@@ -282,9 +282,9 @@ class ListOffers extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(height: 2),
-                                      const Text(
-                                        'Restaurante name',
-                                        style: TextStyle(
+                                      Text(
+                                        offers[index].restaurantName ?? "Restaurante",
+                                        style: const TextStyle(
                                           color: restaurante,
                                           decoration: TextDecoration.underline,
                                           fontWeight: FontWeight.w700,

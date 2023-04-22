@@ -9,6 +9,7 @@ export default interface IOffer extends Document {
     photo: String, 
     price: Number, 
     idSeller: String, 
+    restaurantName: String,
     city: String, 
     date: Date,
     active: Boolean

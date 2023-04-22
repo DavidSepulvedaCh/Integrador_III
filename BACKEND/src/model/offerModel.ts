@@ -54,10 +54,11 @@ class OfferModel {
     public register = async (address: string, latitude: string, longitude: string, name: string, description: string, photo: string, price: number, idSeller: string, city: string, fn: Function) => {
         this.MongoDBC.connection();
         let offerDetails = new OfferSchema({
-            address: address, latitude: latitude, longitude: longitude, name: name, description: description, photo: photo, price: price, idSeller: idSeller, city: city
+            address: address, latitude: latitude, longitude: longitude, name: name, description: description, photo: photo, price: price, idSeller: idSeller, restaurantName: "", city: city
         });
         try {
-            await this.MongoDBC.UserSchema.findById(idSeller);
+            const user = await this.MongoDBC.UserSchema.findById(idSeller);
+            offerDetails.restaurantName = user.name;
         } catch (error) {
             return fn({
                 error: 'Invalid id'
