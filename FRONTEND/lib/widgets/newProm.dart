@@ -1,14 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:integrador/routes/imports.dart';
-
-import 'custom_show_dialog.dart';
-import 'custom_text_field.dart';
 
 final cloudinary = CloudinaryPublic('dti2zyzir', 'prueba');
 
@@ -20,7 +15,6 @@ Future<String?> uploadImageToCloudinary(File imageFile) async {
 
     return response.secureUrl;
   } catch (e) {
-    print(e);
     return null;
   }
 }
@@ -66,7 +60,6 @@ class _NuevaPromoState extends State<NuevaPromo> {
       CustomShowDialog.make(context, "Error", "No ha seleccionado imagen");
       return false;
     }
-    print(_image.toString());
     return true;
   }
 
@@ -127,7 +120,7 @@ class _NuevaPromoState extends State<NuevaPromo> {
           ],
           leading: IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/restaurantIndex');
+              Navigator.pop(context);
             },
             icon: const Icon(
               Icons.cancel,
