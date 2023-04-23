@@ -32,4 +32,5 @@ export 'package:integrador/models/auto_complete_response.dart';
 export 'package:integrador/widgets/network_address.dart';
 export 'package:integrador/widgets/location_list_style.dart';
 export 'package:google_maps_flutter/google_maps_flutter.dart';
+export 'package:url_launcher/url_launcher.dart';
 export 'dart:convert';

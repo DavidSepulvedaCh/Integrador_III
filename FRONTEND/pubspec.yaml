@@ -43,6 +43,8 @@ dependencies:
   image_picker: ^0.8.7+3
   google_maps_flutter: ^2.2.5
   cloudinary_public: ^0.13.0
+  url_launcher: ^6.1.10
+  location: ^4.4.0
 
 dev_dependencies:
   flutter_test:

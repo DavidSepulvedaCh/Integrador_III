@@ -100,17 +100,8 @@ class _IndexState extends State<Index> {
           },
         );
         break;
+      
       case 3:
-        setState(
-          () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const LoginRestaurante()));
-          },
-        );
-        break;
-      case 4:
         Functions.logout(context);
         break;
     }
@@ -267,10 +258,6 @@ class _IndexState extends State<Index> {
           const BottomNavigationBarItem(
             icon: Icon(Icons.favorite, color: Colors.deepOrange),
             label: 'Favoritos',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.restaurant, color: Colors.deepOrange),
-            label: 'Restaurante',
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.logout, color: Colors.deepOrange),

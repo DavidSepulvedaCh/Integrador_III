@@ -8,7 +8,6 @@ class HomeRestaurante extends StatefulWidget {
 }
 
 class _HomeRestauranteState extends State<HomeRestaurante> {
-  
   final _scrollController = ScrollController();
 
   bool _isAppBarHidden = false;
@@ -51,13 +50,14 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
     await APIService.getRestaurantDetails();
     setState(() {
       _restaurantName = SharedService.prefs.getString('name') ?? "Restaurante";
-      _restaurantAddress = SharedService.prefs.getString('address') ?? "Colombia";
+      _restaurantAddress =
+          SharedService.prefs.getString('address') ?? "Colombia";
     });
   }
 
   Future<void> removeOffer(String idOffer) async {
     bool response = await APIService.removeOffer(idOffer);
-    if(response){
+    if (response) {
       setOffers();
     }
   }
@@ -110,34 +110,49 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                   ),
                 ),
                 Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Image.network(
-                        'https://bit.ly/3mTInGh',
-                        height: 35,
-                        width: 35,
-                      ),
-                      const SizedBox(width: 8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            width: 190,
-                            child: Text(
-                              _restaurantName,
-                              maxLines: 1,
-                              style: const TextStyle(fontSize: 16),
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Image.network(
+                          'https://bit.ly/3mTInGh',
+                          height: 40,
+                          width: 40,
+                        ),
+                        const SizedBox(width: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 20),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  child: Text(
+                                    _restaurantName,
+                                    maxLines: 1,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Text(
-                            _restaurantAddress,
-                            style: const TextStyle(fontSize: 14, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 180,
+                                  child: Text(
+                                    _restaurantAddress,
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.grey),
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -149,7 +164,14 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
               controller: _scrollController,
               itemCount: offerss.length,
               itemBuilder: (BuildContext context, int index) {
-                return OfertaRestaurante(removeOffer: removeOffer, id: offerss[index].id!, description: offerss[index].description!, photo: offerss[index].photo!, price: offerss[index].price!, restaurantName: _restaurantName, title: offerss[index].name!);
+                return OfertaRestaurante(
+                    removeOffer: removeOffer,
+                    id: offerss[index].id!,
+                    description: offerss[index].description!,
+                    photo: offerss[index].photo!,
+                    price: offerss[index].price!,
+                    restaurantName: _restaurantName,
+                    title: offerss[index].name!);
               },
             ),
           ),

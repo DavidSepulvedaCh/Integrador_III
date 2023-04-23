@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:integrador/routes/imports.dart';
 
 // ignore: must_be_immutable
@@ -6,69 +8,40 @@ class ListOffers extends StatelessWidget {
 
   ListOffers({super.key, required this.offers});
 
-  /*  Widget _resena() {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Nombre del usuario',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                  'Fecha de la reseña',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Título de la reseña',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Contenido de la reseña. Aquí puedes escribir una descripción detallada de la experiencia del usuario.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(Icons.star, color: Colors.amber, size: 20),
-                const Icon(Icons.star, color: Colors.amber, size: 20),
-                const Icon(Icons.star, color: Colors.amber, size: 20),
-                const Icon(Icons.star_border, color: Colors.amber, size: 20),
-                const Icon(Icons.star_border, color: Colors.amber, size: 20),
-                const SizedBox(width: 8),
-                const Text(
-                  '4.0',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Image.network(
-              'https://via.placeholder.com/350x150',
-              fit: BoxFit.cover,
-            ),
-          ],
-        ),
-      ),
-    );
-  } */
-
   static const titulo = Color.fromARGB(255, 13, 14, 13);
   static const descripcion = Color.fromARGB(255, 34, 34, 34);
   static const restaurante = Color.fromARGB(218, 65, 65, 65);
   static const precio = Color.fromARGB(255, 197, 101, 10);
   static const ubicacion = Color.fromARGB(255, 185, 109, 10);
+  Position? currentLocation;
+  double lati = 0.0000;
+  double long = 0.0000;
+
+  Future<LatLng> _getCurrentLocation() async {
+    final geolocator = Geolocator();
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    return LatLng(position.latitude, position.longitude);
+  }
+
+  String generateMapsUrl(LatLng origin, LatLng destination) {
+    const apiKey = 'AIzaSyCAdQh3u8eBv2ASDf_qh0e92al8TK_ETy4';
+    final url = 'https://www.google.com/maps/dir/?api=1&'
+        'origin=${origin.latitude},${origin.longitude}&'
+        'destination=${destination.latitude},${destination.longitude}';
+    return url;
+  }
+
+  void openMaps(LatLng destination) async {
+    final origin = await _getCurrentLocation();
+    final url = generateMapsUrl(origin, destination);
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'No se puede abrir la URL: $url';
+    }
+  }
 
   void _showModal(BuildContext context, int index) {
     showModalBottomSheet(
@@ -126,6 +99,7 @@ class ListOffers extends StatelessWidget {
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
+                        maxLines: 2,
                       ),
                     ),
                     Positioned(
@@ -137,6 +111,10 @@ class ListOffers extends StatelessWidget {
                           color: Colors.white,
                           fontSize: 16,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                        textAlign: TextAlign.left,
                       ),
                     ),
                   ],
@@ -198,7 +176,13 @@ class ListOffers extends StatelessWidget {
                         children: [
                           const SizedBox(height: 8),
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              lati = double.parse(offers[index].latitude!);
+                              long = double.parse(offers[index].longitude!);
+                              final destino = LatLng(lati, long);
+                              openMaps(destino);
+                              print(generateMapsUrl);
+                            },
                             icon: const Icon(Icons.location_city),
                             label: const Text("¿Como llegar?"),
                             style: ElevatedButton.styleFrom(
@@ -283,7 +267,8 @@ class ListOffers extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 2),
                                       Text(
-                                        offers[index].restaurantName ?? "Restaurante",
+                                        offers[index].restaurantName ??
+                                            "Restaurante",
                                         style: const TextStyle(
                                           color: restaurante,
                                           decoration: TextDecoration.underline,
