@@ -58,6 +58,22 @@ class _IndexState extends State<Index> {
     return register;
   }
 
+  Future<void> setOffersByCity() async {
+    await getOffersByCity().then((value) {
+      setState(() {
+        offerss.clear();
+        offerss.addAll(value);
+        view = ListOffers(offers: offerss);
+      });
+    });
+  }
+
+  Future<List<Offer>> getOffersByCity() async {
+    var register = await APIService.getOffersByPriceRange(
+        priceFilter.getMinPrice(), priceFilter.getMaxPrice());
+    return register;
+  }
+
   Future<void> setMaxPrice() async {
     await getMaxPrice().then((value) {
       setState(() {
@@ -182,6 +198,14 @@ class _IndexState extends State<Index> {
                         }
                       });
                     }else{
+                      await setOffersByCity();
+                      setState(() {
+                        if (typeOfView == 'list') {
+                          view = ListOffers(offers: offerss);
+                        } else {
+                          view = GridOffers(offers: offerss);
+                        }
+                      });
                     }
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context, selectedValue);
