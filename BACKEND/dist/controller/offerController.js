@@ -116,10 +116,25 @@ class OfferController {
             });
         };
         this.getByPriceRange = (req, res) => {
-            console.log('Get by price range');
             const { minPrice, maxPrice } = req.body;
             this.offerModel.getByPriceRange(minPrice, maxPrice, (response) => {
                 res.status(200).json(response);
+            });
+        };
+        this.getByCityAndPriceRange = (req, res) => {
+            const { city, minPrice, maxPrice } = req.body;
+            if (!city) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            if (typeof city !== 'string') {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            this.offerModel.getByCityAndPriceRange(city, minPrice, maxPrice, (response) => {
+                res.json(response);
             });
         };
         this.getByIdUser = (req, res) => {

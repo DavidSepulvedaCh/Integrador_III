@@ -1,5 +1,5 @@
 class Config {
-  static const String apiURL = '192.168.1.8:1802';
+  static const String apiURL = '10.153.82.117:1802';
   static const String loginAPI = '/api/users/login';
   static const String registerAPI = '/api/users/person/register';
   static const String isValidTokenAPI = '/api/users/isValidToken';
@@ -8,6 +8,7 @@ class Config {
   static const String getOfferById = '/api/offers/getById';
   static const String getOfferByPriceRange = '/api/offers/getByPriceRange';
   static const String getOfferByCity = '/api/offers/getByCity';
+  static const String getOfferByCityAndPriceRange = '/api/offers/getByCityAndPriceRange';
   static const String getOffersByIdUser = '/api/offers/getByIdUser';
   static const String removeOffer = '/api/offers/remove';
   static const String createOffer = 'api/offers/register';

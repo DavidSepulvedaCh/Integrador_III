@@ -192,6 +192,7 @@ class GridOffers extends StatelessWidget {
                         fontWeight: FontWeight.w200,
                         fontFamily: 'Raleway',
                         fontSize: 12),
+                        maxLines: 2,
                   ),
                 ),
                 Padding(

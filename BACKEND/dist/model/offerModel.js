@@ -53,9 +53,7 @@ class OfferModel {
         });
         this.getByCity = (city, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
-            const products = yield this.MongoDBC.OfferSchema.find({
-                city: { $eq: city }
-            });
+            const products = yield this.MongoDBC.OfferSchema.find({ city: { $eq: city }, active: true });
             fn(products);
         });
         this.register = (address, latitude, longitude, name, description, photo, price, idSeller, city, fn) => __awaiter(this, void 0, void 0, function* () {
@@ -126,6 +124,11 @@ class OfferModel {
         this.getByPriceRange = (minPrice, maxPrice, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             let offers = yield this.MongoDBC.OfferSchema.find({ price: { $gte: minPrice, $lte: maxPrice }, active: true });
+            fn(offers);
+        });
+        this.getByCityAndPriceRange = (city, minPrice, maxPrice, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            let offers = yield this.MongoDBC.OfferSchema.find({ city: { $eq: city }, price: { $gte: minPrice, $lte: maxPrice }, active: true });
             fn(offers);
         });
         this.getByIdUser = (idUser, fn) => __awaiter(this, void 0, void 0, function* () {
