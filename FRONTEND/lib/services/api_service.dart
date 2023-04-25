@@ -163,7 +163,7 @@ class APIService {
   }
 
   static Future<List<Offer>> getOffersByCity(String city) async {
-    Uri url = Uri.http(Config.apiURL, Config.getOfferByPriceRange);
+    Uri url = Uri.http(Config.apiURL, Config.getOfferByCity);
     final header = {
       "Access-Control-Allow-Origin": "*",
       'Content-Type': 'application/json',
@@ -175,6 +175,33 @@ class APIService {
           .post(url,
               headers: header,
               body: jsonEncode({'city': city, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        List<dynamic> jsonList = jsonDecode(response.body);
+        List<Offer> offerList =
+            jsonList.map((json) => Offer.fromJson(json)).toList();
+        return offerList;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+
+  static Future<List<Offer>> getOffersByCityAndPriceRange(String city, int minPrice, int maxPrice) async {
+    Uri url = Uri.http(Config.apiURL, Config.getOfferByCityAndPriceRange);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    try {
+      final response = await http
+          .post(url,
+              headers: header,
+              body: jsonEncode({'city': city, 'minPrice': minPrice, 'maxPrice': maxPrice, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         List<dynamic> jsonList = jsonDecode(response.body);

@@ -44,9 +44,7 @@ class OfferModel {
     public getByCity = async (city: string, fn: Function) => {
         this.MongoDBC.connection();
         const products = await this.MongoDBC.OfferSchema.find(
-            {
-                city: { $eq: city }
-            }
+            { city: { $eq: city }, active: true }
         );
         fn(products);
     }
@@ -103,6 +101,14 @@ class OfferModel {
         this.MongoDBC.connection();
         let offers = await this.MongoDBC.OfferSchema.find(
             { price: { $gte: minPrice, $lte: maxPrice }, active: true }
+        );
+        fn(offers);
+    }
+
+    public getByCityAndPriceRange = async (city: string, minPrice: number, maxPrice: number, fn: Function) => {
+        this.MongoDBC.connection();
+        let offers = await this.MongoDBC.OfferSchema.find(
+            { city: { $eq: city }, price: { $gte: minPrice, $lte: maxPrice }, active: true }
         );
         fn(offers);
     }

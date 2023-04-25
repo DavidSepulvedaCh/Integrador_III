@@ -14,12 +14,11 @@ class _IndexState extends State<Index> {
   List<Offer> offerss = <Offer>[];
   int _currentIndex = 0;
   double maxPrice = 0;
-  Users? _userLoged;
 
   /* ================ Filter's variables ========= */
-  late PriceFilter priceFilter;
+  PriceFilter priceFilter =
+      PriceFilter(maxPrice: 0, rangeValues: const RangeValues(0, 0));
   String selectedValue = '';
-  String eleccion = '';
 
   /* ==================Functions================= */
 
@@ -34,7 +33,11 @@ class _IndexState extends State<Index> {
     await getOffers().then((value) {
       setState(() {
         offerss.addAll(value);
-        view = ListOffers(offers: offerss);
+        if (typeOfView == 'list') {
+          view = ListOffers(offers: offerss);
+        } else {
+          view = GridOffers(offers: offerss);
+        }
       });
     });
   }
@@ -49,7 +52,6 @@ class _IndexState extends State<Index> {
       setState(() {
         offerss.clear();
         offerss.addAll(value);
-        view = ListOffers(offers: offerss);
       });
     });
   }
@@ -65,14 +67,27 @@ class _IndexState extends State<Index> {
       setState(() {
         offerss.clear();
         offerss.addAll(value);
-        view = ListOffers(offers: offerss);
       });
     });
   }
 
   Future<List<Offer>> getOffersByCity() async {
-    var register = await APIService.getOffersByPriceRange(
-        priceFilter.getMinPrice(), priceFilter.getMaxPrice());
+    var register = await APIService.getOffersByCity(selectedValue);
+    return register;
+  }
+
+  Future<void> setOffersByCityAndPriceRange() async {
+    await getOffersByCityAndPriceRange().then((value) {
+      setState(() {
+        offerss.clear();
+        offerss.addAll(value);
+      });
+    });
+  }
+
+  Future<List<Offer>> getOffersByCityAndPriceRange() async {
+    var register = await APIService.getOffersByCityAndPriceRange(
+        selectedValue, priceFilter.getMinPrice(), priceFilter.getMaxPrice());
     return register;
   }
 
@@ -176,8 +191,11 @@ class _IndexState extends State<Index> {
                         setState(() => selectedValue = value);
                       }
                     }),
-                priceFilter = PriceFilter(
-                    maxPrice: maxPrice, rangeValues: RangeValues(0, maxPrice)),
+                priceFilter = priceFilter.maxPrice == 0
+                    ? PriceFilter(
+                        maxPrice: maxPrice,
+                        rangeValues: RangeValues(0, maxPrice))
+                    : priceFilter,
                 ElevatedButton(
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -200,7 +218,7 @@ class _IndexState extends State<Index> {
                         }
                       });
                     } else {
-                      await setOffersByCity();
+                      await setOffersByCityAndPriceRange();
                       setState(() {
                         if (typeOfView == 'list') {
                           view = ListOffers(offers: offerss);

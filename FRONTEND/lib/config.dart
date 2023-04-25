@@ -8,6 +8,7 @@ class Config {
   static const String getOfferById = '/api/offers/getById';
   static const String getOfferByPriceRange = '/api/offers/getByPriceRange';
   static const String getOfferByCity = '/api/offers/getByCity';
+  static const String getOfferByCityAndPriceRange = '/api/offers/getByCityAndPriceRange';
   static const String getOffersByIdUser = '/api/offers/getByIdUser';
   static const String removeOffer = '/api/offers/remove';
   static const String createOffer = 'api/offers/register';

@@ -30,6 +30,7 @@ class MongoRoute{
         this.router.post('/offers', this.offerController.getOffers);
         this.router.post('/offers/register', this.offerController.register);
         this.router.post('/offers/getByCity', this.offerController.getByCity);
+        this.router.post('/offers/getByCityAndPriceRange', this.offerController.getByCityAndPriceRange);
         this.router.post('/offers/getById', this.offerController.getById);
         this.router.post('/offers/getByListIds', this.offerController.getByListIds);
         this.router.post('/offers/getMaxPriceAllOffers', this.offerController.getMaxPriceAllOffers);
