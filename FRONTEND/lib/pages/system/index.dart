@@ -248,14 +248,12 @@ class _IndexState extends State<Index> {
         title: const Text('Lista de ofertas'),
         backgroundColor: Colors.deepOrange,
         automaticallyImplyLeading: false,
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.menu), // Icono a mostrar
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.menu), // Icono a mostrar
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
       ),
       drawer: Drawer(
         child: ListView(
@@ -263,7 +261,7 @@ class _IndexState extends State<Index> {
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Colors.blue,
+                color: Color.fromARGB(207, 255, 86, 34),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,8 +272,8 @@ class _IndexState extends State<Index> {
                     backgroundImage: NetworkImage('https://bit.ly/3Lstjcq'),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    _userLoged?.name ?? "INVITADO",
+                  const Text(
+                    "User Name",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -293,16 +291,33 @@ class _IndexState extends State<Index> {
               ),
             ),
             ListTile(
-              title: const Text('Opción 1'),
+              leading: const Icon(Icons.favorite,
+                  color: Color.fromARGB(220, 255, 86, 34)),
+              title: const Text('Mis favoritos'),
+              onTap: () {
+                setState(
+                  () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Favorites()));
+                  },
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit,
+                  color: Color.fromARGB(220, 255, 86, 34)),
+              title: const Text('Editar perfil'),
               onTap: () {},
             ),
             ListTile(
-              title: const Text('Opción 2'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text('Opción 3'),
-              onTap: () {},
+              leading: const Icon(Icons.logout,
+                  color: Color.fromARGB(220, 255, 86, 34)),
+              title: const Text('Cerrar Sesión'),
+              onTap: () {
+                Functions.logout(context);
+              },
             ),
           ],
         ),

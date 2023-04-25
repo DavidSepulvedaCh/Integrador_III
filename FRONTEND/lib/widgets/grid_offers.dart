@@ -4,6 +4,36 @@ import 'package:integrador/routes/imports.dart';
 class GridOffers extends StatelessWidget {
   List<Offer> offers;
 
+  Position? currentLocation;
+  double lati = 0.0000;
+  double long = 0.0000;
+
+  Future<LatLng> _getCurrentLocation() async {
+    final geolocator = Geolocator();
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    return LatLng(position.latitude, position.longitude);
+  }
+
+  String generateMapsUrl(LatLng origin, LatLng destination) {
+    const apiKey = 'AIzaSyCAdQh3u8eBv2ASDf_qh0e92al8TK_ETy4';
+    final url = 'https://www.google.com/maps/dir/?api=1&'
+        'origin=${origin.latitude},${origin.longitude}&'
+        'destination=${destination.latitude},${destination.longitude}';
+    return url;
+  }
+
+  void openMaps(LatLng destination) async {
+    final origin = await _getCurrentLocation();
+    final url = generateMapsUrl(origin, destination);
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'No se puede abrir la URL: $url';
+    }
+  }
+
   void _showModal(BuildContext context, int index) {
     showModalBottomSheet(
       context: context,
@@ -12,11 +42,11 @@ class GridOffers extends StatelessWidget {
       ),
       builder: (BuildContext context) {
         return Container(
-          height: 400,
+          height: 500,
           child: Column(
             children: <Widget>[
               Container(
-                height: 150,
+                height: 180,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
@@ -60,16 +90,22 @@ class GridOffers extends StatelessWidget {
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
+                        maxLines: 2,
                       ),
                     ),
                     Positioned(
                       top: 48,
                       left: 16,
-                      child: Text(
-                        offers[index].address!,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+                      child: SizedBox(
+                        width: 350, // ajusta el ancho a tu necesidad
+                        child: Text(
+                          offers[index].address!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
@@ -86,18 +122,25 @@ class GridOffers extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            offers[index].name!,
-                            textAlign: TextAlign.justify,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                          Positioned(
+                            child: SizedBox(
+                              width: 280,
+                              child: Text(
+                                offers[index].name!,
+                                textAlign: TextAlign.justify,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                           ButtonFavorite(idOffer: offers[index].id),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       Text(
                         offers[index].description!,
                         textAlign: TextAlign.justify,
@@ -112,14 +155,14 @@ class GridOffers extends StatelessWidget {
                           const Text(
                             "Precio: ",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             '\$${offers[index].price!}',
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Color.fromARGB(255, 235, 79, 32),
                             ),
@@ -132,7 +175,13 @@ class GridOffers extends StatelessWidget {
                         children: [
                           const SizedBox(height: 8),
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              lati = double.parse(offers[index].latitude!);
+                              long = double.parse(offers[index].longitude!);
+                              final destino = LatLng(lati, long);
+                              openMaps(destino);
+                              print(generateMapsUrl);
+                            },
                             icon: const Icon(Icons.location_city),
                             label: const Text("¿Como llegar?"),
                             style: ElevatedButton.styleFrom(
@@ -192,7 +241,7 @@ class GridOffers extends StatelessWidget {
                         fontWeight: FontWeight.w200,
                         fontFamily: 'Raleway',
                         fontSize: 12),
-                        maxLines: 2,
+                    maxLines: 2,
                   ),
                 ),
                 Padding(
