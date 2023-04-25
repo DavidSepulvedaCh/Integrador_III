@@ -51,11 +51,11 @@ class ListOffers extends StatelessWidget {
       ),
       builder: (BuildContext context) {
         return Container(
-          height: 400,
+          height: 500,
           child: Column(
             children: <Widget>[
               Container(
-                height: 150,
+                height: 180,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
@@ -105,16 +105,17 @@ class ListOffers extends StatelessWidget {
                     Positioned(
                       top: 48,
                       left: 16,
-                      child: Text(
-                        offers[index].address!,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+                      child: SizedBox(
+                        width: 350, // ajusta el ancho a tu necesidad
+                        child: Text(
+                          offers[index].address!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
-                        textAlign: TextAlign.left,
                       ),
                     ),
                   ],
@@ -130,18 +131,25 @@ class ListOffers extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            offers[index].name!,
-                            textAlign: TextAlign.justify,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                          Positioned(
+                            child: SizedBox(
+                              width: 280,
+                              child: Text(
+                                offers[index].name!,
+                                textAlign: TextAlign.justify,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                           ButtonFavorite(idOffer: offers[index].id),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       Text(
                         offers[index].description!,
                         textAlign: TextAlign.justify,
@@ -156,14 +164,14 @@ class ListOffers extends StatelessWidget {
                           const Text(
                             "Precio: ",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             '\$${offers[index].price!}',
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Color.fromARGB(255, 235, 79, 32),
                             ),
