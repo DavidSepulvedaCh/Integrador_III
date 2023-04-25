@@ -1,4 +1,5 @@
 import 'package:integrador/routes/imports.dart';
+import 'package:http/http.dart' as http;
 
 class Index extends StatefulWidget {
   const Index({super.key});
@@ -13,6 +14,7 @@ class _IndexState extends State<Index> {
   List<Offer> offerss = <Offer>[];
   int _currentIndex = 0;
   double maxPrice = 0;
+  Users? _userLoged;
 
   /* ================ Filter's variables ========= */
   late PriceFilter priceFilter;
@@ -116,7 +118,7 @@ class _IndexState extends State<Index> {
           },
         );
         break;
-      
+
       case 3:
         Functions.logout(context);
         break;
@@ -197,7 +199,7 @@ class _IndexState extends State<Index> {
                           view = GridOffers(offers: offerss);
                         }
                       });
-                    }else{
+                    } else {
                       await setOffersByCity();
                       setState(() {
                         if (typeOfView == 'list') {
@@ -219,13 +221,73 @@ class _IndexState extends State<Index> {
     );
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('Lista de ofertas'),
         backgroundColor: Colors.deepOrange,
         automaticallyImplyLeading: false,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.menu), // Icono a mostrar
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage('https://bit.ly/3Lstjcq'),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    _userLoged?.name ?? "INVITADO",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Text(
+                    'Correo electrónico',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              title: const Text('Opción 1'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text('Opción 2'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text('Opción 3'),
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
