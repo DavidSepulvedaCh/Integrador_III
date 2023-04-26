@@ -1,7 +1,6 @@
-import 'package:integrador/widgets/newProm.dart';
+import 'package:integrador/widgets/new_promo.dart';
 import 'package:integrador/pages/system/index.dart';
 import 'package:integrador/routes/imports.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

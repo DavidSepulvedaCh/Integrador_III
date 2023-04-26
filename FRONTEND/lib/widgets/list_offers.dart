@@ -18,7 +18,6 @@ class ListOffers extends StatelessWidget {
   double long = 0.0000;
 
   Future<LatLng> _getCurrentLocation() async {
-    final geolocator = Geolocator();
     final position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
@@ -26,7 +25,6 @@ class ListOffers extends StatelessWidget {
   }
 
   String generateMapsUrl(LatLng origin, LatLng destination) {
-    const apiKey = 'AIzaSyCAdQh3u8eBv2ASDf_qh0e92al8TK_ETy4';
     final url = 'https://www.google.com/maps/dir/?api=1&'
         'origin=${origin.latitude},${origin.longitude}&'
         'destination=${destination.latitude},${destination.longitude}';
@@ -49,8 +47,8 @@ class ListOffers extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-      builder: (BuildContext context) {
-        return Container(
+      builder: (context) {
+        return SizedBox(
           height: 500,
           child: Column(
             children: <Widget>[
@@ -106,7 +104,7 @@ class ListOffers extends StatelessWidget {
                       top: 48,
                       left: 16,
                       child: SizedBox(
-                        width: 350, // ajusta el ancho a tu necesidad
+                        width: 350,
                         child: Text(
                           offers[index].address!,
                           style: const TextStyle(
@@ -131,22 +129,25 @@ class ListOffers extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Positioned(
-                            child: SizedBox(
-                              width: 280,
-                              child: Text(
-                                offers[index].name!,
-                                textAlign: TextAlign.justify,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                          Stack(
+                            children: [
+                              Positioned(
+                                child: SizedBox(
+                                  width: 280,
+                                  child: Text(
+                                    offers[index].name!,
+                                    textAlign: TextAlign.justify,
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                          ),
-                          ButtonFavorite(idOffer: offers[index].id),
+                            ],
+                          )
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -189,7 +190,6 @@ class ListOffers extends StatelessWidget {
                               long = double.parse(offers[index].longitude!);
                               final destino = LatLng(lati, long);
                               openMaps(destino);
-                              print(generateMapsUrl);
                             },
                             icon: const Icon(Icons.location_city),
                             label: const Text("¿Como llegar?"),
@@ -228,7 +228,6 @@ class ListOffers extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         _showModal(context, index);
-                        print("TOCO=====");
                       },
                       child: Card(
                         child: Container(

@@ -1,8 +1,6 @@
-import 'dart:convert';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:integrador/config.dart';
-import 'package:integrador/models/login_response_model.dart';
 import 'package:integrador/models/restaurant_details_response.dart';
 import 'package:integrador/routes/imports.dart';
 

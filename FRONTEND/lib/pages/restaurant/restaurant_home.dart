@@ -1,16 +1,20 @@
+import 'dart:async';
+
 import 'package:integrador/routes/imports.dart';
 
 class HomeRestaurante extends StatefulWidget {
   const HomeRestaurante({Key? key}) : super(key: key);
 
   @override
-  _HomeRestauranteState createState() => _HomeRestauranteState();
+  State<HomeRestaurante> createState() => _HomeRestauranteState();
 }
 
 class _HomeRestauranteState extends State<HomeRestaurante> {
   final _scrollController = ScrollController();
 
   bool _isAppBarHidden = false;
+  bool _isVisible = false;
+  Timer? _timer;
   String _restaurantName = "";
   String _restaurantAddress = "";
   List<Offer> offerss = <Offer>[];
@@ -27,6 +31,20 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
         setState(() {
           _isAppBarHidden = isAppBarHidden;
         });
+        if (_isAppBarHidden) {
+          _timer = Timer(const Duration(milliseconds: 280), () {
+            if (_isAppBarHidden) {
+              setState(() {
+                _isVisible = true;
+              });
+            }
+          });
+        } else {
+          _timer?.cancel();
+          setState(() {
+            _isVisible = false;
+          });
+        }
       }
     });
   }
@@ -87,7 +105,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                   color: Colors.white,
                   onPressed: () {
                     SharedService.prefs.clear();
-                    Navigator.pushNamed(context, '/login');
+                    Navigator.pushReplacementNamed(context, '/login');
                   },
                   icon: const Icon(Icons.logout),
                 ),
@@ -110,17 +128,18 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Image.network(
-                          'https://bit.ly/3mTInGh',
-                          height: 40,
-                          width: 40,
-                        ),
-                        const SizedBox(width: 8),
-                        Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Image.network(
+                        'https://bit.ly/3mTInGh',
+                        height: 40,
+                        width: 40,
+                      ),
+                      const SizedBox(width: 8),
+                      Visibility(
+                        visible: _isVisible,
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 20),
@@ -151,8 +170,8 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                             )
                           ],
                         ),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -190,6 +209,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 }

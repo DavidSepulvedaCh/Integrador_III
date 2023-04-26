@@ -27,7 +27,6 @@ class NuevaPromo extends StatefulWidget {
 }
 
 class _NuevaPromoState extends State<NuevaPromo> {
-  static const negro = Color.fromARGB(193, 13, 14, 13);
   static const naranja = Colors.deepOrange;
   static const blanco = Colors.white;
   static const botones = Color.fromARGB(235, 230, 80, 35);

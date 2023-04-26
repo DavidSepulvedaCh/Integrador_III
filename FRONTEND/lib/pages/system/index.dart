@@ -1,5 +1,4 @@
 import 'package:integrador/routes/imports.dart';
-import 'package:http/http.dart' as http;
 
 class Index extends StatefulWidget {
   const Index({super.key});
@@ -9,6 +8,9 @@ class Index extends StatefulWidget {
 }
 
 class _IndexState extends State<Index> {
+  late String _name;
+  late String _email;
+
   String typeOfView = 'list';
   late Widget view = Container();
   List<Offer> offerss = <Offer>[];
@@ -27,6 +29,10 @@ class _IndexState extends State<Index> {
     super.initState();
     setOffers();
     setMaxPrice();
+    setState(() {
+      _name = SharedService.prefs.getString("name") ?? "User name";
+      _email = SharedService.prefs.getString("email") ?? "Correo electrónico";
+    });
   }
 
   Future<void> setOffers() async {
@@ -128,7 +134,7 @@ class _IndexState extends State<Index> {
       case 2:
         setState(
           () {
-            Navigator.pushReplacement(context,
+            Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const Favorites()));
           },
         );
@@ -209,6 +215,9 @@ class _IndexState extends State<Index> {
                   child: const Text('Aceptar'),
                   onPressed: () async {
                     if (selectedValue.isEmpty) {
+                      setState(() {
+                        view = ListOffers(offers: const []);
+                      });
                       await setOffersByPriceRange();
                       setState(() {
                         if (typeOfView == 'list') {
@@ -218,6 +227,9 @@ class _IndexState extends State<Index> {
                         }
                       });
                     } else {
+                      setState(() {
+                        view = ListOffers(offers: const []);
+                      });
                       await setOffersByCityAndPriceRange();
                       setState(() {
                         if (typeOfView == 'list') {
@@ -272,17 +284,17 @@ class _IndexState extends State<Index> {
                     backgroundImage: NetworkImage('https://bit.ly/3Lstjcq'),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    "User Name",
-                    style: TextStyle(
+                  Text(
+                    _name,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Text(
-                    'Correo electrónico',
-                    style: TextStyle(
+                  Text(
+                    _email,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
                     ),
@@ -297,7 +309,7 @@ class _IndexState extends State<Index> {
               onTap: () {
                 setState(
                   () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const Favorites()));

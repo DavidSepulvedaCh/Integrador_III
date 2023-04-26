@@ -26,6 +26,10 @@ class _ButtonFavoriteState extends State<ButtonFavorite> {
       setState(() {
         heartColor = Colors.red;
       });
+    } else {
+      setState(() {
+        heartColor = Colors.blueGrey;
+      });
     }
   }
 

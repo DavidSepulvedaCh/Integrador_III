@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:integrador/routes/imports.dart';
 
 class PlaceAutocompleteResponse {

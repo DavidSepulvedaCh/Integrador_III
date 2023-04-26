@@ -9,7 +9,6 @@ class GridOffers extends StatelessWidget {
   double long = 0.0000;
 
   Future<LatLng> _getCurrentLocation() async {
-    final geolocator = Geolocator();
     final position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
@@ -17,7 +16,6 @@ class GridOffers extends StatelessWidget {
   }
 
   String generateMapsUrl(LatLng origin, LatLng destination) {
-    const apiKey = 'AIzaSyCAdQh3u8eBv2ASDf_qh0e92al8TK_ETy4';
     final url = 'https://www.google.com/maps/dir/?api=1&'
         'origin=${origin.latitude},${origin.longitude}&'
         'destination=${destination.latitude},${destination.longitude}';
@@ -27,8 +25,8 @@ class GridOffers extends StatelessWidget {
   void openMaps(LatLng destination) async {
     final origin = await _getCurrentLocation();
     final url = generateMapsUrl(origin, destination);
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri.http(url))) {
+      await launchUrl(Uri.http(url));
     } else {
       throw 'No se puede abrir la URL: $url';
     }
@@ -41,7 +39,7 @@ class GridOffers extends StatelessWidget {
         borderRadius: BorderRadius.circular(15.0),
       ),
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: 500,
           child: Column(
             children: <Widget>[
@@ -137,7 +135,6 @@ class GridOffers extends StatelessWidget {
                               ),
                             ),
                           ),
-                          ButtonFavorite(idOffer: offers[index].id),
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -180,7 +177,6 @@ class GridOffers extends StatelessWidget {
                               long = double.parse(offers[index].longitude!);
                               final destino = LatLng(lati, long);
                               openMaps(destino);
-                              print(generateMapsUrl);
                             },
                             icon: const Icon(Icons.location_city),
                             label: const Text("¿Como llegar?"),

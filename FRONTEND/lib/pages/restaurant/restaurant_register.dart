@@ -11,7 +11,6 @@ class RegisterRestaurant extends StatefulWidget {
 }
 
 class _RegisterRestaurantState extends State<RegisterRestaurant> {
-  static const box = Color.fromARGB(185, 99, 99, 99);
 
   bool terminos = false;
   TextEditingController nameTextController = TextEditingController();
@@ -46,7 +45,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
   double latit = 00.0;
   double longit = -0.00;
   String? selectedCity;
-  List<String> _allowedCities = ["Girón", "Bucaramanga", "Floridablanca", "Piedecuesta"];
+  final List<String> _allowedCities = ["Girón", "Bucaramanga", "Floridablanca", "Piedecuesta"];
 
   Future<void> _getCurrentLocation() async {
     try {
@@ -61,9 +60,9 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
       });
       selectedCity =
           await getCityFromLocation(position.latitude, position.longitude);
-      print('LOCATIONN ==>  $selectedLocation');
-      print('CIUDAD!!! ==>  $selectedCity');
-    } catch (e) {}
+    } catch (e) {
+      e.toString();
+    }
   }
 
   Future<Location> getLocationFromAddress(String address) async {
@@ -133,13 +132,10 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     if (response == 0) {
       Navigator.pushReplacementNamed(context, "/restaurantIndex");
     } else if (response == 1) {
-      // ignore: use_build_context_synchronously
       CustomShowDialog.make(context, 'Error', 'Email ya registrado');
     } else if (response == 2) {
-      // ignore: use_build_context_synchronously
       CustomShowDialog.make(context, 'Error', 'No se pudo registrar el email');
     } else {
-      // ignore: use_build_context_synchronously
       CustomShowDialog.make(
           context, 'Error', 'Ocurrió un error. Intente más tarde');
     }
@@ -224,7 +220,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
       builder: (context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setSate) {
-            return Container(
+            return SizedBox(
               height: 1000,
               width: 800,
               child: Column(
@@ -293,7 +289,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepOrange,
-                          onPrimary: Colors.white,
+                          foregroundColor: Colors.white,
                           textStyle: const TextStyle(fontSize: 16),
                           padding: const EdgeInsets.symmetric(
                               vertical: 17, horizontal: 30),
@@ -308,8 +304,6 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                             _getCurrentLocation();
                             getAddress(latit, longit);
                           });
-                          print("LOCATIONN ==>  $selectedLocation");
-                          print("CIUDAD!!! ==>  $selectedCity");
                         },
                         child: const Text('Utilizar mi ubicación'),
                       ),
@@ -317,7 +311,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepOrange,
-                          onPrimary: Colors.white,
+                          foregroundColor: Colors.white,
                           textStyle: const TextStyle(fontSize: 16),
                           padding: const EdgeInsets.symmetric(
                               vertical: 17, horizontal: 30),
@@ -401,7 +395,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
-                          onPrimary: Colors.deepOrange,
+                          foregroundColor: Colors.deepOrange,
                           textStyle: const TextStyle(fontSize: 16),
                           padding: const EdgeInsets.symmetric(
                               vertical: 17, horizontal: 40),

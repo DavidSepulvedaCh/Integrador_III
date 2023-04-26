@@ -1,4 +1,3 @@
-import 'package:integrador/pages/system/index.dart';
 import 'package:integrador/routes/imports.dart';
 
 class Favorites extends StatefulWidget {
@@ -53,8 +52,7 @@ class _FavoritesState extends State<Favorites> {
         break;
       case 2:
         setState(() {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const Index()));
+          Navigator.pop(context);
         });
         break;
       case 3:

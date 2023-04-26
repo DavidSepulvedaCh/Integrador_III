@@ -19,7 +19,6 @@ export 'package:integrador/widgets/custom_text_field.dart';
 export 'package:integrador/widgets/custom_show_dialog.dart';
 export 'package:integrador/models/register_request_model.dart';
 export 'package:integrador/models/login_request_model.dart';
-export 'package:integrador/widgets/filtro_ciudad.dart';
 export 'package:integrador/widgets/filtro_precio.dart';
 export 'package:integrador/pages/restaurant/restaurant_login.dart';
 export 'package:integrador/pages/restaurant/restaurant_register.dart';

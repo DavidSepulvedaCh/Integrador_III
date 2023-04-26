@@ -12,8 +12,6 @@ class LoginRestaurante extends StatefulWidget {
 }
 
 class _LoginRestauranteState extends State<LoginRestaurante> {
-  static const fondo = Color.fromARGB(192, 235, 235, 235);
-  static const barraNavegacionColor = Color.fromARGB(255, 250, 140, 44);
   static const backContainer = Color.fromARGB(181, 29, 29, 29);
   static const backBoxS = Color.fromARGB(80, 226, 207, 191);
 
@@ -77,11 +75,9 @@ class _LoginRestauranteState extends State<LoginRestaurante> {
             ],
           ),
           height: 60,
-          // ignore: prefer_const_constructors
           child: TextField(
             obscureText: true,
             style: const TextStyle(color: Colors.white),
-            // ignore: prefer_const_constructors
             decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.only(top: 15),
