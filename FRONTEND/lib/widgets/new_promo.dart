@@ -40,9 +40,11 @@ class _NuevaPromoState extends State<NuevaPromo> {
 
   Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
-    setState(() {
-      _image = File(pickedImage!.path);
-    });
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+    }
   }
 
   bool _validate() {
@@ -69,11 +71,20 @@ class _NuevaPromoState extends State<NuevaPromo> {
     String? imageUrl = await uploadImageToCloudinary(_image!);
     await APIService.createOffer(
             name.text, description.text, price.text, imageUrl!)
-        .then((value) => {if (value) {
-          CustomShowDialog.make(context, "Éxito", "Se creó la oferta correctamente").then((value) => Navigator.pushReplacementNamed(context, '/restaurantIndex'))
-        }else{
-          CustomShowDialog.make(context, "Error", "No se pudo crear la oferta")
-        }});
+        .then((value) => {
+              if (value)
+                {
+                  CustomShowDialog.make(
+                          context, "Éxito", "Se creó la oferta correctamente")
+                      .then((value) => Navigator.pushReplacementNamed(
+                          context, '/restaurantIndex'))
+                }
+              else
+                {
+                  CustomShowDialog.make(
+                      context, "Error", "No se pudo crear la oferta")
+                }
+            });
   }
 
   @override
