@@ -1,3 +1,4 @@
+import 'package:integrador/pages/edit_user.dart';
 import 'package:integrador/widgets/new_promo.dart';
 import 'package:integrador/pages/system/index.dart';
 import 'package:integrador/routes/imports.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         '/restaurant':(context) => const LoginRestaurante(),
         '/restaurantIndex':(context) =>  const HomeRestaurante(),
         '/nuevapromocion': (context) => const NuevaPromo(),
+        'profileSettings':(context) =>  const ProfileSettings(),
       },
     );
   }

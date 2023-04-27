@@ -237,11 +237,11 @@ class ListOffers extends StatelessWidget {
                               Expanded(
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.network(
-                                    offers[index].photo!,
+                                  child: ImageLoading(
+                                    imageUrl: offers[index].photo!,
                                     width: 150,
                                     height: 150,
-                                    fit: BoxFit.cover,
+                                    /* fit: BoxFit.cover, */
                                   ),
                                 ),
                               ),

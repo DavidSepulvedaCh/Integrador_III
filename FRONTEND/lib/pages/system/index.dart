@@ -1,3 +1,4 @@
+import 'package:integrador/pages/edit_user.dart';
 import 'package:integrador/routes/imports.dart';
 
 class Index extends StatefulWidget {
@@ -310,9 +311,11 @@ class _IndexState extends State<Index> {
                 setState(
                   () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Favorites()));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Favorites(),
+                      ),
+                    );
                   },
                 );
               },
@@ -321,7 +324,14 @@ class _IndexState extends State<Index> {
               leading: const Icon(Icons.edit,
                   color: Color.fromARGB(220, 255, 86, 34)),
               title: const Text('Editar perfil'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfileSettings(),
+                  ),
+                );
+              },
             ),
             ListTile(
               leading: const Icon(Icons.logout,

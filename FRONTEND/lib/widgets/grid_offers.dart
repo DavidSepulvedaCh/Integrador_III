@@ -217,7 +217,7 @@ class GridOffers extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            Image.network(offers[index].photo!, height: 90, fit: BoxFit.cover),
+            ImageLoading(imageUrl: offers[index].photo!, height: 90),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,

@@ -33,4 +33,7 @@ export 'package:integrador/widgets/location_list_style.dart';
 export 'package:google_maps_flutter/google_maps_flutter.dart';
 export 'package:integrador/models/login_response_model.dart';
 export 'package:url_launcher/url_launcher.dart';
+export 'package:integrador/widgets/animacion_imagen.dart';
+export  'package:flutter_spinkit/flutter_spinkit.dart';
+export 'package:flutter_spinkit/flutter_spinkit.dart';
 export 'dart:convert';
