@@ -53,6 +53,22 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
   ];
 
   Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
     try {
       final position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
@@ -179,8 +195,8 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
   Widget buildBtnSingIn() {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const LoginRestaurante()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Login()));
       },
       child: RichText(
         text: const TextSpan(
@@ -225,21 +241,76 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     showModalBottomSheet(
       context: context,
       //isScrollControlled: true,
+      isScrollControlled: true,
       builder: (context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setSate) {
             return SizedBox(
-              height: 1000,
+              height: MediaQuery.of(context).size.height * 0.70,
               width: 800,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
                     children: [
-                      const SizedBox(height: 30),
-                      const Text("¡Elige la ubicacion de tu restaurante!"),
-                      Text("Tu ubicación:  $selectedLocation"),
-                      Text("Tu ciudad:  $selectedCity"),
+                      const SizedBox(height: 25),
+                      const Text(
+                        "¡Elige la ubicacion de tu restaurante!",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        child: Text.rich(
+                          TextSpan(
+                            text: "Tu ubicación:  ",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors
+                                  .deepOrange, // Aplica el color solo al primer TextSpan
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "$selectedLocation",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors
+                                      .black, // Color de texto predeterminado
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 8),
+                        child: Text.rich(
+                          TextSpan(
+                            text: "Tu ciudad:  ",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors
+                                  .deepOrange, // Aplica el color solo al primer TextSpan
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "$selectedCity",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors
+                                      .black, // Color de texto predeterminado
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 20),
                       TextField(
                         onChanged: (value) {
@@ -318,6 +389,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                             selectedCity;
                             _getCurrentLocation();
                             getAddress(latit, longit);
+                            Navigator.pop(context);
                           });
                         },
                         child: const Text('Utilizar mi ubicación'),
@@ -359,107 +431,109 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: Stack(
-          children: <Widget>[
-            IgnorePointer(
-              ignoring: _isDoingFetch,
-              child: Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/signUpRest.jpg'),
-                      fit: BoxFit.cover),
-                ),
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 45,
-                    vertical: 50,
+        child: GestureDetector(
+          child: Stack(
+            children: <Widget>[
+              IgnorePointer(
+                ignoring: _isDoingFetch,
+                child: Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/signUpRest.jpg'),
+                        fit: BoxFit.cover),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Text(
-                        'Registra tu restaurante',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Open Sans'),
-                      ),
-                      const SizedBox(height: 25),
-                      const Text(
-                        'Regístrate ahora y comienza a disfrutar de todos los beneficios de nuestra plataforma.',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Open Sans'),
-                      ),
-                      const SizedBox(height: 48),
-                      CustomTextField(
-                          textEditingController: nameTextController,
-                          labelText: 'Nombre del restaurante',
-                          hintText: 'Nombre del restaurante',
-                          icon: Icons.local_restaurant_outlined),
-                      const SizedBox(height: 30),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.location_on),
-                        label: Text(
-                          selectedLocation ?? 'Ubicación del Restaurante',
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 45,
+                      vertical: 50,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text(
+                          'Registra tu restaurante',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Open Sans'),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.deepOrange,
-                          textStyle: const TextStyle(fontSize: 16),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 17, horizontal: 40),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                        const SizedBox(height: 25),
+                        const Text(
+                          'Regístrate ahora y comienza a disfrutar de todos los beneficios de nuestra plataforma.',
+                          textAlign: TextAlign.justify,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Open Sans'),
+                        ),
+                        const SizedBox(height: 48),
+                        CustomTextField(
+                            textEditingController: nameTextController,
+                            labelText: 'Nombre del restaurante',
+                            hintText: 'Nombre del restaurante',
+                            icon: Icons.local_restaurant_outlined),
+                        const SizedBox(height: 30),
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.location_on),
+                          label: Text(
+                            selectedLocation ?? 'Ubicación del Restaurante',
                           ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepOrange,
+                            textStyle: const TextStyle(fontSize: 16),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 17, horizontal: 40),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              selectedLocation;
+                              abrirModal();
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            selectedLocation;
-                            abrirModal();
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 35),
-                      CustomTextField(
-                          textEditingController: emailTextController,
-                          labelText: 'Correo electrónico',
-                          hintText: 'Dirección de correo',
-                          icon: Icons.email),
-                      const SizedBox(height: 30),
-                      PasswordField(
-                          textEditingController: passwordOneTextController,
-                          labelText: 'Contraseña',
-                          hintText: 'Contraseña'),
-                      const SizedBox(height: 30),
-                      PasswordField(
-                          textEditingController: passwordTwoTextController,
-                          labelText: 'Repite la contraseña',
-                          hintText: 'Repite la contraseña'),
-                      const SizedBox(height: 15),
-                      builTerminos(),
-                      const SizedBox(height: 20),
-                      ButtonOne(onClick: register, text: 'Registrar'),
-                      buildBtnSingIn()
-                    ],
+                        const SizedBox(height: 35),
+                        CustomTextField(
+                            textEditingController: emailTextController,
+                            labelText: 'Correo electrónico',
+                            hintText: 'Dirección de correo',
+                            icon: Icons.email),
+                        const SizedBox(height: 30),
+                        PasswordField(
+                            textEditingController: passwordOneTextController,
+                            labelText: 'Contraseña',
+                            hintText: 'Contraseña'),
+                        const SizedBox(height: 30),
+                        PasswordField(
+                            textEditingController: passwordTwoTextController,
+                            labelText: 'Repite la contraseña',
+                            hintText: 'Repite la contraseña'),
+                        const SizedBox(height: 15),
+                        builTerminos(),
+                        const SizedBox(height: 20),
+                        ButtonOne(onClick: register, text: 'Registrar'),
+                        buildBtnSingIn()
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            if (_isDoingFetch)
-              Container(
-                color: Colors.black.withOpacity(0.5),
-                child: const Center(
-                  child: CircularProgressIndicator(),
+              if (_isDoingFetch)
+                Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

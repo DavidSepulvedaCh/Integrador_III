@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:integrador/routes/imports.dart';
+import 'package:integrador/widgets/new_promo.dart';
+
+import '../edit_user.dart';
 
 class HomeRestaurante extends StatefulWidget {
   const HomeRestaurante({Key? key}) : super(key: key);
@@ -12,11 +15,16 @@ class HomeRestaurante extends StatefulWidget {
 class _HomeRestauranteState extends State<HomeRestaurante> {
   final _scrollController = ScrollController();
 
+  late String _name;
+  late String _email;
+
   bool _isAppBarHidden = false;
   bool _isVisible = false;
   Timer? _timer;
   String _restaurantName = "";
   String _restaurantAddress = "";
+  String _restaurantPhoto = "";
+  String _restaurantDescription = "";
   List<Offer> offerss = <Offer>[];
   late Widget view = Container();
 
@@ -47,6 +55,10 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
         }
       }
     });
+    setState(() {
+      _name = SharedService.prefs.getString("name") ?? "User name";
+      _email = SharedService.prefs.getString("email") ?? "Correo electrónico";
+    });
   }
 
   Future<void> setOffers() async {
@@ -70,6 +82,8 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
       _restaurantName = SharedService.prefs.getString('name') ?? "Restaurante";
       _restaurantAddress =
           SharedService.prefs.getString('address') ?? "Colombia";
+      _restaurantPhoto = SharedService.prefs.getString('photo')!;
+      _restaurantPhoto = SharedService.prefs.getString('description')!;
     });
   }
 
@@ -80,10 +94,88 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
     }
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(207, 255, 86, 34),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage('https://bit.ly/3Lstjcq'),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    _name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    _email,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.local_offer,
+                  color: Color.fromARGB(220, 255, 86, 34)),
+              title: const Text('Nueva oferta'),
+              onTap: () {
+                setState(
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NuevaPromo(),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit,
+                  color: Color.fromARGB(220, 255, 86, 34)),
+              title: const Text('Editar perfil'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfileSettings(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout,
+                  color: Color.fromARGB(220, 255, 86, 34)),
+              title: const Text('Cerrar Sesión'),
+              onTap: () {
+                Functions.logout(context);
+              },
+            ),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           PreferredSize(
@@ -101,14 +193,16 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                       fontWeight: FontWeight.bold),
                 ),
                 centerTitle: true,
-                leading: IconButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    SharedService.prefs.clear();
-                    Navigator.pushReplacementNamed(context, '/login');
-                  },
-                  icon: const Icon(Icons.logout),
-                ),
+                actions: <Widget>[
+                  IconButton(
+                    color: Colors.white,
+                    onPressed: () {
+                      SharedService.prefs.clear();
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                    icon: const Icon(Icons.logout),
+                  ),
+                ],
               ),
             ),
           ),

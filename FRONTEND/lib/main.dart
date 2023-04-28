@@ -27,7 +27,6 @@ class MyApp extends StatelessWidget {
         '/signUp':(context) => const Register(),
         '/signUpRestaurant':(context) => const RegisterRestaurant(),
         '/index': ((context) => const Index()),
-        '/restaurant':(context) => const LoginRestaurante(),
         '/restaurantIndex':(context) =>  const HomeRestaurante(),
         '/nuevapromocion': (context) => const NuevaPromo(),
         'profileSettings':(context) =>  const ProfileSettings(),
