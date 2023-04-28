@@ -8,17 +8,27 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  bool _isDoingFetch = false;
   bool terminos = false;
   TextEditingController nameTextController = TextEditingController();
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordOneTextController = TextEditingController();
   TextEditingController passwordTwoTextController = TextEditingController();
 
-  void register() async{
-    if(!Functions.validateRegister(context, nameTextController.text, emailTextController.text, passwordOneTextController.text, passwordTwoTextController.text, terminos)){
+  void register() async {
+    if (!Functions.validateRegister(
+        context,
+        nameTextController.text,
+        emailTextController.text,
+        passwordOneTextController.text,
+        passwordTwoTextController.text,
+        terminos)) {
       return;
     }
-    RegisterRequestModel model = RegisterRequestModel(name: nameTextController.text, email: emailTextController.text, password: passwordOneTextController.text);
+    RegisterRequestModel model = RegisterRequestModel(
+        name: nameTextController.text,
+        email: emailTextController.text,
+        password: passwordOneTextController.text);
     final response = await APIService.register(model);
     if (response == 0) {
       // ignore: use_build_context_synchronously
@@ -26,12 +36,22 @@ class _RegisterState extends State<Register> {
     } else if (response == 1) {
       // ignore: use_build_context_synchronously
       CustomShowDialog.make(context, 'Error', 'Email ya registrado');
-    } else if(response == 2){
+      setState(() {
+        _isDoingFetch = false;
+      });
+    } else if (response == 2) {
       // ignore: use_build_context_synchronously
       CustomShowDialog.make(context, 'Error', 'No se pudo registrar el email');
+      setState(() {
+        _isDoingFetch = false;
+      });
     } else {
       // ignore: use_build_context_synchronously
-      CustomShowDialog.make(context, 'Error', 'Ocurrió un error. Intente más tarde');
+      CustomShowDialog.make(
+          context, 'Error', 'Ocurrió un error. Intente más tarde');
+      setState(() {
+        _isDoingFetch = false;
+      });
     }
   }
 
@@ -61,7 +81,7 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
-  
+
   Widget buildBtnSingIn() {
     return GestureDetector(
       onTap: () {
@@ -90,23 +110,23 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          child: Stack(
-            children: <Widget>[
-              Container(
+        child: Stack(
+          children: <Widget>[
+            IgnorePointer(
+              ignoring: _isDoingFetch,
+              child: Container(
                 height: double.infinity,
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/fondo2.jpg'),
-                    fit: BoxFit.cover
-                  ),
+                      image: AssetImage('assets/fondo2.jpg'),
+                      fit: BoxFit.cover),
                 ),
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -135,13 +155,27 @@ class _RegisterState extends State<Register> {
                             fontFamily: 'Open Sans'),
                       ),
                       const SizedBox(height: 48),
-                      CustomTextField(textEditingController: nameTextController, labelText: 'Nombre completo', hintText: 'Nombre completo', icon: Icons.person),
+                      CustomTextField(
+                          textEditingController: nameTextController,
+                          labelText: 'Nombre completo',
+                          hintText: 'Nombre completo',
+                          icon: Icons.person),
                       const SizedBox(height: 30),
-                      CustomTextField(textEditingController: emailTextController, labelText: 'Correo electrónico', hintText: 'Dirección de correo', icon: Icons.email),
+                      CustomTextField(
+                          textEditingController: emailTextController,
+                          labelText: 'Correo electrónico',
+                          hintText: 'Dirección de correo',
+                          icon: Icons.email),
                       const SizedBox(height: 30),
-                      PasswordField(textEditingController: passwordOneTextController, labelText: 'Contraseña', hintText: 'Contraseña'),
+                      PasswordField(
+                          textEditingController: passwordOneTextController,
+                          labelText: 'Contraseña',
+                          hintText: 'Contraseña'),
                       const SizedBox(height: 30),
-                      PasswordField(textEditingController: passwordTwoTextController, labelText: 'Repite la contraseña', hintText: 'Repite la contraseña'),
+                      PasswordField(
+                          textEditingController: passwordTwoTextController,
+                          labelText: 'Repite la contraseña',
+                          hintText: 'Repite la contraseña'),
                       const SizedBox(height: 15),
                       builTerminos(),
                       const SizedBox(height: 20),
@@ -151,8 +185,15 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            if (_isDoingFetch)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+          ],
         ),
       ),
     );

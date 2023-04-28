@@ -217,7 +217,16 @@ class GridOffers extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            ImageLoading(imageUrl: offers[index].photo!, height: 90),
+            CachedNetworkImage(
+              imageUrl: offers[index].photo!,
+              width: 150,
+              height: 90,
+              placeholder: (context, url) => const SpinKitRing(
+                color: Colors.deepOrange,
+                size: 50.0,
+              ),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,

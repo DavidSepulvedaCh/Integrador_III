@@ -16,6 +16,7 @@ const mongoDBC_1 = __importDefault(require("../mongoDB/mongoDBC"));
 const userSchema_1 = __importDefault(require("../mongoDB/schemas/userSchema"));
 const biometricLoginUserData_1 = __importDefault(require("../mongoDB/schemas/biometricLoginUserData"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const mongodb_1 = require("mongodb");
 class UserModel {
     constructor() {
         this.register = (email, name, password, role, fn) => __awaiter(this, void 0, void 0, function* () {
@@ -185,11 +186,58 @@ class UserModel {
             }
             return fn({
                 success: 'Login success',
+                photo: restaurantExists.photo,
+                description: restaurantExists.description,
                 latitude: restaurantExists.latitude,
                 longitude: restaurantExists.longitude,
                 address: restaurantExists.address,
                 city: restaurantExists.city
             });
+        });
+        this.updateRestaurantName = (idUser, name, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            try {
+                const result = yield this.MongoDBC.UserSchema.updateOne({ _id: new mongodb_1.ObjectId(idUser) }, { $set: { name: name } });
+                if (result.modifiedCount == 0) {
+                    return fn({ error: 'User does not exist' });
+                }
+                else {
+                    return fn({ success: 'Update successful' });
+                }
+            }
+            catch (error) {
+                return fn({ error: 'User does not exist' });
+            }
+        });
+        this.updateRestaurantPhoto = (idUser, photo, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            try {
+                const result = yield this.MongoDBC.RestaurantSchema.updateOne({ idUser: idUser }, { $set: { photo: photo } });
+                if (result.modifiedCount == 0) {
+                    return fn({ error: 'User does not exist' });
+                }
+                else {
+                    return fn({ success: 'Update successful' });
+                }
+            }
+            catch (error) {
+                return fn({ error: 'User does not exist' });
+            }
+        });
+        this.updateRestaurantDescription = (idUser, description, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            try {
+                const result = yield this.MongoDBC.RestaurantSchema.updateOne({ idUser: idUser }, { $set: { description: description } });
+                if (result.modifiedCount == 0) {
+                    return fn({ error: 'User does not exist' });
+                }
+                else {
+                    return fn({ success: 'Update successful' });
+                }
+            }
+            catch (error) {
+                return fn({ error: 'User does not exist' });
+            }
         });
         this.MongoDBC = new mongoDBC_1.default();
     }

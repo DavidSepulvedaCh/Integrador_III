@@ -7,6 +7,14 @@ const RestaurantSchema = new Schema({
         required: true,
         unique: true
     },
+    photo: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
     latitude: {
         type: String,
         required: true

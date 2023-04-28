@@ -34,6 +34,6 @@ export 'package:google_maps_flutter/google_maps_flutter.dart';
 export 'package:integrador/models/login_response_model.dart';
 export 'package:url_launcher/url_launcher.dart';
 export 'package:integrador/widgets/animacion_imagen.dart';
-export  'package:flutter_spinkit/flutter_spinkit.dart';
 export 'package:flutter_spinkit/flutter_spinkit.dart';
+export 'package:cached_network_image/cached_network_image.dart';
 export 'dart:convert';

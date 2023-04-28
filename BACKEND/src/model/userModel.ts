@@ -3,6 +3,7 @@ import UserSchema from "../mongoDB/schemas/userSchema";
 import biometricLoginUserData from "../mongoDB/schemas/biometricLoginUserData";
 import bcryptjs from "bcryptjs";
 import IRestaurant from "../mongoDB/interfaces/IRestaurant";
+import { ObjectId } from "mongodb";
 
 class UserModel {
 
@@ -152,7 +153,7 @@ class UserModel {
                 token: { $eq: token }
             }
         );
-        if(userExists){
+        if (userExists) {
             const remove = await this.MongoDBC.BiometricLoginUserDataSchema.deleteOne(
                 {
                     token: { $eq: token }
@@ -166,20 +167,20 @@ class UserModel {
         this.MongoDBC.connection();
         try {
             const userExists = await this.MongoDBC.UserSchema.findById(restaurantDetails.idUser);
-        if (userExists == null) {
+            if (userExists == null) {
+                return fn({
+                    error: 'User does not exist'
+                });
+            }
+            const newRestaurant = await restaurantDetails.save();
+            if (newRestaurant._id) {
+                return fn({
+                    success: 'Register success'
+                })
+            }
             return fn({
-                error: 'User does not exist'
+                error: 'Register error'
             });
-        }
-        const newRestaurant = await restaurantDetails.save();
-        if (newRestaurant._id) {
-            return fn({
-                success: 'Register success'
-            })
-        }
-        return fn({
-            error: 'Register error'
-        });
         } catch (error) {
             console.log(error);
         }
@@ -199,11 +200,64 @@ class UserModel {
         }
         return fn({
             success: 'Login success',
+            photo: restaurantExists.photo,
+            description: restaurantExists.description,
             latitude: restaurantExists.latitude,
             longitude: restaurantExists.longitude,
             address: restaurantExists.address,
             city: restaurantExists.city
         });
+    }
+
+    public updateRestaurantName = async (idUser: string, name: string, fn: Function) => {
+        this.MongoDBC.connection();
+        try {
+            const result = await this.MongoDBC.UserSchema.updateOne(
+                { _id: new ObjectId(idUser) },
+                { $set: { name: name } }
+            );
+            if (result.modifiedCount == 0) {
+                return fn({ error: 'User does not exist' });
+            } else {
+                return fn({ success: 'Update successful' });
+            }
+        } catch (error) {
+            return fn({ error: 'User does not exist' });
+        }
+    }
+
+    public updateRestaurantPhoto = async (idUser: string, photo: string, fn: Function) => {
+        this.MongoDBC.connection();
+        try {
+            const result = await this.MongoDBC.RestaurantSchema.updateOne(
+                { idUser: idUser },
+                { $set: { photo: photo } }
+            );
+            if (result.modifiedCount == 0) {
+                return fn({ error: 'User does not exist' });
+            } else {
+                return fn({ success: 'Update successful' });
+            }
+        } catch (error) {
+            return fn({ error: 'User does not exist' });
+        }
+    }
+
+    public updateRestaurantDescription = async (idUser: string, description: string, fn: Function) => {
+        this.MongoDBC.connection();
+        try {
+            const result = await this.MongoDBC.RestaurantSchema.updateOne(
+                { idUser: idUser },
+                { $set: { description: description } }
+            );
+            if (result.modifiedCount == 0) {
+                return fn({ error: 'User does not exist' });
+            } else {
+                return fn({ success: 'Update successful' });
+            }
+        } catch (error) {
+            return fn({ error: 'User does not exist' });
+        }
     }
 
 }

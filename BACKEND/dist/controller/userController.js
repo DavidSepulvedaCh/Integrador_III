@@ -64,6 +64,8 @@ class UserController {
             const passwordEncrypt = yield bcryptjs_1.default.hash(password, 8);
             let restaurantDetails = new restaurantSchema_1.default({
                 idUser: '',
+                photo: '',
+                description: '',
                 latitude: latitude,
                 longitude: longitude,
                 address: address,
@@ -110,7 +112,79 @@ class UserController {
                 if (response.error) {
                     return res.status(409).json({ error: response.error });
                 }
-                res.json({ latitude: response.latitude, longitude: response.longitude, address: response.address, city: response.city, messagge: response.success });
+                res.json({ photo: response.photo, description: response.description, latitude: response.latitude, longitude: response.longitude, address: response.address, city: response.city, messagge: response.success });
+            });
+        });
+        this.updateRestaurantName = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { idUser, name } = req.body;
+            if (!idUser || !name) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            if (typeof idUser != "string" || typeof name != "string") {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            if (idUser.length <= 1 || name.length <= 1) {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            this.userModel.updateRestaurantName(idUser, name, (response) => {
+                if (response.error) {
+                    return res.status(409).json({ error: response.error });
+                }
+                res.status(200).send({ success: "Update successful" });
+            });
+        });
+        this.updateRestaurantPhoto = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { idUser, photo } = req.body;
+            if (!idUser || !photo) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            if (typeof idUser != "string" || typeof photo != "string") {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            if (idUser.length <= 1 || photo.length <= 1) {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            this.userModel.updateRestaurantPhoto(idUser, photo, (response) => {
+                if (response.error) {
+                    return res.status(409).json({ error: response.error });
+                }
+                res.status(200).send({ success: "Update successful" });
+            });
+        });
+        this.updateRestaurantDescription = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { idUser, description } = req.body;
+            if (!idUser || !description) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            if (typeof idUser != "string" || typeof description != "string") {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            if (idUser.length <= 1 || description.length <= 1) {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            this.userModel.updateRestaurantDescription(idUser, description, (response) => {
+                if (response.error) {
+                    return res.status(409).json({ error: response.error });
+                }
+                res.status(200).send({ success: "Update successful" });
             });
         });
         this.login = (req, res) => {

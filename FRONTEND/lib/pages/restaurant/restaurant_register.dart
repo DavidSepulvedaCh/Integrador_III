@@ -11,7 +11,7 @@ class RegisterRestaurant extends StatefulWidget {
 }
 
 class _RegisterRestaurantState extends State<RegisterRestaurant> {
-
+  bool _isDoingFetch = false;
   bool terminos = false;
   TextEditingController nameTextController = TextEditingController();
   TextEditingController emailTextController = TextEditingController();
@@ -45,7 +45,12 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
   double latit = 00.0;
   double longit = -0.00;
   String? selectedCity;
-  final List<String> _allowedCities = ["Girón", "Bucaramanga", "Floridablanca", "Piedecuesta"];
+  final List<String> _allowedCities = [
+    "Girón",
+    "Bucaramanga",
+    "Floridablanca",
+    "Piedecuesta"
+  ];
 
   Future<void> _getCurrentLocation() async {
     try {
@@ -116,19 +121,22 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
         terminos)) {
       return;
     }
-    if(!_allowedCities.contains(selectedCity)){
-      CustomShowDialog.make(context, "Error", "Ciudad no válida para uso de la aplicación");
+    if (!_allowedCities.contains(selectedCity)) {
+      CustomShowDialog.make(
+          context, "Error", "Ciudad no válida para uso de la aplicación");
       return;
     }
     RegisterRequestModel model = RegisterRequestModel(
         name: nameTextController.text,
         email: emailTextController.text,
         password: passwordOneTextController.text);
-    if(selectedLocation == null || selectedCity == null){
-      CustomShowDialog.make(context, "Error", "No se ha podido obtener la ubicación");
+    if (selectedLocation == null || selectedCity == null) {
+      CustomShowDialog.make(
+          context, "Error", "No se ha podido obtener la ubicación");
       return;
     }
-    final response = await APIService.registerRestaurant(model, latit.toString(), longit.toString(), selectedLocation!, selectedCity!);
+    final response = await APIService.registerRestaurant(model,
+        latit.toString(), longit.toString(), selectedLocation!, selectedCity!);
     if (response == 0) {
       Navigator.pushReplacementNamed(context, "/restaurantIndex");
     } else if (response == 1) {
@@ -264,14 +272,21 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                                   location.latitude, location.longitude)
                               .then((value) => {
                                     setState(() {
-                                      if(value == null){
-                                        List<String> miArray = placePredictions[index].description!.split(", ");
-                                        if(miArray.elementAt(miArray.length-2) == "Bogotá"){
-                                          selectedCity = miArray.elementAt(miArray.length-2);
-                                        }else{
-                                          selectedCity = miArray.elementAt(miArray.length-3);
+                                      if (value == null) {
+                                        List<String> miArray =
+                                            placePredictions[index]
+                                                .description!
+                                                .split(", ");
+                                        if (miArray.elementAt(
+                                                miArray.length - 2) ==
+                                            "Bogotá") {
+                                          selectedCity = miArray
+                                              .elementAt(miArray.length - 2);
+                                        } else {
+                                          selectedCity = miArray
+                                              .elementAt(miArray.length - 3);
                                         }
-                                      }else{
+                                      } else {
                                         selectedCity = value;
                                       }
                                     })
@@ -344,10 +359,11 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          child: Stack(
-            children: <Widget>[
-              Container(
+        child: Stack(
+          children: <Widget>[
+            IgnorePointer(
+              ignoring: _isDoingFetch,
+              child: Container(
                 height: double.infinity,
                 width: double.infinity,
                 decoration: const BoxDecoration(
@@ -435,8 +451,15 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            if (_isDoingFetch)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+          ],
         ),
       ),
     );

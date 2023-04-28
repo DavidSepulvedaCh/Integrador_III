@@ -41,6 +41,8 @@ class SharedService{
     var longitude = model.longitude ?? 'default';
     var address = model.address ?? 'default';
     var city = model.city ?? 'default';
+    var photo = model.photo ?? 'https://bit.ly/3HjnEDk';
+    var description = model.description ?? "";
     if(longitude!= 'default' && latitude != 'default' ){
       await prefs.setString('latitude', latitude);
       await prefs.setString('longitude', longitude);
@@ -50,6 +52,20 @@ class SharedService{
       if(city != 'default'){
         await prefs.setString('city', city);
       }
+      await prefs.setString("photo", photo);
+      await prefs.setString("description", description);
     }
+  }
+
+  static Future<void> updateRestaurantName(String name) async {
+    await prefs.setString("name", name);
+  }
+
+  static Future<void> updateRestaurantPhoto(String photo) async {
+    await prefs.setString("photo", photo);
+  }
+
+  static Future<void> updateRestaurantDescription(String description) async {
+    await prefs.setString("description", description);
   }
 }

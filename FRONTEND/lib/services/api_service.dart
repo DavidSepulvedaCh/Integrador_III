@@ -422,4 +422,79 @@ class APIService {
       return 3;
     }
   }
+
+  static Future<bool> updateRestaurantName(String name) async {
+    Uri url = Uri.http(Config.apiURL, Config.updateRestaurantName);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    var id = SharedService.prefs.getString('id');
+    try {
+      final response = await http
+          .post(url,
+              headers: header, body: jsonEncode({'idUser': id, 'name': name, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        await SharedService.updateRestaurantName(name);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> updateRestaurantPhoto(String photo) async {
+    Uri url = Uri.http(Config.apiURL, Config.updateRestaurantPhoto);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    var id = SharedService.prefs.getString('id');
+    try {
+      final response = await http
+          .post(url,
+              headers: header, body: jsonEncode({'idUser': id, 'photo': photo, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        await SharedService.updateRestaurantPhoto(photo);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> updateRestaurantDescription(String description) async {
+    Uri url = Uri.http(Config.apiURL, Config.updateRestaurantDescription);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    var id = SharedService.prefs.getString('id');
+    try {
+      final response = await http
+          .post(url,
+              headers: header, body: jsonEncode({'idUser': id, 'description': description, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        await SharedService.updateRestaurantDescription(description);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

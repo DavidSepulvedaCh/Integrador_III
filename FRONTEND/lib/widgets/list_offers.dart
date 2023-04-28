@@ -237,11 +237,17 @@ class ListOffers extends StatelessWidget {
                               Expanded(
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
-                                  child: ImageLoading(
+                                  child: CachedNetworkImage(
                                     imageUrl: offers[index].photo!,
                                     width: 150,
                                     height: 150,
-                                    /* fit: BoxFit.cover, */
+                                    placeholder: (context, url) =>
+                                        const SpinKitRing(
+                                      color: Colors.deepOrange,
+                                      size: 50.0,
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   ),
                                 ),
                               ),
