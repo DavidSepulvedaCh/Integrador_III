@@ -1,4 +1,3 @@
-import 'package:integrador/pages/edit_user.dart';
 import 'package:integrador/routes/imports.dart';
 
 class Index extends StatefulWidget {
