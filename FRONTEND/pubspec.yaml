@@ -51,6 +51,7 @@ dependencies:
   carousel_slider: ^4.2.1
   mongo_dart: ^0.8.2
   flutter_screenutil: ^5.7.0
+  google_maps_webservice: ^0.0.19
 
 dev_dependencies:
   flutter_test:
