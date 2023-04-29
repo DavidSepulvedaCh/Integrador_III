@@ -1,6 +1,7 @@
+// ignore_for_file: must_be_immutable, prefer_final_fields
+
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:integrador/routes/imports.dart';
 
@@ -20,6 +21,7 @@ class ProfileSettings extends StatefulWidget {
 
 class _ProfileSettingsState extends State<ProfileSettings> {
   File? _image;
+  // ignore: unused_field
   bool _isModalOpen = false;
   bool _isDoingFetch = false;
   late String originalName;

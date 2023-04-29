@@ -67,7 +67,7 @@ class ListOffers extends StatelessWidget {
                       imageUrl: offers[index].photo!,
                       fit: BoxFit.cover,
                       width: double.infinity,
-                      height: 180,
+                      height: MediaQuery.of(context).size.width * 0.75, // NUEVO
                       placeholder: (context, url) => const SpinKitRing(
                         color: Colors.deepOrange,
                         size: 50.0,
@@ -175,12 +175,15 @@ class ListOffers extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            '\$${offers[index].price!}',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 235, 79, 32),
+                          Flexible(
+                            // NUEVO
+                            child: Text(
+                              '\$${offers[index].price!}',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 235, 79, 32),
+                              ),
                             ),
                           ),
                         ],
@@ -198,13 +201,16 @@ class ListOffers extends StatelessWidget {
                               openMaps(destino);
                             },
                             icon: const Icon(Icons.location_city),
-                            label: const Text("¿Como llegar?"),
+                            label: const Text("¿Cómo llegar?"),
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
                               backgroundColor: Colors.deepOrange,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
+                              minimumSize: Size(
+                                  MediaQuery.of(context).size.width * 0.7,
+                                  50), // NUEVO
                             ),
                           ),
                         ],
