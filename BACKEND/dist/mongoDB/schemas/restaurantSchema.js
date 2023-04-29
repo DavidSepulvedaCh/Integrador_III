@@ -4,12 +4,9 @@ const mongoose_1 = require("mongoose");
 const RestaurantSchema = new mongoose_1.Schema({
     idUser: {
         type: String,
+        ref: 'users',
         required: true,
         unique: true
-    },
-    photo: {
-        type: String,
-        required: true
     },
     description: {
         type: String,

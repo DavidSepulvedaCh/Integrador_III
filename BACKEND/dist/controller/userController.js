@@ -64,7 +64,6 @@ class UserController {
             const passwordEncrypt = yield bcryptjs_1.default.hash(password, 8);
             let restaurantDetails = new restaurantSchema_1.default({
                 idUser: '',
-                photo: '',
                 description: '',
                 latitude: latitude,
                 longitude: longitude,
@@ -115,6 +114,14 @@ class UserController {
                 res.json({ photo: response.photo, description: response.description, latitude: response.latitude, longitude: response.longitude, address: response.address, city: response.city, messagge: response.success });
             });
         });
+        this.getInformationAllRestaurants = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            this.userModel.getInformationAllRestaurants((response) => {
+                if (response.error) {
+                    return res.status(409).json({ error: response.error });
+                }
+                res.status(200).send();
+            });
+        });
         this.updateRestaurantName = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { idUser, name } = req.body;
             if (!idUser || !name) {
@@ -139,24 +146,24 @@ class UserController {
                 res.status(200).send({ success: "Update successful" });
             });
         });
-        this.updateRestaurantPhoto = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { idUser, photo } = req.body;
-            if (!idUser || !photo) {
+        this.updatePhoto = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id, photo } = req.body;
+            if (!id || !photo) {
                 return res.status(400).send({
                     error: 'Missing data'
                 });
             }
-            if (typeof idUser != "string" || typeof photo != "string") {
+            if (typeof id != "string" || typeof photo != "string") {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
-            if (idUser.length <= 1 || photo.length <= 1) {
+            if (id.length <= 1 || photo.length <= 1) {
                 return res.status(400).send({
                     error: 'Invalid data'
                 });
             }
-            this.userModel.updateRestaurantPhoto(idUser, photo, (response) => {
+            this.userModel.updatePhoto(id, photo, (response) => {
                 if (response.error) {
                     return res.status(409).json({ error: response.error });
                 }
@@ -209,7 +216,7 @@ class UserController {
                     return res.status(401).json({ error: response.error });
                 }
                 let token = this.generateToken(response.id, email, response.name, response.role);
-                res.status(200).json({ id: response.id, name: response.name, email: email, role: response.role, token: token, messagge: response.success });
+                res.status(200).json({ id: response.id, name: response.name, email: email, photo: response.photo, role: response.role, token: token, messagge: response.success });
             });
         };
         this.registerBiometric = (req, res) => {

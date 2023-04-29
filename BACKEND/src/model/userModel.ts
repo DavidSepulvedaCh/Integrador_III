@@ -19,6 +19,7 @@ class UserModel {
             email: email,
             name: name,
             password: password,
+            photo: 'https://bit.ly/3Lstjcq',
             role: role
         });
         const userExists = await this.MongoDBC.UserSchema.findOne(
@@ -66,6 +67,7 @@ class UserModel {
             id: userExists._id,
             email: email,
             name: userExists.name,
+            photo: userExists.photo,
             role: userExists.role
         });
     }
@@ -209,6 +211,30 @@ class UserModel {
         });
     }
 
+    public getInformationAllRestaurants = async (fn: Function) => {
+        try {
+            this.MongoDBC.connection();
+            const restaurants = await this.MongoDBC.RestaurantSchema.aggregate([
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "idUser",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                {
+                    $unwind: "$user"
+                }
+            ]);
+            console.log(restaurants);
+            return fn({ success: "success" });
+        } catch (error) {
+            console.error(error);
+            return fn({ error: "error" });
+        }
+    }
+
     public updateRestaurantName = async (idUser: string, name: string, fn: Function) => {
         this.MongoDBC.connection();
         try {
@@ -226,11 +252,11 @@ class UserModel {
         }
     }
 
-    public updateRestaurantPhoto = async (idUser: string, photo: string, fn: Function) => {
+    public updatePhoto = async (id: string, photo: string, fn: Function) => {
         this.MongoDBC.connection();
         try {
-            const result = await this.MongoDBC.RestaurantSchema.updateOne(
-                { idUser: idUser },
+            const result = await this.MongoDBC.UserSchema.updateOne(
+                { _id: new ObjectId(id) },
                 { $set: { photo: photo } }
             );
             if (result.modifiedCount == 0) {

@@ -4,12 +4,9 @@ import IRestaurant from "../interfaces/IRestaurant";
 const RestaurantSchema = new Schema({
     idUser: {
         type: String,
+        ref: 'users',
         required: true,
         unique: true
-    },
-    photo: {
-        type: String,
-        required: true
     },
     description: {
         type: String,

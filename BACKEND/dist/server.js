@@ -41,7 +41,7 @@ class Server {
         this.route();
     }
     config() {
-        this.backend.set('port', process.env.PORT || 3000);
+        this.backend.set('port', process.env.PORT || 80);
         this.backend.use((0, express_1.json)());
         Middlewares_1.default.unless = express_unless_1.unless;
         this.backend.use(Middlewares_1.default.unless({

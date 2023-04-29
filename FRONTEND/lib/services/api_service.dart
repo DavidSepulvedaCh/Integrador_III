@@ -460,7 +460,7 @@ class APIService {
     try {
       final response = await http
           .post(url,
-              headers: header, body: jsonEncode({'idUser': id, 'photo': photo, 'token': token}))
+              headers: header, body: jsonEncode({'id': id, 'photo': photo, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         await SharedService.updateRestaurantPhoto(photo);
