@@ -16,7 +16,7 @@ class Server {
     }
 
     private config(){
-        this.backend.set('port', process.env.PORT || 3000);
+        this.backend.set('port', process.env.PORT || 80);
         this.backend.use(json());
         verifyToken.unless = unless;
         this.backend.use(
