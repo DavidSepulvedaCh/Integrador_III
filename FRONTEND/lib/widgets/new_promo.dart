@@ -125,8 +125,32 @@ class _NuevaPromoState extends State<NuevaPromo> {
                 centerTitle: true,
                 actions: [
                   IconButton(
-                    onPressed: () async {
-                      createOffer();
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Confirmar creación de oferta'),
+                            content: const Text(
+                                '¿Estas seguro de crear esta nueva oferta?'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Cancelar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Aceptar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  createOffer();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     icon: const Icon(
                       Icons.save,

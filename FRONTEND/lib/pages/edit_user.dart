@@ -86,9 +86,6 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   }
 
   void updateName() {
-    if (nameController.text == originalName) {
-      return;
-    }
     setState(() {
       _isDoingFetch = true;
     });
@@ -117,9 +114,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   }
 
   void updateDescription() {
-    if (descriptionController.text == originalDescription) {
-      return;
-    }
+    setState(() {
+      _isDoingFetch = true;
+    });
     APIService.updateRestaurantDescription(descriptionController.text)
         .then((value) => {
               if (value)
@@ -258,14 +255,39 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                           ),
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.save),
-                            onPressed: updateName,
+                            onPressed: () {
+                              if (nameController.text == originalName) {
+                                return;
+                              }
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                        'Confirmación actualizar nombre'),
+                                    content: const Text(
+                                        '¿Estas seguro de actualizar el nombre?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Cancelar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text('Aceptar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          updateName();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           ),
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            widget.name = value;
-                          });
-                        },
                       ),
                       const SizedBox(height: 20),
                       const SizedBox(height: 20),
@@ -286,15 +308,41 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                           ),
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.save),
-                            onPressed: updateDescription,
+                            onPressed: () {
+                              if (descriptionController.text ==
+                                  originalDescription) {
+                                return;
+                              }
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                        'Confirmación actualizar descripción'),
+                                    content: const Text(
+                                        '¿Estas seguro de actualizar la descripción?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Cancelar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text('Aceptar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          updateDescription();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           ),
                         ),
                         maxLines: null,
-                        onChanged: (value) {
-                          setState(() {
-                            widget.description = value;
-                          });
-                        },
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton.icon(

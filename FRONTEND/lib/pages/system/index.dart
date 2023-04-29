@@ -311,9 +311,9 @@ class _IndexState extends State<Index> {
                 ),
               ),
               const SizedBox(width: 16),
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage('https://bit.ly/3Lstjcq'),
+                backgroundImage: CachedNetworkImageProvider(_photo),
               ),
             ],
           ),
@@ -335,9 +335,9 @@ class _IndexState extends State<Index> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage('https://bit.ly/3Lstjcq'),
+                    backgroundImage: CachedNetworkImageProvider(_photo),
                   ),
                   const SizedBox(height: 10),
                   Text(

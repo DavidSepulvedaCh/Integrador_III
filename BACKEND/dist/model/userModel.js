@@ -202,7 +202,7 @@ class UserModel {
                 .populate({
                 path: 'idUser',
                 model: 'users',
-                select: 'name',
+                select: 'name photo',
                 match: { role: 'restaurant' } // Filtro para usuarios con el rol 'restaurant'
             })
                 .select('-__v')

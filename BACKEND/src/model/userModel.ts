@@ -217,7 +217,7 @@ class UserModel {
             .populate({ // Referencia a la colección de usuarios y obtener su campo 'name'
                 path: 'idUser',
                 model: 'users',
-                select: 'name',
+                select: 'name photo',
                 match: { role: 'restaurant' } // Filtro para usuarios con el rol 'restaurant'
             })
             .select('-__v')
