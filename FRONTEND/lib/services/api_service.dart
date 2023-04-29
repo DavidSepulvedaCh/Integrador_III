@@ -411,6 +411,7 @@ class APIService {
           "latitude": latitude, "longitude": longitude, "address": address, "city": city}))
           .timeout(const Duration(seconds: 8));
       if (response.statusCode == 200) {
+        print(response.body);
         await SharedService.setLogginDetails(loginResponseModel(response.body));
         return 0;
       } else if (response.statusCode == 409) {

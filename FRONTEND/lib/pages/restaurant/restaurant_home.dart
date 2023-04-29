@@ -92,7 +92,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
 
   void _updateReload(bool value) {
     setState(() {
-      reload = true;
+      reload = value;
     });
   }
 
@@ -102,6 +102,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
     if (reload) {
       setState(() {
         setOffers();
+        getRestaurantDetails();
         reload = false;
       });
     }
@@ -172,7 +173,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                     builder: (context) => ProfileSettings(
                         name: _restaurantName,
                         description: _restaurantDescription,
-                        photo: _restaurantPhoto),
+                        photo: _restaurantPhoto, update: _updateReload),
                   ),
                 );
               },

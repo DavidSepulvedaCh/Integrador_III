@@ -64,7 +64,7 @@ class UserController {
             const passwordEncrypt = yield bcryptjs_1.default.hash(password, 8);
             let restaurantDetails = new restaurantSchema_1.default({
                 idUser: '',
-                description: '',
+                description: "",
                 latitude: latitude,
                 longitude: longitude,
                 address: address,

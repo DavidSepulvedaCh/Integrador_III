@@ -10,11 +10,13 @@ class ProfileSettings extends StatefulWidget {
   String name;
   String description;
   String photo;
+  final Function(bool) update;
   ProfileSettings(
       {super.key,
       required this.name,
       required this.description,
-      required this.photo});
+      required this.photo,
+      required this.update});
 
   @override
   State<ProfileSettings> createState() => _ProfileSettingsState();
@@ -42,18 +44,21 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     setState(() {
-      if(pickedImage != null){
+      if (pickedImage != null) {
         _image = File(pickedImage.path);
       }
     });
   }
 
   void updatePhoto() async {
-    if(_image == null){
+    if (_image == null) {
       return;
     }
+    setState(() {
+      _isDoingFetch = true;
+    });
     String url = await Functions.uploadImageToCloudinary(_image!) ?? "";
-    if(url == ""){
+    if (url == "") {
       return;
     }
     APIService.updatePhoto(url)
@@ -65,7 +70,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     widget.photo = url;
                   }),
                   CustomShowDialog.make(
-                      context, "Éxito", "Se actualizó la foto exitosamente")
+                      context, "Éxito", "Se actualizó la foto exitosamente"),
+                  widget.update(true)
                 }
               else
                 {
@@ -95,7 +101,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     originalName = nameController.text;
                   }),
                   CustomShowDialog.make(
-                      context, "Éxito", "Se actualizó el nombre exitosamente")
+                      context, "Éxito", "Se actualizó el nombre exitosamente"),
+                  widget.update(true)
                 }
               else
                 {
@@ -122,7 +129,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     originalDescription = descriptionController.text;
                   }),
                   CustomShowDialog.make(context, "Éxito",
-                      "Se actualizó la descripción exitosamente")
+                      "Se actualizó la descripción exitosamente"),
+                  widget.update(true)
                 }
               else
                 {

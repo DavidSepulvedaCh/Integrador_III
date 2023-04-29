@@ -59,7 +59,7 @@ class UserController {
         const passwordEncrypt: String = await bcryptjs.hash(password, 8);
         let restaurantDetails = new restaurantSchema({
             idUser: '',
-            description: '',
+            description: "",
             latitude: latitude,
             longitude: longitude,
             address: address,

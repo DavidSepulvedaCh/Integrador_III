@@ -9,8 +9,7 @@ const RestaurantSchema = new mongoose_1.Schema({
         unique: true
     },
     description: {
-        type: String,
-        required: true
+        type: String
     },
     latitude: {
         type: String,
