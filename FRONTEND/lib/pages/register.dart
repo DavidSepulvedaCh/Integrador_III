@@ -16,6 +16,9 @@ class _RegisterState extends State<Register> {
   TextEditingController passwordTwoTextController = TextEditingController();
 
   void register() async {
+    setState(() {
+      _isDoingFetch = true;
+    });
     if (!Functions.validateRegister(
         context,
         nameTextController.text,
