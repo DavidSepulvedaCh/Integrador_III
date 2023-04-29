@@ -59,7 +59,6 @@ class UserController {
         const passwordEncrypt: String = await bcryptjs.hash(password, 8);
         let restaurantDetails = new restaurantSchema({
             idUser: '',
-            photo: '',
             description: '',
             latitude: latitude,
             longitude: longitude,
@@ -112,6 +111,15 @@ class UserController {
         });
     }
 
+    public getInformationAllRestaurants = async (req: Request, res: Response) => {
+        this.userModel.getInformationAllRestaurants((response: any) => {
+            if (response.error) {
+                return res.status(409).json({ error: response.error });
+            }
+            res.status(200).send();
+        });
+    }
+
     public updateRestaurantName = async (req: Request, res: Response) => {
         const { idUser, name } = req.body;
         if (!idUser || !name) {
@@ -133,32 +141,32 @@ class UserController {
             if (response.error) {
                 return res.status(409).json({ error: response.error });
             }
-            res.status(200).send({success: "Update successful"});
+            res.status(200).send({ success: "Update successful" });
         });
     }
 
-    public updateRestaurantPhoto = async (req: Request, res: Response) => {
-        const { idUser, photo } = req.body;
-        if (!idUser || !photo) {
+    public updatePhoto = async (req: Request, res: Response) => {
+        const { id, photo } = req.body;
+        if (!id || !photo) {
             return res.status(400).send({
                 error: 'Missing data'
             });
         }
-        if (typeof idUser != "string" || typeof photo != "string") {
+        if (typeof id != "string" || typeof photo != "string") {
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        if (idUser.length <= 1 || photo.length <= 1) {
+        if (id.length <= 1 || photo.length <= 1) {
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        this.userModel.updateRestaurantPhoto(idUser, photo, (response: any) => {
+        this.userModel.updatePhoto(id, photo, (response: any) => {
             if (response.error) {
                 return res.status(409).json({ error: response.error });
             }
-            res.status(200).send({success: "Update successful"});
+            res.status(200).send({ success: "Update successful" });
         });
     }
 
@@ -183,7 +191,7 @@ class UserController {
             if (response.error) {
                 return res.status(409).json({ error: response.error });
             }
-            res.status(200).send({success: "Update successful"});
+            res.status(200).send({ success: "Update successful" });
         });
     }
 
@@ -209,7 +217,7 @@ class UserController {
                 return res.status(401).json({ error: response.error });
             }
             let token = this.generateToken(response.id, email, response.name, response.role);
-            res.status(200).json({ id: response.id, name: response.name, email: email, role: response.role, token: token, messagge: response.success });
+            res.status(200).json({ id: response.id, name: response.name, email: email, photo: response.photo, role: response.role, token: token, messagge: response.success });
         });
     }
 

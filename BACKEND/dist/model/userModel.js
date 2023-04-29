@@ -25,6 +25,7 @@ class UserModel {
                 email: email,
                 name: name,
                 password: password,
+                photo: 'https://bit.ly/3Lstjcq',
                 role: role
             });
             const userExists = yield this.MongoDBC.UserSchema.findOne({
@@ -67,6 +68,7 @@ class UserModel {
                 id: userExists._id,
                 email: email,
                 name: userExists.name,
+                photo: userExists.photo,
                 role: userExists.role
             });
         });
@@ -194,6 +196,30 @@ class UserModel {
                 city: restaurantExists.city
             });
         });
+        this.getInformationAllRestaurants = (fn) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                this.MongoDBC.connection();
+                const restaurants = yield this.MongoDBC.RestaurantSchema.aggregate([
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "idUser",
+                            foreignField: "_id",
+                            as: "user"
+                        }
+                    },
+                    {
+                        $unwind: "$user"
+                    }
+                ]);
+                console.log(restaurants);
+                return fn({ success: "success" });
+            }
+            catch (error) {
+                console.error(error);
+                return fn({ error: "error" });
+            }
+        });
         this.updateRestaurantName = (idUser, name, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             try {
@@ -209,10 +235,10 @@ class UserModel {
                 return fn({ error: 'User does not exist' });
             }
         });
-        this.updateRestaurantPhoto = (idUser, photo, fn) => __awaiter(this, void 0, void 0, function* () {
+        this.updatePhoto = (id, photo, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             try {
-                const result = yield this.MongoDBC.RestaurantSchema.updateOne({ idUser: idUser }, { $set: { photo: photo } });
+                const result = yield this.MongoDBC.UserSchema.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { photo: photo } });
                 if (result.modifiedCount == 0) {
                     return fn({ error: 'User does not exist' });
                 }

@@ -25,6 +25,7 @@ class SharedService{
     var id = model.id ?? 'default';
     var name= model.name ?? 'default';
     var email = model.email ?? 'default';
+    var photo = model.photo ?? 'https://bit.ly/3Lstjcq';
     var role = model.role ?? 'default';
     var token = model.token ?? 'default';
     if(name!= 'default' && token != 'default' && email != 'default' && id != 'default' && role != 'default'){
@@ -34,6 +35,7 @@ class SharedService{
       await prefs.setString('role', role);
       await prefs.setString('token', token);
     }
+    await prefs.setString("photo", photo);
   }
 
   static Future<void> setRestaurantDetails(RestaurantDetailsResponse model) async {
@@ -41,7 +43,6 @@ class SharedService{
     var longitude = model.longitude ?? 'default';
     var address = model.address ?? 'default';
     var city = model.city ?? 'default';
-    var photo = model.photo ?? 'https://bit.ly/3Lstjcq';
     var description = model.description ?? "";
     if(longitude!= 'default' && latitude != 'default' ){
       await prefs.setString('latitude', latitude);
@@ -52,7 +53,6 @@ class SharedService{
       if(city != 'default'){
         await prefs.setString('city', city);
       }
-      await prefs.setString("photo", photo);
       await prefs.setString("description", description);
     }
   }
@@ -61,7 +61,7 @@ class SharedService{
     await prefs.setString("name", name);
   }
 
-  static Future<void> updateRestaurantPhoto(String photo) async {
+  static Future<void> updatePhoto(String photo) async {
     await prefs.setString("photo", photo);
   }
 

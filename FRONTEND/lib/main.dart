@@ -4,9 +4,6 @@ import 'package:integrador/routes/imports.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedService.setUp();
-  /* await dotenv.load(); 
-  String apiKey = dotenv.env['apiKey']!;
-  print(apiKey); */
   runApp(const MyApp());
 }
 

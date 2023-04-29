@@ -1,5 +1,5 @@
 class Config {
-  static const String apiURL = '192.168.0.102:1802';
+  static const String apiURL = '10.153.82.55:1802';
   static const String loginAPI = '/api/users/login';
   static const String registerAPI = '/api/users/person/register';
   static const String isValidTokenAPI = '/api/users/isValidToken';
@@ -17,6 +17,6 @@ class Config {
   static const String getMaxPriceAllOffers = 'api/offers/getMaxPriceAllOffers';
   static const String registerRestaurant = '/api/users/restaurant/register';
   static const String updateRestaurantName = '/api/users/restaurant/updateName';
-  static const String updateRestaurantPhoto= '/api/users/restaurant/updatePhoto';
+  static const String updatePhoto= '/api/users/updatePhoto';
   static const String updateRestaurantDescription = '/api/users/restaurant/updateDescription';
 }

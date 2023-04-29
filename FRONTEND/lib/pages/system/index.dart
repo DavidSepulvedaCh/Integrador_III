@@ -1,5 +1,4 @@
-// ignore_for_file: prefer_final_fields, unused_field
-
+import 'package:integrador/pages/edit_user.dart';
 import 'package:integrador/routes/imports.dart';
 
 class Index extends StatefulWidget {
@@ -12,6 +11,7 @@ class Index extends StatefulWidget {
 class _IndexState extends State<Index> {
   late String _name;
   late String _email;
+  late String _photo;
 
   String typeOfView = 'list';
   late Widget view = Container();
@@ -45,6 +45,7 @@ class _IndexState extends State<Index> {
     setState(() {
       _name = SharedService.prefs.getString("name") ?? "User name";
       _email = SharedService.prefs.getString("email") ?? "Correo electrónico";
+      _photo = SharedService.prefs.getString("photo")!;
     });
   }
 

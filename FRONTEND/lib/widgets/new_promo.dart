@@ -25,6 +25,14 @@ class _NuevaPromoState extends State<NuevaPromo> {
 
   final RegExp _formatter = RegExp(r'^\d*\.?\d{0,4}$');
 
+  @override
+  void dispose() {
+    name.dispose();
+    description.dispose();
+    price.dispose();
+    super.dispose();
+  }
+
   Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
@@ -64,6 +72,7 @@ class _NuevaPromoState extends State<NuevaPromo> {
         .then((value) => {
               if (value)
                 {
+                  FocusScope.of(context).unfocus(),
                   widget.createOffer(true),
                   CustomShowDialog.make(
                           context, "Éxito", "Se creó la oferta correctamente")
