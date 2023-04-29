@@ -20,7 +20,8 @@ Future<String?> uploadImageToCloudinary(File imageFile) async {
 }
 
 class NuevaPromo extends StatefulWidget {
-  const NuevaPromo({super.key});
+  final Function(bool) createOffer;
+  const NuevaPromo({super.key, required this.createOffer});
 
   @override
   State<NuevaPromo> createState() => _NuevaPromoState();
@@ -31,6 +32,7 @@ class _NuevaPromoState extends State<NuevaPromo> {
   static const blanco = Colors.white;
   static const botones = Color.fromARGB(235, 230, 80, 35);
 
+  bool _isDoingFetch = false;
   File? _image;
   TextEditingController name = TextEditingController();
   TextEditingController description = TextEditingController();
@@ -68,16 +70,19 @@ class _NuevaPromoState extends State<NuevaPromo> {
     if (!_validate()) {
       return;
     }
+    setState(() {
+      _isDoingFetch = true;
+    });
     String? imageUrl = await uploadImageToCloudinary(_image!);
     await APIService.createOffer(
             name.text, description.text, price.text, imageUrl!)
         .then((value) => {
               if (value)
                 {
+                  widget.createOffer(true),
                   CustomShowDialog.make(
                           context, "Éxito", "Se creó la oferta correctamente")
-                      .then((value) => Navigator.pushReplacementNamed(
-                          context, '/restaurantIndex'))
+                      .then((value) => Navigator.pop(context))
                 }
               else
                 {
@@ -85,6 +90,9 @@ class _NuevaPromoState extends State<NuevaPromo> {
                       context, "Error", "No se pudo crear la oferta")
                 }
             });
+    setState(() {
+      _isDoingFetch = false;
+    });
   }
 
   @override
@@ -118,144 +126,166 @@ class _NuevaPromoState extends State<NuevaPromo> {
           ),
           centerTitle: true,
           actions: [
-            IconButton(
-              onPressed: () async {
-                createOffer();
+            IgnorePointer(
+              ignoring: _isDoingFetch,
+              child: IconButton(
+                onPressed: () async {
+                  createOffer();
+                },
+                icon: const Icon(
+                  Icons.save,
+                  size: 28,
+                ),
+              ),
+            ),
+          ],
+          leading: IgnorePointer(
+            ignoring: _isDoingFetch,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
               },
               icon: const Icon(
-                Icons.save,
+                Icons.cancel,
                 size: 28,
               ),
-            )
-          ],
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.cancel,
-              size: 28,
             ),
           ),
           backgroundColor: naranja,
           elevation: 0,
         ),
-        body: ListView(
-          children: [
-            Center(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
-                    child: CustomTextField(
-                        textEditingController: name,
-                        labelText: "",
-                        hintText: "Nombre del producto",
-                        icon: Icons.fastfood),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
-                    child: CustomTextField(
-                        textEditingController: description,
-                        labelText: "",
-                        hintText: "Descripción del producto",
-                        icon: Icons.description),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 35),
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.black38,
-                                blurRadius: 5,
-                                offset: Offset(0, 2)),
-                          ],
-                        ),
-                        height: 60,
-                        child: TextField(
-                          controller: price,
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          style: const TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.only(top: 15),
-                              prefixIcon: Icon(Icons.monetization_on,
-                                  color: HexColor('#E64A19')),
-                              hintText: "Precio del producto",
-                              hintStyle: TextStyle(color: HexColor('#212121'))),
-                        ),
-                      )),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      if (_image != null)
-                        Image.file(
-                          _image!,
-                          width: 250,
-                          height: 250,
-                        ),
-                      SizedBox(height: 25),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+        body: Stack(
+          children: <Widget>[
+            IgnorePointer(
+                ignoring: _isDoingFetch,
+                child: ListView(
+                  children: [
+                    Center(
+                      child: Column(
                         children: [
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              // Acción al presionar el botón de subir imagen
-                              _pickImage(ImageSource.gallery);
-                            },
-                            icon: const Icon(Icons.image),
-                            label: const Text('Subir imagen'),
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: botones,
-                              minimumSize: const Size(150, 50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
+                          const SizedBox(
+                            height: 50,
                           ),
-                          SizedBox(width: 10),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              // Acción al presionar el botón de tomar foto
-                              _pickImage(ImageSource.camera);
-                            },
-                            icon: const Icon(Icons.camera_alt),
-                            label: const Text('Tomar foto'),
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: botones,
-                              minimumSize: const Size(150, 50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 35),
+                            child: CustomTextField(
+                                textEditingController: name,
+                                labelText: "",
+                                hintText: "Nombre del producto",
+                                icon: Icons.fastfood),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 35),
+                            child: CustomTextField(
+                                textEditingController: description,
+                                labelText: "",
+                                hintText: "Descripción del producto",
+                                icon: Icons.description),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 35),
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.black38,
+                                        blurRadius: 5,
+                                        offset: Offset(0, 2)),
+                                  ],
+                                ),
+                                height: 60,
+                                child: TextField(
+                                  controller: price,
+                                  keyboardType: TextInputType.numberWithOptions(
+                                      decimal: true),
+                                  style: const TextStyle(color: Colors.black),
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding:
+                                          const EdgeInsets.only(top: 15),
+                                      prefixIcon: Icon(Icons.monetization_on,
+                                          color: HexColor('#E64A19')),
+                                      hintText: "Precio del producto",
+                                      hintStyle: TextStyle(
+                                          color: HexColor('#212121'))),
+                                ),
+                              )),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              if (_image != null)
+                                Image.file(
+                                  _image!,
+                                  width: 250,
+                                  height: 250,
+                                ),
+                              SizedBox(height: 25),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton.icon(
+                                    onPressed: () {
+                                      // Acción al presionar el botón de subir imagen
+                                      _pickImage(ImageSource.gallery);
+                                    },
+                                    icon: const Icon(Icons.image),
+                                    label: const Text('Subir imagen'),
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: botones,
+                                      minimumSize: const Size(150, 50),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  ElevatedButton.icon(
+                                    onPressed: () {
+                                      // Acción al presionar el botón de tomar foto
+                                      _pickImage(ImageSource.camera);
+                                    },
+                                    icon: const Icon(Icons.camera_alt),
+                                    label: const Text('Tomar foto'),
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: botones,
+                                      minimumSize: const Size(150, 50),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
+                              SizedBox(height: 35)
+                            ],
                           ),
                         ],
                       ),
-                      SizedBox(height: 35)
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                )),
+            if (_isDoingFetch)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
-            ),
           ],
         ));
   }

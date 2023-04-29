@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 // ignore: must_be_immutable
 class OfertaRestaurante extends StatelessWidget {
@@ -38,11 +40,15 @@ class OfertaRestaurante extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
-                photo,
+              child: CachedNetworkImage(
+                imageUrl: photo,
                 width: 115,
                 height: 115,
-                fit: BoxFit.cover,
+                placeholder: (context, url) => const SpinKitRing(
+                  color: Colors.deepOrange,
+                  size: 50.0,
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
             const SizedBox(width: 15),
@@ -101,8 +107,9 @@ class OfertaRestaurante extends StatelessWidget {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title:  Text('¡Eliminar $title!'),
-                          content: const Text('¿Estas seguro de eliminar esta oferta?'),
+                          title: Text('¡Eliminar $title!'),
+                          content: const Text(
+                              '¿Estas seguro de eliminar esta oferta?'),
                           actions: <Widget>[
                             TextButton(
                               child: const Text('Cancelar'),
@@ -121,8 +128,6 @@ class OfertaRestaurante extends StatelessWidget {
                         );
                       },
                     );
-
-                    
                   },
                   color: deleteColor,
                 ),

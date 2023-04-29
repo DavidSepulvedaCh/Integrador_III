@@ -7,7 +7,7 @@ class ProfileSettings extends StatefulWidget {
   const ProfileSettings({Key? key}) : super(key: key);
 
   @override
-  _ProfileSettingsState createState() => _ProfileSettingsState();
+  State<ProfileSettings> createState() => _ProfileSettingsState();
 }
 
 class _ProfileSettingsState extends State<ProfileSettings> {
@@ -18,7 +18,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   bool _isModalOpen = false;
 
   Future<void> _pickImage(ImageSource source) async {
-    final pickedImage = await ImagePicker().getImage(source: source);
+    final pickedImage = await ImagePicker().pickImage(source: source);
     setState(() {
       _image = File(pickedImage!.path);
     });

@@ -15,14 +15,13 @@ class HomeRestaurante extends StatefulWidget {
 class _HomeRestauranteState extends State<HomeRestaurante> {
   final _scrollController = ScrollController();
 
-  late String _name;
-  late String _email;
-
+  bool reload = false;
   bool _isAppBarHidden = false;
   bool _isVisible = false;
   Timer? _timer;
   String _restaurantName = "";
   String _restaurantAddress = "";
+  String _restaurantEmail = "";
   String _restaurantPhoto = "";
   String _restaurantDescription = "";
   List<Offer> offerss = <Offer>[];
@@ -55,10 +54,6 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
         }
       }
     });
-    setState(() {
-      _name = SharedService.prefs.getString("name") ?? "User name";
-      _email = SharedService.prefs.getString("email") ?? "Correo electrónico";
-    });
   }
 
   Future<void> setOffers() async {
@@ -80,6 +75,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
     await APIService.getRestaurantDetails();
     setState(() {
       _restaurantName = SharedService.prefs.getString('name') ?? "Restaurante";
+      _restaurantEmail = SharedService.prefs.getString("email") ?? "email";
       _restaurantAddress =
           SharedService.prefs.getString('address') ?? "Colombia";
       _restaurantPhoto = SharedService.prefs.getString('photo')!;
@@ -94,9 +90,21 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
     }
   }
 
+  void _updateReload(bool value) {
+    setState(() {
+      reload = true;
+    });
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    if (reload) {
+      setState(() {
+        setOffers();
+        reload = false;
+      });
+    }
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -118,7 +126,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    _name,
+                    _restaurantName,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -126,7 +134,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                     ),
                   ),
                   Text(
-                    _email,
+                    _restaurantEmail,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
@@ -145,7 +153,8 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const NuevaPromo(),
+                        builder: (context) =>
+                            NuevaPromo(createOffer: _updateReload),
                       ),
                     );
                   },
@@ -292,7 +301,12 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/nuevapromocion');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NuevaPromo(createOffer: _updateReload),
+            ),
+          );
         },
         backgroundColor: Colors.deepOrange,
         child: const Icon(Icons.add),

@@ -151,17 +151,29 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
           context, "Error", "No se ha podido obtener la ubicación");
       return;
     }
+    setState(() {
+      _isDoingFetch = true;
+    });
     final response = await APIService.registerRestaurant(model,
         latit.toString(), longit.toString(), selectedLocation!, selectedCity!);
     if (response == 0) {
       Navigator.pushReplacementNamed(context, "/restaurantIndex");
     } else if (response == 1) {
       CustomShowDialog.make(context, 'Error', 'Email ya registrado');
+      setState(() {
+        _isDoingFetch = false;
+      });
     } else if (response == 2) {
       CustomShowDialog.make(context, 'Error', 'No se pudo registrar el email');
+      setState(() {
+        _isDoingFetch = false;
+      });
     } else {
       CustomShowDialog.make(
           context, 'Error', 'Ocurrió un error. Intente más tarde');
+      setState(() {
+        _isDoingFetch = false;
+      });
     }
   }
 

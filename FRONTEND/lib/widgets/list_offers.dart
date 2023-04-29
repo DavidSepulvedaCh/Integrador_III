@@ -55,20 +55,26 @@ class ListOffers extends StatelessWidget {
               Container(
                 height: 180,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15),
-                  ),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      offers[index].photo!,
-                    ),
                   ),
                 ),
                 child: Stack(
                   children: <Widget>[
+                    CachedNetworkImage(
+                      imageUrl: offers[index].photo!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 180,
+                      placeholder: (context, url) => const SpinKitRing(
+                        color: Colors.deepOrange,
+                        size: 50.0,
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
                     Positioned(
                       top: 0,
                       left: 0,
