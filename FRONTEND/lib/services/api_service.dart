@@ -411,7 +411,6 @@ class APIService {
           "latitude": latitude, "longitude": longitude, "address": address, "city": city}))
           .timeout(const Duration(seconds: 8));
       if (response.statusCode == 200) {
-        print(response.body);
         await SharedService.setLogginDetails(loginResponseModel(response.body));
         return 0;
       } else if (response.statusCode == 409) {
@@ -496,6 +495,31 @@ class APIService {
       }
     } catch (e) {
       return false;
+    }
+  }
+
+  static Future<List<Restaurant>> getInformationOfAllRestaurants() async {
+    Uri url = Uri.http(Config.apiURL, Config.getInformationOfAllRestaurants);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    try {
+      final response = await http
+          .post(url, headers: header, body: jsonEncode({'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        List<dynamic> jsonList = jsonDecode(response.body);
+        List<Restaurant> restaurantList =
+            jsonList.map((json) => Restaurant.fromJson(json)).toList();
+        return restaurantList;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
     }
   }
 }

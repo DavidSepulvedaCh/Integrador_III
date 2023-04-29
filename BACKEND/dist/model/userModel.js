@@ -197,28 +197,17 @@ class UserModel {
             });
         });
         this.getInformationAllRestaurants = (fn) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                this.MongoDBC.connection();
-                const restaurants = yield this.MongoDBC.RestaurantSchema.aggregate([
-                    {
-                        $lookup: {
-                            from: "users",
-                            localField: "idUser",
-                            foreignField: "_id",
-                            as: "user"
-                        }
-                    },
-                    {
-                        $unwind: "$user"
-                    }
-                ]);
-                console.log(restaurants);
-                return fn({ success: "success" });
-            }
-            catch (error) {
-                console.error(error);
-                return fn({ error: "error" });
-            }
+            this.MongoDBC.connection();
+            const restaurants = yield this.MongoDBC.RestaurantSchema.find({}) // Obtener todos los restaurantes
+                .populate({
+                path: 'idUser',
+                model: 'users',
+                select: 'name',
+                match: { role: 'restaurant' } // Filtro para usuarios con el rol 'restaurant'
+            })
+                .select('-__v')
+                .exec();
+            return fn(restaurants);
         });
         this.updateRestaurantName = (idUser, name, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();

@@ -119,7 +119,7 @@ class UserController {
                 if (response.error) {
                     return res.status(409).json({ error: response.error });
                 }
-                res.status(200).send();
+                res.status(200).json(response);
             });
         });
         this.updateRestaurantName = (req, res) => __awaiter(this, void 0, void 0, function* () {

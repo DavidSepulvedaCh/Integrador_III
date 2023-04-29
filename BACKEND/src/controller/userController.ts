@@ -116,7 +116,7 @@ class UserController {
             if (response.error) {
                 return res.status(409).json({ error: response.error });
             }
-            res.status(200).send();
+            res.status(200).json(response);
         });
     }
 

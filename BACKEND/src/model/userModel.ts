@@ -212,27 +212,17 @@ class UserModel {
     }
 
     public getInformationAllRestaurants = async (fn: Function) => {
-        try {
-            this.MongoDBC.connection();
-            const restaurants = await this.MongoDBC.RestaurantSchema.aggregate([
-                {
-                    $lookup: {
-                        from: "users",
-                        localField: "idUser",
-                        foreignField: "_id",
-                        as: "user"
-                    }
-                },
-                {
-                    $unwind: "$user"
-                }
-            ]);
-            console.log(restaurants);
-            return fn({ success: "success" });
-        } catch (error) {
-            console.error(error);
-            return fn({ error: "error" });
-        }
+        this.MongoDBC.connection();
+        const restaurants = await this.MongoDBC.RestaurantSchema.find({}) // Obtener todos los restaurantes
+            .populate({ // Referencia a la colección de usuarios y obtener su campo 'name'
+                path: 'idUser',
+                model: 'users',
+                select: 'name',
+                match: { role: 'restaurant' } // Filtro para usuarios con el rol 'restaurant'
+            })
+            .select('-__v')
+            .exec();
+        return fn(restaurants);
     }
 
     public updateRestaurantName = async (idUser: string, name: string, fn: Function) => {

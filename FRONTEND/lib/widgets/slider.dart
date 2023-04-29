@@ -15,7 +15,7 @@ class ImageSliderWidget extends StatelessWidget {
       itemBuilder: (BuildContext context, int index, int realIndex) {
         return Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(147, 175, 175, 175),
+            color: const Color.fromARGB(147, 175, 175, 175),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(

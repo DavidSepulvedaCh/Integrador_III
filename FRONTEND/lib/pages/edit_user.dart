@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:integrador/routes/imports.dart';
 
-// ignore: must_be_immutable
 class ProfileSettings extends StatefulWidget {
   String name;
   String description;

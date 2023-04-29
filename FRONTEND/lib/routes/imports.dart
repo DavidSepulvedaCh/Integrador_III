@@ -37,4 +37,5 @@ export 'package:flutter_spinkit/flutter_spinkit.dart';
 export 'package:cached_network_image/cached_network_image.dart';
 export 'package:integrador/widgets/slider.dart';
 export 'package:integrador/pages/mapa.dart';
+export 'package:integrador/models/restaurant_model.dart';
 export 'dart:convert';
