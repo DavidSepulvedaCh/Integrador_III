@@ -79,7 +79,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
       _restaurantAddress =
           SharedService.prefs.getString('address') ?? "Colombia";
       _restaurantPhoto = SharedService.prefs.getString('photo')!;
-      _restaurantPhoto = SharedService.prefs.getString('description')!;
+      _restaurantDescription = SharedService.prefs.getString('description')!;
     });
   }
 
@@ -120,10 +120,10 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage('https://bit.ly/3Lstjcq'),
-                  ),
+                  CircleAvatar(
+                      radius: 30,
+                      backgroundImage:
+                          CachedNetworkImageProvider(_restaurantPhoto)),
                   const SizedBox(height: 10),
                   Text(
                     _restaurantName,
@@ -169,7 +169,10 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ProfileSettings(),
+                    builder: (context) => ProfileSettings(
+                        name: _restaurantName,
+                        description: _restaurantDescription,
+                        photo: _restaurantPhoto),
                   ),
                 );
               },

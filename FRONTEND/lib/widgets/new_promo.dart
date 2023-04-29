@@ -2,22 +2,7 @@
 
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:integrador/routes/imports.dart';
-
-final cloudinary = CloudinaryPublic('dti2zyzir', 'prueba');
-
-Future<String?> uploadImageToCloudinary(File imageFile) async {
-  try {
-    final response = await cloudinary.uploadFile(
-      CloudinaryFile.fromFile(imageFile.path),
-    );
-
-    return response.secureUrl;
-  } catch (e) {
-    return null;
-  }
-}
 
 class NuevaPromo extends StatefulWidget {
   final Function(bool) createOffer;
@@ -73,7 +58,7 @@ class _NuevaPromoState extends State<NuevaPromo> {
     setState(() {
       _isDoingFetch = true;
     });
-    String? imageUrl = await uploadImageToCloudinary(_image!);
+    String? imageUrl = await Functions.uploadImageToCloudinary(_image!);
     await APIService.createOffer(
             name.text, description.text, price.text, imageUrl!)
         .then((value) => {
@@ -97,196 +82,190 @@ class _NuevaPromoState extends State<NuevaPromo> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: blanco,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          iconTheme: const IconThemeData(color: Colors.white),
-          toolbarHeight: 80,
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                "Nueva Promoción",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Agrega una nueva promoción para tus clientes',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-          centerTitle: true,
-          actions: [
-            IgnorePointer(
-              ignoring: _isDoingFetch,
-              child: IconButton(
-                onPressed: () async {
-                  createOffer();
-                },
-                icon: const Icon(
-                  Icons.save,
-                  size: 28,
-                ),
-              ),
-            ),
-          ],
-          leading: IgnorePointer(
-            ignoring: _isDoingFetch,
-            child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.cancel,
-                size: 28,
-              ),
-            ),
-          ),
-          backgroundColor: naranja,
-          elevation: 0,
-        ),
-        body: Stack(
-          children: <Widget>[
-            IgnorePointer(
-                ignoring: _isDoingFetch,
-                child: ListView(
-                  children: [
-                    Center(
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 35),
-                            child: CustomTextField(
-                                textEditingController: name,
-                                labelText: "",
-                                hintText: "Nombre del producto",
-                                icon: Icons.fastfood),
-                          ),
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 35),
-                            child: CustomTextField(
-                                textEditingController: description,
-                                labelText: "",
-                                hintText: "Descripción del producto",
-                                icon: Icons.description),
-                          ),
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 35),
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.black38,
-                                        blurRadius: 5,
-                                        offset: Offset(0, 2)),
-                                  ],
-                                ),
-                                height: 60,
-                                child: TextField(
-                                  controller: price,
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      decimal: true),
-                                  style: const TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.only(top: 15),
-                                      prefixIcon: Icon(Icons.monetization_on,
-                                          color: HexColor('#E64A19')),
-                                      hintText: "Precio del producto",
-                                      hintStyle: TextStyle(
-                                          color: HexColor('#212121'))),
-                                ),
-                              )),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              if (_image != null)
-                                Image.file(
-                                  _image!,
-                                  width: 250,
-                                  height: 250,
-                                ),
-                              SizedBox(height: 25),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      // Acción al presionar el botón de subir imagen
-                                      _pickImage(ImageSource.gallery);
-                                    },
-                                    icon: const Icon(Icons.image),
-                                    label: const Text('Subir imagen'),
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: botones,
-                                      minimumSize: const Size(150, 50),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      // Acción al presionar el botón de tomar foto
-                                      _pickImage(ImageSource.camera);
-                                    },
-                                    icon: const Icon(Icons.camera_alt),
-                                    label: const Text('Tomar foto'),
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: botones,
-                                      minimumSize: const Size(150, 50),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 35)
-                            ],
-                          ),
-                        ],
+    return Stack(
+      children: [
+        IgnorePointer(
+          ignoring: _isDoingFetch,
+          child: Scaffold(
+              backgroundColor: blanco,
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                iconTheme: const IconThemeData(color: Colors.white),
+                toolbarHeight: 80,
+                title: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "Nueva Promoción",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Agrega una nueva promoción para tus clientes',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
                       ),
                     ),
                   ],
-                )),
-            if (_isDoingFetch)
-              Container(
-                color: Colors.black.withOpacity(0.5),
-                child: const Center(
-                  child: CircularProgressIndicator(),
                 ),
+                centerTitle: true,
+                actions: [
+                  IconButton(
+                    onPressed: () async {
+                      createOffer();
+                    },
+                    icon: const Icon(
+                      Icons.save,
+                      size: 28,
+                    ),
+                  ),
+                ],
+                leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.cancel,
+                    size: 28,
+                  ),
+                ),
+                backgroundColor: naranja,
+                elevation: 0,
               ),
-          ],
-        ));
+              body: ListView(
+                children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                          child: CustomTextField(
+                              textEditingController: name,
+                              labelText: "",
+                              hintText: "Nombre del producto",
+                              icon: Icons.fastfood),
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                          child: CustomTextField(
+                              textEditingController: description,
+                              labelText: "",
+                              hintText: "Descripción del producto",
+                              icon: Icons.description),
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 35),
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      color: Colors.black38,
+                                      blurRadius: 5,
+                                      offset: Offset(0, 2)),
+                                ],
+                              ),
+                              height: 60,
+                              child: TextField(
+                                controller: price,
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                style: const TextStyle(color: Colors.black),
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    contentPadding:
+                                        const EdgeInsets.only(top: 15),
+                                    prefixIcon: Icon(Icons.monetization_on,
+                                        color: HexColor('#E64A19')),
+                                    hintText: "Precio del producto",
+                                    hintStyle:
+                                        TextStyle(color: HexColor('#212121'))),
+                              ),
+                            )),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            if (_image != null)
+                              Image.file(
+                                _image!,
+                                width: 250,
+                                height: 250,
+                              ),
+                            SizedBox(height: 25),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    // Acción al presionar el botón de subir imagen
+                                    _pickImage(ImageSource.gallery);
+                                  },
+                                  icon: const Icon(Icons.image),
+                                  label: const Text('Subir imagen'),
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: botones,
+                                    minimumSize: const Size(150, 50),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    // Acción al presionar el botón de tomar foto
+                                    _pickImage(ImageSource.camera);
+                                  },
+                                  icon: const Icon(Icons.camera_alt),
+                                  label: const Text('Tomar foto'),
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: botones,
+                                    minimumSize: const Size(150, 50),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 35)
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
+        ),
+        if (_isDoingFetch)
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+      ],
+    );
   }
 }
