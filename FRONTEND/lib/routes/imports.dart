@@ -35,4 +35,6 @@ export 'package:url_launcher/url_launcher.dart';
 export 'package:integrador/widgets/animacion_imagen.dart';
 export 'package:flutter_spinkit/flutter_spinkit.dart';
 export 'package:cached_network_image/cached_network_image.dart';
+export 'package:integrador/widgets/slider.dart';
+export 'package:integrador/pages/mapa.dart';
 export 'dart:convert';

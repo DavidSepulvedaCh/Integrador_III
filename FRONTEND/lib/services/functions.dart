@@ -2,6 +2,7 @@ import 'package:integrador/routes/imports.dart';
 import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
 
+
 class Functions {
   static void logout(BuildContext context) async {
     await updateFavorites();
@@ -83,14 +84,16 @@ class Functions {
 
   static Future<String?> uploadImageToCloudinary(File imageFile) async {
     final cloudinary = CloudinaryPublic('dti2zyzir', 'prueba');
-  try {
-    final response = await cloudinary.uploadFile(
-      CloudinaryFile.fromFile(imageFile.path),
-    );
+    try {
+      final response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(imageFile.path),
+      );
 
-    return response.secureUrl;
-  } catch (e) {
-    return null;
+      return response.secureUrl;
+    } catch (e) {
+      return null;
+    }
   }
-}
+
+
 }

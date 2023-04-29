@@ -1,3 +1,4 @@
+import 'package:integrador/pages/edit_user.dart';
 import 'package:integrador/routes/imports.dart';
 
 class Index extends StatefulWidget {
@@ -17,6 +18,17 @@ class _IndexState extends State<Index> {
   List<Offer> offerss = <Offer>[];
   int _currentIndex = 0;
   double maxPrice = 0;
+
+  List<String> imageUrls = [
+    'https://bit.ly/3ngEDPI',
+    'https://ubr.to/40XnecM',
+    'https://bit.ly/3LfDGz7'
+  ];
+  List<String> captions = [
+    'DelValle BBQ',
+    'Porto Burger',
+    'Comics Pizza',
+  ];
 
   /* ================ Filter's variables ========= */
   PriceFilter priceFilter =
@@ -112,42 +124,6 @@ class _IndexState extends State<Index> {
     return maxPriceApi;
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-    switch (index) {
-      case 0:
-        setState(
-          () {
-            view = ListOffers(offers: offerss);
-            typeOfView = 'list';
-          },
-        );
-        break;
-      case 1:
-        setState(
-          () {
-            view = GridOffers(offers: offerss);
-            typeOfView = 'grid';
-          },
-        );
-        break;
-      case 2:
-        setState(
-          () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Favorites()));
-          },
-        );
-        break;
-
-      case 3:
-        Functions.logout(context);
-        break;
-    }
-  }
-
   /* ================= Filter's functions ============= */
 
   void showModal() {
@@ -159,46 +135,58 @@ class _IndexState extends State<Index> {
             return Column(
               children: <Widget>[
                 const SizedBox(height: 15),
-                RadioListTile(
-                    title: const Text('Bucaramanga'),
-                    value: 'Bucaramanga',
-                    selected: selectedValue == 'Bucaramanga',
-                    groupValue: selectedValue,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() => selectedValue = value);
-                      }
-                    }),
-                RadioListTile(
-                    title: const Text('Piedecuesta'),
-                    value: 'Piedecuesta',
-                    selected: selectedValue == 'Piedecuesta',
-                    groupValue: selectedValue,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() => selectedValue = value);
-                      }
-                    }),
-                RadioListTile(
-                    title: const Text('Girón'),
-                    value: 'Girón',
-                    selected: selectedValue == 'Girón',
-                    groupValue: selectedValue,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() => selectedValue = value);
-                      }
-                    }),
-                RadioListTile(
-                    title: const Text('Floridablanca'),
-                    value: 'Floridablanca',
-                    selected: selectedValue == 'Floridablanca',
-                    groupValue: selectedValue,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() => selectedValue = value);
-                      }
-                    }),
+                Flexible(
+                  flex: 1,
+                  child: RadioListTile(
+                      title: const Text('Bucaramanga'),
+                      value: 'Bucaramanga',
+                      selected: selectedValue == 'Bucaramanga',
+                      groupValue: selectedValue,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => selectedValue = value);
+                        }
+                      }),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: RadioListTile(
+                      title: const Text('Piedecuesta'),
+                      value: 'Piedecuesta',
+                      selected: selectedValue == 'Piedecuesta',
+                      groupValue: selectedValue,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => selectedValue = value);
+                        }
+                      }),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: RadioListTile(
+                      title: const Text('Girón'),
+                      value: 'Girón',
+                      selected: selectedValue == 'Girón',
+                      groupValue: selectedValue,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => selectedValue = value);
+                        }
+                      }),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: RadioListTile(
+                      title: const Text('Floridablanca'),
+                      value: 'Floridablanca',
+                      selected: selectedValue == 'Floridablanca',
+                      groupValue: selectedValue,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => selectedValue = value);
+                        }
+                      }),
+                ),
                 priceFilter = priceFilter.maxPrice == 0
                     ? PriceFilter(
                         maxPrice: maxPrice,
@@ -259,15 +247,64 @@ class _IndexState extends State<Index> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Lista de ofertas'),
-        backgroundColor: Colors.deepOrange,
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: const Icon(Icons.menu), // Icono a mostrar
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
+        title: Flexible(
+          flex: 2,
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Colors.deepOrange,
+                ),
+                onPressed: () {
+                  _scaffoldKey.currentState?.openDrawer();
+                },
+              ),
+              const Flexible(
+                flex: 1,
+                child: Text(
+                  'FOODHUB',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Flexible(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      _name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      _email,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              const CircleAvatar(
+                radius: 20,
+                backgroundImage: NetworkImage('https://bit.ly/3Lstjcq'),
+              ),
+            ],
+          ),
         ),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
       ),
       drawer: Drawer(
         child: ListView(
@@ -322,17 +359,31 @@ class _IndexState extends State<Index> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.filter_alt,
+                  color: Color.fromARGB(220, 255, 86, 34)),
+              title: const Text('filtros'),
+              onTap: () {
+                showModal();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.map,
+                  color: Color.fromARGB(220, 255, 86, 34)),
+              title: const Text('Mapa'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MapSample(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.edit,
                   color: Color.fromARGB(220, 255, 86, 34)),
               title: const Text('Editar perfil'),
-              onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const ProfileSettings(),
-                //   ),
-                // );
-              },
+              onTap: () {},
             ),
             ListTile(
               leading: const Icon(Icons.logout,
@@ -348,65 +399,34 @@ class _IndexState extends State<Index> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          //filtrosBuild(),
+          const Padding(
+            padding: EdgeInsets.only(left: 15, top: 20, bottom: 20),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Nuestros restaurantes: ",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ),
           Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Column(
-                children: [
-                  const Text(
-                      '¡Para mayor facilidad seleccione los filtros de tu preferencia!'),
-                  Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: ElevatedButton.icon(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                HexColor('#E64A19')),
-                          ),
-                          label: const Text(
-                            'Filtros',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
-                          ),
-                          icon: const Icon(Icons.filter_list),
-                          onPressed: () {
-                            showModal();
-                          })),
-                  // ZonaBottomSheet(maxPrice: maxPrice),
-                ],
-              )),
-          Flexible(child: view)
+            padding: const EdgeInsets.only(left: 15, bottom: 20, right: 15),
+            child: ImageSliderWidget(imageUrls: imageUrls, captions: captions),
+          ),
+          const Divider(
+            thickness: 0.8,
+            color: Color.fromARGB(82, 88, 88, 87),
+            indent: 20,
+            endIndent: 20,
+          ),
+
+          Flexible(child: view),
         ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: _onItemTapped,
-        // ignore: prefer_const_literals_to_create_immutables
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.list, color: Colors.deepOrange),
-            label: 'Lista',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.grid_4x4, color: Colors.deepOrange),
-            label: 'Grilla',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.favorite, color: Colors.deepOrange),
-            label: 'Favoritos',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.logout, color: Colors.deepOrange),
-            label: 'Salir',
-          ),
-        ],
-        selectedLabelStyle: const TextStyle(color: Colors.red),
       ),
     );
   }

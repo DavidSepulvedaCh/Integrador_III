@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
         '/signUpRestaurant':(context) => const RegisterRestaurant(),
         '/index': ((context) => const Index()),
         '/restaurantIndex':(context) =>  const HomeRestaurante(),
+        '/mapa':(context) => const MapSample(),
       },
     );
   }

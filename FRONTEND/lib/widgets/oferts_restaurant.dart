@@ -38,17 +38,20 @@ class OfertaRestaurante extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: CachedNetworkImage(
-                imageUrl: photo,
-                width: 115,
-                height: 115,
-                placeholder: (context, url) => const SpinKitRing(
-                  color: Colors.deepOrange,
-                  size: 50.0,
+            Flexible(
+              flex: 1,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: CachedNetworkImage(
+                  imageUrl: photo,
+                  width: 115,
+                  height: 115,
+                  placeholder: (context, url) => const SpinKitRing(
+                    color: Colors.deepOrange,
+                    size: 50.0,
+                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
             const SizedBox(width: 15),
