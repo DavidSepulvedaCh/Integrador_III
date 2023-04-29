@@ -17,6 +17,6 @@ class Config {
   static const String getMaxPriceAllOffers = 'api/offers/getMaxPriceAllOffers';
   static const String registerRestaurant = '/api/users/restaurant/register';
   static const String updateRestaurantName = '/api/users/restaurant/updateName';
-  static const String updateRestaurantPhoto= '/api/users/updatePhoto';
+  static const String updatePhoto= '/api/users/updatePhoto';
   static const String updateRestaurantDescription = '/api/users/restaurant/updateDescription';
 }

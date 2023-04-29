@@ -61,7 +61,7 @@ class SharedService{
     await prefs.setString("name", name);
   }
 
-  static Future<void> updateRestaurantPhoto(String photo) async {
+  static Future<void> updatePhoto(String photo) async {
     await prefs.setString("photo", photo);
   }
 

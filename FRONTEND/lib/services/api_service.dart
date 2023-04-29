@@ -448,8 +448,8 @@ class APIService {
     }
   }
 
-  static Future<bool> updateRestaurantPhoto(String photo) async {
-    Uri url = Uri.http(Config.apiURL, Config.updateRestaurantPhoto);
+  static Future<bool> updatePhoto(String photo) async {
+    Uri url = Uri.http(Config.apiURL, Config.updatePhoto);
     final header = {
       "Access-Control-Allow-Origin": "*",
       'Content-Type': 'application/json',
@@ -463,7 +463,7 @@ class APIService {
               headers: header, body: jsonEncode({'id': id, 'photo': photo, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
-        await SharedService.updateRestaurantPhoto(photo);
+        await SharedService.updatePhoto(photo);
         return true;
       } else {
         return false;

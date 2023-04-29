@@ -53,7 +53,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     if(url == ""){
       return;
     }
-    APIService.updateRestaurantPhoto(url)
+    APIService.updatePhoto(url)
         .then((value) => {
               if (value)
                 {
