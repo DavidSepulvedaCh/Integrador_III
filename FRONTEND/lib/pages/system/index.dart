@@ -1,4 +1,3 @@
-import 'package:integrador/pages/edit_user.dart';
 import 'package:integrador/routes/imports.dart';
 
 class Index extends StatefulWidget {
@@ -16,6 +15,7 @@ class _IndexState extends State<Index> {
   String typeOfView = 'list';
   late Widget view = Container();
   List<Offer> offerss = <Offer>[];
+  List<Restaurant> restaurants = <Restaurant>[];
   int _currentIndex = 0;
   double maxPrice = 0;
 
@@ -47,6 +47,20 @@ class _IndexState extends State<Index> {
       _email = SharedService.prefs.getString("email") ?? "Correo electrónico";
       _photo = SharedService.prefs.getString("photo")!;
     });
+    setRestaurantsInformation();
+  }
+
+  Future<void> setRestaurantsInformation() async {
+    await getRestaurantsInformation().then((value) {
+      setState(() {
+        restaurants.addAll(value);
+      });
+    });
+  }
+
+  Future<List<Restaurant>> getRestaurantsInformation() async {
+    var register = await APIService.getInformationOfAllRestaurants();
+    return register;
   }
 
   Future<void> setOffers() async {
@@ -247,7 +261,8 @@ class _IndexState extends State<Index> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Flexible(
+        title: Flex(direction: Axis.horizontal, children: [
+          Flexible(
           flex: 2,
           child: Row(
             children: [
@@ -303,6 +318,8 @@ class _IndexState extends State<Index> {
             ],
           ),
         ),
+        
+        ],),
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
       ),
