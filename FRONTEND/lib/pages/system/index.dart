@@ -17,7 +17,7 @@ class _IndexState extends State<Index> {
   late Widget view = Container();
   List<Offer> offerss = <Offer>[];
   List<Restaurant> restaurants = <Restaurant>[];
-  double maxPrice = 0;
+  double _maxPrice = 0;
 
   List<String> imageUrls = [
     'https://bit.ly/3ngEDPI',
@@ -129,7 +129,11 @@ class _IndexState extends State<Index> {
   Future<void> setMaxPrice() async {
     await getMaxPrice().then((value) {
       setState(() {
-        maxPrice = value;
+        if(value == -1){
+          _maxPrice = 1;
+        } else {
+          _maxPrice = value;
+        }
       });
     });
   }
@@ -205,8 +209,8 @@ class _IndexState extends State<Index> {
                 ),
                 priceFilter = priceFilter.maxPrice == 0
                     ? PriceFilter(
-                        maxPrice: maxPrice,
-                        rangeValues: RangeValues(0, maxPrice))
+                        maxPrice: _maxPrice,
+                        rangeValues: RangeValues(0, _maxPrice))
                     : priceFilter,
                 IgnorePointer(
                   ignoring: _isDoingFetch,
