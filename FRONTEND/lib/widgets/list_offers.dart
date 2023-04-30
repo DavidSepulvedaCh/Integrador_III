@@ -41,6 +41,54 @@ class ListOffers extends StatelessWidget {
     }
   }
 
+  void _showModalImage(BuildContext context, String imageUrl) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      builder: (context) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: SizedBox(
+            height: 500,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    placeholder: (context, url) => const SpinKitRing(
+                      color: Colors.deepOrange,
+                      size: 50.0,
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showModal(BuildContext context, int index) {
     showModalBottomSheet(
       context: context,
@@ -52,77 +100,81 @@ class ListOffers extends StatelessWidget {
           height: 500,
           child: Column(
             children: <Widget>[
-              Container(
-                height: 180,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    CachedNetworkImage(
-                      imageUrl: offers[index].photo!,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.width * 0.75, // NUEVO
-                      placeholder: (context, url) => const SpinKitRing(
-                        color: Colors.deepOrange,
-                        size: 50.0,
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+              GestureDetector(
+                onTap: () {_showModalImage(context, offers[index].photo!);},
+                child: Container(
+                  height: 180,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
                     ),
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: <Color>[
-                              Colors.black.withOpacity(0.6),
-                              Colors.transparent,
-                            ],
+                  ),
+                  child: Stack(
+                    children: <Widget>[
+                      CachedNetworkImage(
+                        imageUrl: offers[index].photo!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height:
+                            MediaQuery.of(context).size.width * 0.75, // NUEVO
+                        placeholder: (context, url) => const SpinKitRing(
+                          color: Colors.deepOrange,
+                          size: 50.0,
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: <Color>[
+                                Colors.black.withOpacity(0.6),
+                                Colors.transparent,
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      top: 16,
-                      left: 16,
-                      child: Text(
-                        offers[index].restaurantName ?? "Nombre restaurante",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 2,
-                      ),
-                    ),
-                    Positioned(
-                      top: 48,
-                      left: 16,
-                      child: SizedBox(
-                        width: 350,
+                      Positioned(
+                        top: 16,
+                        left: 16,
                         child: Text(
-                          offers[index].address!,
+                          offers[index].restaurantName ?? "Nombre restaurante",
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
                           maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        top: 48,
+                        left: 16,
+                        child: SizedBox(
+                          width: 350,
+                          child: Text(
+                            offers[index].address!,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(
@@ -198,9 +250,8 @@ class ListOffers extends StatelessWidget {
                               lati = double.parse(offers[index].latitude!);
                               long = double.parse(offers[index].longitude!);
                               final destino = LatLng(lati, long);
-                              final origen = await _getCurrentLocation();
-                              // ignore: prefer_const_declarations
-                              //final origen = const LatLng(7.098191, -73.123305);
+                              //final origen = await _getCurrentLocation();
+                              final origen = LatLng(7.098191, -73.123305);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

@@ -57,13 +57,14 @@ class _MapaRutaWidgetState extends State<MapaRutaWidget> {
   void _getRoute() async {
     String googleMapsApiKey = "AIzaSyCAdQh3u8eBv2ASDf_qh0e92al8TK_ETy4";
     final String url =
-  'https://maps.googleapis.com/maps/api/directions/json?origin=${widget.origen.latitude},${widget.origen.longitude}&destination=${widget.destino.latitude},${widget.destino.longitude}&mode=driving&key=${googleMapsApiKey}';
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${widget.origen.latitude},${widget.origen.longitude}&destination=${widget.destino.latitude},${widget.destino.longitude}&mode=driving&key=${googleMapsApiKey}';
 
     final response = await http.get(Uri.parse(url));
 
     final Map<String, dynamic> data = jsonDecode(response.body);
 
     List<LatLng> points = [];
+    List<String> instructions = []; // Lista de instrucciones
 
     if (data['status'] == 'OK') {
       data['routes'][0]['legs'][0]['steps'].forEach((step) {
@@ -71,13 +72,23 @@ class _MapaRutaWidgetState extends State<MapaRutaWidget> {
             step['start_location']['lat'], step['start_location']['lng']));
         points.add(
             LatLng(step['end_location']['lat'], step['end_location']['lng']));
+
+        // Extraer la instrucción de este paso y agregarla a la lista de instrucciones
+        String instruction = step['html_instructions'];
+        instruction =
+            instruction.replaceAll('<b>', ''); // Eliminar las etiquetas HTML
+        instruction = instruction.replaceAll('</b>', '');
+        instruction =
+            instruction.replaceAll('<div style="font-size:0.9em">', ' ');
+        instruction = instruction.replaceAll('</div>', '');
+        instructions.add(instruction.trim());
       });
 
       setState(() {
         _polylines.add(Polyline(
-          polylineId: const PolylineId('route'),
+          polylineId: PolylineId('route'),
           points: points,
-          color: const Color.fromARGB(255, 243, 93, 33),
+          color: Color.fromARGB(255, 243, 93, 33),
           width: 5,
         ));
       });
