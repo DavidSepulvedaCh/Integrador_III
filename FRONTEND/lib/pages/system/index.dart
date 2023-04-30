@@ -433,7 +433,7 @@ class _IndexState extends State<Index> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 15, bottom: 20, right: 15),
-            child: ImageSliderWidget(imageUrls: imageUrls, captions: captions),
+            child: Deslizar(),
           ),
           const Divider(
             thickness: 0.8,

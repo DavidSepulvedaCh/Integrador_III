@@ -1,10 +1,7 @@
 // ignore_for_file: unused_element
 
 import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:integrador/routes/imports.dart';
 
 class MapSample extends StatefulWidget {
   const MapSample({Key? key}) : super(key: key);
@@ -14,31 +11,40 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
+  List<Restaurant> restaurants = <Restaurant>[];
   List<Marker> _markers = [];
 
 // Lista de coordenadas con sus nombres
-  List<Map<String, dynamic>> coordinatesList = [
-    {"name": "Lugar 1", "latitude": 7.119349, "longitude": -73.122742},
-    {"name": "Lugar 2", "latitude": 7.118678, "longitude": -73.119956},
-    {"name": "Lugar 3", "latitude": 7.111902, "longitude": -73.120012},
-  ];
 
 // Crear los marcadores a partir de la lista de coordenadas
-  void _createMarkers() {
-    for (final coordinates in coordinatesList) {
-      final marker = Marker(
-        markerId: MarkerId(coordinates["name"]),
-        position: LatLng(coordinates["latitude"], coordinates["longitude"]),
-        infoWindow: InfoWindow(title: coordinates["name"]),
-      );
-      _markers.add(marker);
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    _createMarkers();
+    setRestaurantsInformation();
+  }
+
+  Future<void> setRestaurantsInformation() async {
+    final List<Restaurant> restaurants = await getRestaurantsInformation();
+    setState(() {
+      _createMarkers(restaurants);
+    });
+  }
+
+  Future<List<Restaurant>> getRestaurantsInformation() async {
+    final register = await APIService.getInformationOfAllRestaurants();
+    return register;
+  }
+
+  void _createMarkers(List<Restaurant> restaurants) {
+    for (final restaurant in restaurants) {
+      final marker = Marker(
+        markerId: MarkerId(restaurant.id!),
+        position: LatLng(double.parse(restaurant.latitude!),
+            double.parse(restaurant.longitude!)),
+        infoWindow: InfoWindow(title: restaurant.name!),
+      );
+      _markers.add(marker);
+    }
   }
 
   final Completer<GoogleMapController> _controller =
@@ -47,7 +53,7 @@ class MapSampleState extends State<MapSample> {
   // ignore: prefer_const_declarations
   static final CameraPosition _bucaramangaPosition = const CameraPosition(
     target: LatLng(7.119349, -73.122742),
-    zoom: 30,
+    zoom: 12,
   );
 
   @override
@@ -56,6 +62,16 @@ class MapSampleState extends State<MapSample> {
       appBar: AppBar(
         title: const Text("Mapa"),
         backgroundColor: Colors.deepOrange,
+        actions: [
+          IconButton(
+            onPressed: () {
+              for (var restaurant in restaurants) {
+                print(restaurant.name);
+              }
+            },
+            icon: const Icon(Icons.menu),
+          )
+        ],
       ),
       body: GoogleMap(
         mapType: MapType.normal,
@@ -66,7 +82,6 @@ class MapSampleState extends State<MapSample> {
           _controller.complete(controller);
         },
         markers: Set<Marker>.of(_markers),
-        
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(left: 30, bottom: 15),

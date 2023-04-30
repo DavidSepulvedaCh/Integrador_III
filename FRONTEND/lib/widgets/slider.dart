@@ -1,63 +1,93 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
+import 'package:integrador/routes/imports.dart';
 
-class ImageSliderWidget extends StatelessWidget {
-  final List<String> imageUrls;
-  final List<String> captions;
+class Deslizar extends StatefulWidget {
+  const Deslizar({Key? key}) : super(key: key);
 
-  const ImageSliderWidget(
-      {super.key, required this.imageUrls, required this.captions});
+  @override
+  State<Deslizar> createState() => _DeslizarState();
+}
+
+class _DeslizarState extends State<Deslizar> {
+  late Future<List<Restaurant>> _restaurantsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _restaurantsFuture = getRestaurantsInformation();
+  }
+
+  Future<List<Restaurant>> getRestaurantsInformation() async {
+    final register = await APIService.getInformationOfAllRestaurants();
+    return register;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider.builder(
-      itemCount: imageUrls.length,
-      itemBuilder: (BuildContext context, int index, int realIndex) {
-        return Container(
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(147, 175, 175, 175),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                child: Image.network(
-                  imageUrls[index],
-                  height: 65,
-                  width: 65,
-                ),
+    return FutureBuilder<List<Restaurant>>(
+      future: _restaurantsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final restaurants = snapshot.data!;
+            return CarouselSlider.builder(
+              itemCount: restaurants.length,
+              itemBuilder: (BuildContext context, int index, int realIndex) {
+                return Container(
+                  height: 100,
+                  width: MediaQuery.of(context).size.width / 3,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(111, 175, 175, 175),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        child: Image.network(
+                          restaurants[index].photo!,
+                          height: 65,
+                          width: 65,
+                        ),
+                      ),
+                      Text(
+                        restaurants[index].name!,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                );
+              },
+              options: CarouselOptions(
+                height: 100,
+                enlargeCenterPage: false,
+                enableInfiniteScroll: true,
+                aspectRatio: 16 / 9,
+                viewportFraction: 1 / 2,
+                initialPage: 0,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                scrollDirection: Axis.horizontal,
               ),
-              Text(
-                captions[index],
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-        );
+            );
+          }
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
       },
-      options: CarouselOptions(
-        height: 100,
-        enlargeCenterPage: false,
-        enableInfiniteScroll: true,
-        aspectRatio: 16 / 9, // Proporción de aspecto de los elementos
-        viewportFraction: 1 /
-            3, // Fracción de la pantalla que ocupan los elementos (en este caso, 1/4 para mostrar 4 elementos)
-        initialPage: 0, // Página inicial
-        reverse: false, // Desplazamiento en orden inverso
-        autoPlay: true, // Reproducción automática
-        autoPlayInterval: const Duration(
-            seconds:
-                3), // Intervalo de tiempo entre cada reproducción automática
-        autoPlayAnimationDuration: const Duration(
-            milliseconds:
-                800), // Duración de la animación de reproducción automática
-        autoPlayCurve: Curves
-            .fastOutSlowIn, // Curva de animación de reproducción automática
-        scrollDirection: Axis.horizontal,
-      ),
     );
   }
 }
