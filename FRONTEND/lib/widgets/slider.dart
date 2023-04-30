@@ -49,7 +49,7 @@ class _DeslizarState extends State<Deslizar> {
                       Container(
                         padding: const EdgeInsets.all(5),
                         child: Image.network(
-                          restaurants[index].photo!,
+                          restaurants[index].photo ?? "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg",
                           height: 65,
                           width: 65,
                         ),

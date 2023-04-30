@@ -78,7 +78,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
       _restaurantEmail = SharedService.prefs.getString("email") ?? "email";
       _restaurantAddress =
           SharedService.prefs.getString('address') ?? "Colombia";
-      _restaurantPhoto = SharedService.prefs.getString('photo')!;
+      _restaurantPhoto = SharedService.prefs.getString('photo') ?? "https://bit.ly/3Lstjcq";
       _restaurantDescription = SharedService.prefs.getString('description')!;
     });
   }

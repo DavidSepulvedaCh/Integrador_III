@@ -11,6 +11,7 @@ class _IndexState extends State<Index> {
   late String _name;
   late String _email;
   late String _photo;
+  bool _isDoingFetch = false;
 
   String typeOfView = 'list';
   late Widget view = Container();
@@ -45,7 +46,8 @@ class _IndexState extends State<Index> {
     setState(() {
       _name = SharedService.prefs.getString("name") ?? "User name";
       _email = SharedService.prefs.getString("email") ?? "Correo electrónico";
-      _photo = SharedService.prefs.getString("photo")!;
+      _photo =
+          SharedService.prefs.getString("photo") ?? "https://bit.ly/3Lstjcq";
     });
     setRestaurantsInformation();
   }
@@ -206,46 +208,62 @@ class _IndexState extends State<Index> {
                         maxPrice: maxPrice,
                         rangeValues: RangeValues(0, maxPrice))
                     : priceFilter,
-                ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                IgnorePointer(
+                  ignoring: _isDoingFetch,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
                       ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(HexColor('#E64A19')),
                     ),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(HexColor('#E64A19')),
+                    child: const Text('Aceptar'),
+                    onPressed: () {
+                      setState(() {
+                        _isDoingFetch = true;
+                      });
+                      if (selectedValue.isEmpty) {
+                        setOffersByPriceRange()
+                            .then((value) => {
+                                  setState(() {
+                                    if (typeOfView == 'list') {
+                                      view = ListOffers(offers: offerss);
+                                    } else {
+                                      view = GridOffers(offers: offerss);
+                                    }
+                                  })
+                                })
+                            .then((value) => {Navigator.pop(context)})
+                            .then((value) => {
+                                  Navigator.pop(context),
+                                  setState(() {
+                                    _isDoingFetch = false;
+                                  })
+                                });
+                      } else {
+                        setOffersByCityAndPriceRange()
+                            .then((value) => {
+                                  setState(() {
+                                    if (typeOfView == 'list') {
+                                      view = ListOffers(offers: offerss);
+                                    } else {
+                                      view = GridOffers(offers: offerss);
+                                    }
+                                  })
+                                })
+                            .then((value) => {Navigator.pop(context)})
+                            .then((value) => {
+                                  Navigator.pop(context),
+                                  setState(() {
+                                    _isDoingFetch = false;
+                                  })
+                                });
+                      }
+                    },
                   ),
-                  child: const Text('Aceptar'),
-                  onPressed: () async {
-                    if (selectedValue.isEmpty) {
-                      setState(() {
-                        view = ListOffers(offers: const []);
-                      });
-                      await setOffersByPriceRange();
-                      setState(() {
-                        if (typeOfView == 'list') {
-                          view = ListOffers(offers: offerss);
-                        } else {
-                          view = GridOffers(offers: offerss);
-                        }
-                      });
-                    } else {
-                      setState(() {
-                        view = ListOffers(offers: const []);
-                      });
-                      await setOffersByCityAndPriceRange();
-                      setState(() {
-                        if (typeOfView == 'list') {
-                          view = ListOffers(offers: offerss);
-                        } else {
-                          view = GridOffers(offers: offerss);
-                        }
-                      });
-                    }
-                    // ignore: use_build_context_synchronously
-                    Navigator.pop(context, selectedValue);
-                  },
                 ),
               ],
             );
@@ -261,65 +279,66 @@ class _IndexState extends State<Index> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Flex(direction: Axis.horizontal, children: [
-          Flexible(
-          flex: 2,
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.deepOrange,
-                ),
-                onPressed: () {
-                  _scaffoldKey.currentState?.openDrawer();
-                },
-              ),
-              const Flexible(
-                flex: 1,
-                child: Text(
-                  'FOODHUB',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+        title: Flex(
+          direction: Axis.horizontal, children: [
+            Flexible(
+              flex: 2,
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.menu,
+                      color: Colors.deepOrange,
+                    ),
+                    onPressed: () {
+                      _scaffoldKey.currentState?.openDrawer();
+                    },
                   ),
-                ),
-              ),
-              const Spacer(),
-              Flexible(
-                flex: 1,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      _name,
-                      style: const TextStyle(
-                        fontSize: 16,
+                  const Flexible(
+                    flex: 1,
+                    child: Text(
+                      'FOODHUB',
+                      style: TextStyle(
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
                     ),
-                    Text(
-                      _email,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                  ),
+                  const Spacer(),
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          _name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          _email,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 16),
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: CachedNetworkImageProvider(_photo),
+                  ),
+                ],
               ),
-              const SizedBox(width: 16),
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: CachedNetworkImageProvider(_photo),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        
-        ],),
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
       ),
@@ -444,8 +463,8 @@ class _IndexState extends State<Index> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, bottom: 20, right: 15),
+          const Padding(
+            padding: EdgeInsets.only(left: 15, bottom: 20, right: 15),
             child: Deslizar(),
           ),
           const Divider(
