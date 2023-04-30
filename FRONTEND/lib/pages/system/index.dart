@@ -17,7 +17,6 @@ class _IndexState extends State<Index> {
   late Widget view = Container();
   List<Offer> offerss = <Offer>[];
   List<Restaurant> restaurants = <Restaurant>[];
-  int _currentIndex = 0;
   double maxPrice = 0;
 
   List<String> imageUrls = [
@@ -463,9 +462,9 @@ class _IndexState extends State<Index> {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 15, bottom: 20, right: 15),
-            child: Deslizar(),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, bottom: 20, right: 15),
+            child: Deslizar(restaurants: restaurants),
           ),
           const Divider(
             thickness: 0.8,

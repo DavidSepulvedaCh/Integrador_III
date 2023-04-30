@@ -251,7 +251,7 @@ class ListOffers extends StatelessWidget {
                               long = double.parse(offers[index].longitude!);
                               final destino = LatLng(lati, long);
                               //final origen = await _getCurrentLocation();
-                              final origen = LatLng(7.098191, -73.123305);
+                              const origen = LatLng(7.098191, -73.123305);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

@@ -7,10 +7,10 @@ class MapaRutaWidget extends StatefulWidget {
   final LatLng origen;
   final LatLng destino;
 
-  MapaRutaWidget({required this.origen, required this.destino});
+  const MapaRutaWidget({super.key, required this.origen, required this.destino});
 
   @override
-  _MapaRutaWidgetState createState() => _MapaRutaWidgetState();
+  State<MapaRutaWidget> createState() => _MapaRutaWidgetState();
 }
 
 class _MapaRutaWidgetState extends State<MapaRutaWidget> {
@@ -86,9 +86,9 @@ class _MapaRutaWidgetState extends State<MapaRutaWidget> {
 
       setState(() {
         _polylines.add(Polyline(
-          polylineId: PolylineId('route'),
+          polylineId: const PolylineId('route'),
           points: points,
-          color: Color.fromARGB(255, 243, 93, 33),
+          color: const Color.fromARGB(255, 243, 93, 33),
           width: 5,
         ));
       });
