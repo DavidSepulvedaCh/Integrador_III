@@ -239,7 +239,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Image.network(
-                        'https://bit.ly/3mTInGh',
+                        _restaurantPhoto,
                         height: 40,
                         width: 40,
                       ),

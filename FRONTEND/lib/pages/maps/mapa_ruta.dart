@@ -38,16 +38,16 @@ class _MapaRutaWidgetState extends State<MapaRutaWidget> {
   void initState() {
     super.initState();
     _markers.add(Marker(
-      markerId: MarkerId('origen'),
+      markerId: const MarkerId('origen'),
       position: widget.origen,
-      infoWindow: InfoWindow(
+      infoWindow: const InfoWindow(
         title: 'Origen',
       ),
     ));
     _markers.add(Marker(
-      markerId: MarkerId('destino'),
+      markerId: const MarkerId('destino'),
       position: widget.destino,
-      infoWindow: InfoWindow(
+      infoWindow: const InfoWindow(
         title: 'Destino',
       ),
     ));
@@ -55,9 +55,9 @@ class _MapaRutaWidgetState extends State<MapaRutaWidget> {
   }
 
   void _getRoute() async {
-    String GoogleMapsApiKey = "AIzaSyCAdQh3u8eBv2ASDf_qh0e92al8TK_ETy4";
+    String googleMapsApiKey = "AIzaSyCAdQh3u8eBv2ASDf_qh0e92al8TK_ETy4";
     final String url =
-  'https://maps.googleapis.com/maps/api/directions/json?origin=${widget.origen.latitude},${widget.origen.longitude}&destination=${widget.destino.latitude},${widget.destino.longitude}&mode=driving&key=${GoogleMapsApiKey}';
+  'https://maps.googleapis.com/maps/api/directions/json?origin=${widget.origen.latitude},${widget.origen.longitude}&destination=${widget.destino.latitude},${widget.destino.longitude}&mode=driving&key=${googleMapsApiKey}';
 
     final response = await http.get(Uri.parse(url));
 
@@ -75,9 +75,9 @@ class _MapaRutaWidgetState extends State<MapaRutaWidget> {
 
       setState(() {
         _polylines.add(Polyline(
-          polylineId: PolylineId('route'),
+          polylineId: const PolylineId('route'),
           points: points,
-          color: Color.fromARGB(255, 243, 93, 33),
+          color: const Color.fromARGB(255, 243, 93, 33),
           width: 5,
         ));
       });
