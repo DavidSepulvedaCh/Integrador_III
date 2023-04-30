@@ -144,6 +144,7 @@ class _IndexState extends State<Index> {
   void showModal() {
     showModalBottomSheet(
       context: context,
+      isDismissible: false,
       builder: (context) {
         return StatefulBuilder(
           builder: ((BuildContext context, StateSetter setState) {
@@ -235,9 +236,9 @@ class _IndexState extends State<Index> {
                                     }
                                   })
                                 })
-                            .then((value) => {Navigator.pop(context)})
                             .then((value) => {
-                                  Navigator.pop(context),
+                                  if (Navigator.canPop(context))
+                                    {Navigator.pop(context)},
                                   setState(() {
                                     _isDoingFetch = false;
                                   })
@@ -253,9 +254,9 @@ class _IndexState extends State<Index> {
                                     }
                                   })
                                 })
-                            .then((value) => {Navigator.pop(context)})
                             .then((value) => {
-                                  Navigator.pop(context),
+                                  if (Navigator.canPop(context))
+                                    {Navigator.pop(context)},
                                   setState(() {
                                     _isDoingFetch = false;
                                   })
@@ -275,146 +276,152 @@ class _IndexState extends State<Index> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Flex(
-          direction: Axis.horizontal, children: [
-            Flexible(
-              flex: 2,
-              child: Row(
+    return Stack(
+      children: [
+        IgnorePointer(
+          ignoring: _isDoingFetch,
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+              title: Flex(
+                direction: Axis.horizontal,
                 children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.menu,
-                      color: Colors.deepOrange,
-                    ),
-                    onPressed: () {
-                      _scaffoldKey.currentState?.openDrawer();
-                    },
-                  ),
-                  const Flexible(
-                    flex: 1,
-                    child: Text(
-                      'FOODHUB',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
                   Flexible(
-                    flex: 1,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    flex: 2,
+                    child: Row(
                       children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.menu,
+                            color: Colors.deepOrange,
+                          ),
+                          onPressed: () {
+                            _scaffoldKey.currentState?.openDrawer();
+                          },
+                        ),
+                        const Flexible(
+                          flex: 1,
+                          child: Text(
+                            'FOODHUB',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Flexible(
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                _name,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Text(
+                                _email,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: CachedNetworkImageProvider(_photo),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.white,
+              automaticallyImplyLeading: false,
+            ),
+            drawer: Drawer(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  DrawerHeader(
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(207, 255, 86, 34),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage: CachedNetworkImageProvider(_photo),
+                        ),
+                        const SizedBox(height: 10),
                         Text(
                           _name,
                           style: const TextStyle(
-                            fontSize: 16,
+                            color: Colors.white,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
                           ),
                         ),
                         Text(
                           _email,
                           style: const TextStyle(
+                            color: Colors.white,
                             fontSize: 14,
-                            color: Colors.grey,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundImage: CachedNetworkImageProvider(_photo),
+                  ListTile(
+                    leading: const Icon(Icons.favorite,
+                        color: Color.fromARGB(220, 255, 86, 34)),
+                    title: const Text('Mis favoritos'),
+                    onTap: () {
+                      setState(
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Favorites(),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(207, 255, 86, 34),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: CachedNetworkImageProvider(_photo),
+                  ListTile(
+                    leading: const Icon(Icons.filter_alt,
+                        color: Color.fromARGB(220, 255, 86, 34)),
+                    title: const Text('filtros'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      showModal();
+                    },
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    _name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  ListTile(
+                    leading: const Icon(Icons.map,
+                        color: Color.fromARGB(220, 255, 86, 34)),
+                    title: const Text('Mapa'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MapSample(),
+                        ),
+                      );
+                    },
                   ),
-                  Text(
-                    _email,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.favorite,
-                  color: Color.fromARGB(220, 255, 86, 34)),
-              title: const Text('Mis favoritos'),
-              onTap: () {
-                setState(
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Favorites(),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.filter_alt,
-                  color: Color.fromARGB(220, 255, 86, 34)),
-              title: const Text('filtros'),
-              onTap: () {
-                showModal();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.map,
-                  color: Color.fromARGB(220, 255, 86, 34)),
-              title: const Text('Mapa'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MapSample(),
-                  ),
-                );
-              },
-            ),
-           /*  ListTile(
+                  /*  ListTile(
               leading: const Icon(Icons.map,
                   color: Color.fromARGB(220, 255, 86, 34)),
               title: const Text('ejemplo ruta'),
@@ -427,55 +434,66 @@ class _IndexState extends State<Index> {
                 );
               },
             ), */
-            ListTile(
-              leading: const Icon(Icons.edit,
-                  color: Color.fromARGB(220, 255, 86, 34)),
-              title: const Text('Editar perfil'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout,
-                  color: Color.fromARGB(220, 255, 86, 34)),
-              title: const Text('Cerrar Sesión'),
-              onTap: () {
-                Functions.logout(context);
-              },
-            ),
-          ],
-        ),
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          //filtrosBuild(),
-          const Padding(
-            padding: EdgeInsets.only(left: 15, top: 20, bottom: 20),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Nuestros restaurantes: ",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
+                  ListTile(
+                    leading: const Icon(Icons.edit,
+                        color: Color.fromARGB(220, 255, 86, 34)),
+                    title: const Text('Editar perfil'),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.logout,
+                        color: Color.fromARGB(220, 255, 86, 34)),
+                    title: const Text('Cerrar Sesión'),
+                    onTap: () {
+                      Functions.logout(context);
+                    },
+                  ),
+                ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, bottom: 20, right: 15),
-            child: Deslizar(restaurants: restaurants),
-          ),
-          const Divider(
-            thickness: 0.8,
-            color: Color.fromARGB(82, 88, 88, 87),
-            indent: 20,
-            endIndent: 20,
-          ),
+            body: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                //filtrosBuild(),
+                const Padding(
+                  padding: EdgeInsets.only(left: 15, top: 20, bottom: 20),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Nuestros restaurantes: ",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 15, bottom: 20, right: 15),
+                  child: Deslizar(restaurants: restaurants),
+                ),
+                const Divider(
+                  thickness: 0.8,
+                  color: Color.fromARGB(82, 88, 88, 87),
+                  indent: 20,
+                  endIndent: 20,
+                ),
 
-          Flexible(child: view),
-        ],
-      ),
+                Flexible(child: view),
+              ],
+            ),
+          ),
+        ),
+        if (_isDoingFetch)
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+      ],
     );
   }
 }
