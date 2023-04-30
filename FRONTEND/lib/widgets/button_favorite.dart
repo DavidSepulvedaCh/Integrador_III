@@ -11,7 +11,6 @@ class ButtonFavorite extends StatefulWidget {
 }
 
 class _ButtonFavoriteState extends State<ButtonFavorite> {
-
   @override
   void initState() {
     super.initState();
@@ -21,15 +20,22 @@ class _ButtonFavoriteState extends State<ButtonFavorite> {
   Color heartColor = Colors.blueGrey;
 
   isInFavorites(String idOffer) async {
+    if (idOffer == "default" || !mounted) {
+      return;
+    }
     bool exists = await SQLiteDB.existsFavorite(idOffer);
     if (exists) {
-      setState(() {
-        heartColor = Colors.red;
-      });
+      if (mounted) {
+        setState(() {
+          heartColor = Colors.red;
+        });
+      }
     } else {
-      setState(() {
-        heartColor = Colors.blueGrey;
-      });
+      if (mounted) {
+        setState(() {
+          heartColor = Colors.blueGrey;
+        });
+      }
     }
   }
 
