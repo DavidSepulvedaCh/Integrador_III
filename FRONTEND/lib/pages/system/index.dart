@@ -396,6 +396,19 @@ class _IndexState extends State<Index> {
                 );
               },
             ),
+           /*  ListTile(
+              leading: const Icon(Icons.map,
+                  color: Color.fromARGB(220, 255, 86, 34)),
+              title: const Text('ejemplo ruta'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MapaRutaWidget(origen: origen, destino: destino),
+                  ),
+                );
+              },
+            ), */
             ListTile(
               leading: const Icon(Icons.edit,
                   color: Color.fromARGB(220, 255, 86, 34)),

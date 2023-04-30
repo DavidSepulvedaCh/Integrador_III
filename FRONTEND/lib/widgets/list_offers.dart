@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
 import 'package:integrador/routes/imports.dart';
 
@@ -194,11 +194,21 @@ class ListOffers extends StatelessWidget {
                         children: [
                           const SizedBox(height: 8),
                           ElevatedButton.icon(
-                            onPressed: () {
+                            onPressed: () async {
                               lati = double.parse(offers[index].latitude!);
                               long = double.parse(offers[index].longitude!);
                               final destino = LatLng(lati, long);
-                              openMaps(destino);
+                              final origen = await _getCurrentLocation();
+                              // ignore: prefer_const_declarations
+                              //final origen = const LatLng(7.098191, -73.123305);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MapaRutaWidget(
+                                      origen: origen, destino: destino),
+                                ),
+                              );
+                              //openMaps(destino);
                             },
                             icon: const Icon(Icons.location_city),
                             label: const Text("¿Cómo llegar?"),
