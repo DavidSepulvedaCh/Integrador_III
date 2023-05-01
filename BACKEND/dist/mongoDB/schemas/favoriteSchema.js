@@ -6,7 +6,7 @@ const FavoriteSchema = new mongoose_1.Schema({
         type: String,
         required: true
     },
-    idOffer: {
+    idRestaurant: {
         type: String,
         required: true
     }

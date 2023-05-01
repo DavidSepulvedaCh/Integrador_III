@@ -153,6 +153,15 @@ class UserModel {
                 fn(remove);
             }
         });
+        this.restaurantExists = (id) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const offerExists = yield this.MongoDBC.RestaurantSchema.findById(id);
+                return true;
+            }
+            catch (error) {
+                return false;
+            }
+        });
         this.restaurantRegister = (restaurantDetails, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             try {
@@ -174,6 +183,30 @@ class UserModel {
             }
             catch (error) {
                 console.log(error);
+            }
+        });
+        this.getRestaurantById = (id, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            try {
+                const restaurant = yield this.MongoDBC.RestaurantSchema.find({
+                    _id: new mongodb_1.ObjectId(id)
+                })
+                    .populate({
+                    path: 'idUser',
+                    model: 'users',
+                    select: 'name photo',
+                    match: { role: 'restaurant' }
+                })
+                    .select('-__v')
+                    .exec();
+                return fn({
+                    restaurant: restaurant
+                });
+            }
+            catch (error) {
+                return fn({
+                    error: 'Invalid id'
+                });
             }
         });
         this.getRestaurantInformationByIdUser = (idUser, fn) => __awaiter(this, void 0, void 0, function* () {
@@ -208,6 +241,21 @@ class UserModel {
                 .select('-__v')
                 .exec();
             return fn(restaurants);
+        });
+        this.getRestaurantsInformationByIds = (idsList, fn) => __awaiter(this, void 0, void 0, function* () {
+            this.MongoDBC.connection();
+            const restaurants = yield this.MongoDBC.RestaurantSchema.find({
+                _id: { $in: idsList }
+            }) // Obtener todos los restaurantes
+                .populate({
+                path: 'idUser',
+                model: 'users',
+                select: 'name photo',
+                match: { role: 'restaurant' } // Filtro para usuarios con el rol 'restaurant'
+            })
+                .select('-__v')
+                .exec();
+            return fn({ restaurants: restaurants });
         });
         this.updateRestaurantName = (idUser, name, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();

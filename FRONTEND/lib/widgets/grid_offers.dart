@@ -264,8 +264,7 @@ class GridOffers extends StatelessWidget {
                         "\$ ${offers[index].price}",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontFamily: 'Raleway'),
-                      ),
-                      ButtonFavorite(idOffer: offers[index].id)
+                      )
                     ],
                   ),
                 )

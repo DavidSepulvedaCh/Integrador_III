@@ -18,7 +18,7 @@ class Functions {
   }
 
   static loginSuccess(BuildContext context) async {
-    List<Offer> favorites = await APIService.getFavorites();
+    List<Restaurant> favorites = await APIService.getFavorites();
     await SQLiteDB.saveFavorites(favorites);
     // ignore: use_build_context_synchronously
     Navigator.pushReplacementNamed(context, '/index');

@@ -28,7 +28,7 @@ class FavoriteController {
                 resolve(favorites);
             });
         });
-        const currentIds: any[] = currentFavorites.map((favorite: any) => favorite.idOffer);
+        const currentIds: any[] = currentFavorites.map((favorite: any) => favorite.idRestaurant);
 
         /* ======================== For to add the ids ===================== */
 
@@ -38,8 +38,8 @@ class FavoriteController {
                 if (currentIds.includes(id)) {
                     continue;
                 } else {
-                    var offerExists: boolean = await this.offerModel.offerExists(id);
-                    if (!offerExists) {
+                    var restaurantExists: boolean = await this.userModel.restaurantExists(id);
+                    if (!restaurantExists) {
                         return res.status(400).send({
                             error: 'Invalid data'
                         });
@@ -73,18 +73,18 @@ class FavoriteController {
     }
 
     public addFavorite = async (req: Request, res: Response) => {
-        const { idUser, idOffer } = req.body;
-        if (!idUser || !idOffer) {
+        const { idUser, idRestaurant } = req.body;
+        if (!idUser || !idRestaurant) {
             return res.status(400).send({
                 error: 'Missing data'
             });
         }
-        if (typeof idUser !== 'string' || typeof idOffer !== 'string') {
+        if (typeof idUser !== 'string' || typeof idRestaurant !== 'string') {
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        var favoriteExists: boolean = await this.favoritesModel.favoriteExists(idUser, idOffer);
+        var favoriteExists: boolean = await this.favoritesModel.favoriteExists(idUser, idRestaurant);
         if (favoriteExists) {
             return res.status(410).send({
                 error: 'Favorite already exists'
@@ -96,13 +96,13 @@ class FavoriteController {
                 error: 'Invalid data'
             });
         }
-        var offerExists: boolean = await this.offerModel.offerExists(idOffer);
-        if (!offerExists) {
+        var restaurantExists: boolean = await this.userModel.restaurantExists(idRestaurant);
+        if (!restaurantExists) {
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        this.favoritesModel.addFavorite(idUser, idOffer, (response: any) => {
+        this.favoritesModel.addFavorite(idUser, idRestaurant, (response: any) => {
             if (response.error) {
                 return res.status(400).send({
                     error: response.error
@@ -113,24 +113,24 @@ class FavoriteController {
     }
 
     public removeFavorite = async (req: Request, res: Response) => {
-        const { idUser, idOffer } = req.body;
-        if (!idUser || !idOffer) {
+        const { idUser, idRestaurant } = req.body;
+        if (!idUser || !idRestaurant) {
             return res.status(400).send({
                 error: 'Missing data'
             });
         }
-        if (typeof idUser !== 'string' || typeof idOffer !== 'string') {
+        if (typeof idUser !== 'string' || typeof idRestaurant !== 'string') {
             return res.status(400).send({
                 error: 'Invalid data'
             });
         }
-        var favoriteExists: boolean = await this.favoritesModel.favoriteExists(idUser, idOffer);
+        var favoriteExists: boolean = await this.favoritesModel.favoriteExists(idUser, idRestaurant);
         if (!favoriteExists) {
             return res.status(400).send({
                 error: 'Favorite no exists'
             });
         }
-        this.favoritesModel.removeFavorite(idUser, idOffer, (response: any) => {
+        this.favoritesModel.removeFavorite(idUser, idRestaurant, (response: any) => {
             if (response.deletedCount != 1) {
                 return res.status(400).send({
                     error: response.error
@@ -152,14 +152,14 @@ class FavoriteController {
                 error: 'Invalid data'
             });
         }
-        var ids_offers: any;
+        var ids_restaurants: any;
         await this.favoritesModel.getFavorites(idUser, (response: any) => {
-            ids_offers = response.map((element: { idOffer: any; }) => element.idOffer);
+            ids_restaurants = response.map((element: { idRestaurant: any; }) => element.idRestaurant);
         });
-        if (ids_offers.length == 0) {
-            return res.status(200).json({ offers: ids_offers });
+        if (ids_restaurants.length == 0) {
+            return res.status(200).json({ restaurants: ids_restaurants });
         }
-        this.offerModel.getByIds(ids_offers, (response: any) => {
+        this.userModel.getRestaurantsInformationByIds(ids_restaurants, (response: any) => {
             return res.status(200).send(response);
         });
     }

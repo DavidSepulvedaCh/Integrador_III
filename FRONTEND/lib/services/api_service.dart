@@ -238,8 +238,8 @@ class APIService {
     }
   }
 
-  static Future<Offer?> getOfferById(String idOffer) async {
-    Uri url = Uri.http(Config.apiURL, Config.getOfferById);
+  static Future<Restaurant?> getRestaurantById(String idRestaurant) async {
+    Uri url = Uri.http(Config.apiURL, Config.getRestaurantById);
     final header = {
       "Access-Control-Allow-Origin": "*",
       'Content-Type': 'application/json',
@@ -250,12 +250,11 @@ class APIService {
       final response = await http
           .post(url,
               headers: header,
-              body: jsonEncode({'id': idOffer, 'token': token}))
+              body: jsonEncode({'id': idRestaurant, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
-        var offer = jsonDecode(response.body);
-        offer = offer['offer'];
-        return Offer.fromJson(offer);
+        var restaurant = jsonDecode(response.body);
+        return Restaurant.fromJson(restaurant.first);
       } else {
         return null;
       }
@@ -290,7 +289,7 @@ class APIService {
     }
   }
 
-  static Future<List<Offer>> getFavorites() async {
+  static Future<List<Restaurant>> getFavorites() async {
     Uri url = Uri.http(Config.apiURL, Config.getFavorites);
     final header = {
       "Access-Control-Allow-Origin": "*",
@@ -306,10 +305,10 @@ class APIService {
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
-        final List<dynamic> offersJson = json['offers'];
-        List<Offer> offerList =
-            offersJson.map((offerJson) => Offer.fromJson(offerJson)).toList();
-        return offerList;
+        final List<dynamic> restaurantsJson = json['restaurants'];
+        List<Restaurant> restaurantList=
+            restaurantsJson.map((restaurantJson) => Restaurant.fromJson(restaurantJson)).toList();
+        return restaurantList;
       } else {
         return [];
       }

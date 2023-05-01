@@ -2,9 +2,9 @@ import 'package:integrador/routes/imports.dart';
 
 // ignore: must_be_immutable
 class ButtonFavorite extends StatefulWidget {
-  String? idOffer;
+  String? idRestaurant;
 
-  ButtonFavorite({super.key, this.idOffer});
+  ButtonFavorite({super.key, this.idRestaurant});
 
   @override
   State<ButtonFavorite> createState() => _ButtonFavoriteState();
@@ -14,16 +14,16 @@ class _ButtonFavoriteState extends State<ButtonFavorite> {
   @override
   void initState() {
     super.initState();
-    isInFavorites(widget.idOffer ?? 'default');
+    isInFavorites(widget.idRestaurant ?? 'default');
   }
 
   Color heartColor = Colors.blueGrey;
 
-  isInFavorites(String idOffer) async {
-    if (idOffer == "default" || !mounted) {
+  isInFavorites(String idRestaurant) async {
+    if (idRestaurant == "default" || !mounted) {
       return;
     }
-    bool exists = await SQLiteDB.existsFavorite(idOffer);
+    bool exists = await SQLiteDB.existsFavorite(idRestaurant);
     if (exists) {
       if (mounted) {
         setState(() {
@@ -39,21 +39,21 @@ class _ButtonFavoriteState extends State<ButtonFavorite> {
     }
   }
 
-  addFavorite(String idOffer) async {
+  addFavorite(String idRestaurant) async {
     String idUser = SharedService.prefs.getString('id') ?? 'default';
-    if (idUser == 'default' || idOffer == 'default') {
+    if (idUser == 'default' || idRestaurant == 'default') {
       return;
     }
-    bool exists = await SQLiteDB.existsFavorite(idOffer);
+    bool exists = await SQLiteDB.existsFavorite(idRestaurant);
     if (exists) {
-      await SQLiteDB.delete(idOffer);
+      await SQLiteDB.delete(idRestaurant);
       setState(() {
         heartColor = Colors.blueGrey;
       });
     } else {
-      Offer? product = await APIService.getOfferById(idOffer);
-      if (product != null) {
-        await SQLiteDB.insert(product);
+      Restaurant? restaurant = await APIService.getRestaurantById(idRestaurant);
+      if (restaurant != null) {
+        await SQLiteDB.insert(restaurant);
         setState(() {
           heartColor = Colors.red;
         });
@@ -64,7 +64,7 @@ class _ButtonFavoriteState extends State<ButtonFavorite> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () => addFavorite(widget.idOffer ?? 'default'),
+      onPressed: () => addFavorite(widget.idRestaurant ?? 'default'),
       icon: const Icon(Icons.favorite),
       color: heartColor,
       padding: const EdgeInsets.only(left: 0),

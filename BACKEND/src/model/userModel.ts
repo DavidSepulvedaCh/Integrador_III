@@ -165,6 +165,15 @@ class UserModel {
         }
     }
 
+    public restaurantExists = async (id: string): Promise<boolean> => {
+        try {
+            const offerExists = await this.MongoDBC.RestaurantSchema.findById(id);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
     public restaurantRegister = async (restaurantDetails: IRestaurant, fn: Function) => {
         this.MongoDBC.connection();
         try {
@@ -185,6 +194,30 @@ class UserModel {
             });
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    public getRestaurantById = async (id: string, fn: Function) => {
+        this.MongoDBC.connection();
+        try {
+            const restaurant = await this.MongoDBC.RestaurantSchema.find({
+                _id: new ObjectId(id)
+            })
+            .populate({
+                path: 'idUser',
+                model: 'users',
+                select: 'name photo',
+                match: { role: 'restaurant' }
+            })
+            .select('-__v')
+            .exec();
+            return fn({
+                restaurant: restaurant
+            });
+        } catch (error) {
+            return fn({
+                error: 'Invalid id'
+            });
         }
     }
 
@@ -223,6 +256,22 @@ class UserModel {
             .select('-__v')
             .exec();
         return fn(restaurants);
+    }
+
+    public getRestaurantsInformationByIds = async (idsList: string, fn: Function) => {
+        this.MongoDBC.connection();
+        const restaurants = await this.MongoDBC.RestaurantSchema.find({
+            _id: { $in: idsList }
+        }) // Obtener todos los restaurantes
+            .populate({ // Referencia a la colección de usuarios y obtener su campo 'name'
+                path: 'idUser',
+                model: 'users',
+                select: 'name photo',
+                match: { role: 'restaurant' } // Filtro para usuarios con el rol 'restaurant'
+            })
+            .select('-__v')
+            .exec();
+        return fn({ restaurants: restaurants });
     }
 
     public updateRestaurantName = async (idUser: string, name: string, fn: Function) => {

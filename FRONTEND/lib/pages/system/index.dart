@@ -391,16 +391,16 @@ class _IndexState extends State<Index> {
                         color: Color.fromARGB(220, 255, 86, 34)),
                     title: const Text('Mis favoritos'),
                     onTap: () {
-                      setState(
-                        () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Favorites(),
-                            ),
-                          );
-                        },
-                      );
+                      // setState(
+                      //   () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => const Favorites(),
+                      //       ),
+                      //     );
+                      //   },
+                      // );
                     },
                   ),
                   ListTile(

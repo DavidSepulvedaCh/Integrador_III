@@ -6,7 +6,7 @@ const FavoriteSchema = new Schema({
         type: String,
         required: true
     },
-    idOffer: {
+    idRestaurant: {
         type: String,
         required: true
     }

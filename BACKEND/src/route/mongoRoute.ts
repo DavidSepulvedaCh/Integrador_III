@@ -30,6 +30,7 @@ class MongoRoute{
         this.router.post('/users/restaurant/updateName', this.userController.updateRestaurantName);
         this.router.post('/users/updatePhoto', this.userController.updatePhoto);
         this.router.post('/users/restaurant/updateDescription', this.userController.updateRestaurantDescription);
+        this.router.post('/users/restaurant/getById', this.userController.getRestaurantById);
         this.router.post('/users/restaurant/getInformationOfAllRestaurants', this.userController.getInformationAllRestaurants);
         this.router.post('/offers', this.offerController.getOffers);
         this.router.post('/offers/register', this.offerController.register);

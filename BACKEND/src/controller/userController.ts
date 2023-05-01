@@ -83,7 +83,31 @@ class UserController {
         } catch (error) {
             console.log(error);
         }
+    }
 
+    public getRestaurantById = async (req: Request, res: Response) => {
+        const { id } = req.body;
+        if (!id) {
+            return res.status(400).send({
+                error: 'Missing data'
+            });
+        }
+        if (typeof id != "string") {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        if (id.length <= 1) {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        this.userModel.getRestaurantById(id, (response: any) => {
+            if (response.error) {
+                return res.status(409).json({ error: response.error });
+            }
+            return res.status(200).send(response.restaurant);
+        });
     }
 
     public getRestaurantInformationByIdUser = async (req: Request, res: Response) => {

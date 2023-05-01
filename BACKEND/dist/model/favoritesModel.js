@@ -16,11 +16,11 @@ const mongoDBC_1 = __importDefault(require("../mongoDB/mongoDBC"));
 const favoriteSchema_1 = __importDefault(require("../mongoDB/schemas/favoriteSchema"));
 class FavoritesModel {
     constructor() {
-        this.addFavorite = (idUser, idOffer, fn) => __awaiter(this, void 0, void 0, function* () {
+        this.addFavorite = (idUser, idRestaurant, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             let favoriteDetails = new favoriteSchema_1.default({
                 idUser: idUser,
-                idOffer: idOffer
+                idRestaurant: idRestaurant
             });
             const newFavorite = yield favoriteDetails.save();
             if (newFavorite._id) {
@@ -33,11 +33,11 @@ class FavoritesModel {
                 error: 'Register error'
             });
         });
-        this.removeFavorite = (idUser, idOffer, fn) => __awaiter(this, void 0, void 0, function* () {
+        this.removeFavorite = (idUser, idRestaurant, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             const deleteFavorite = yield this.MongoDBC.FavoriteSchema.deleteOne({
                 idUser: idUser,
-                idOffer: idOffer
+                idRestaurant: idRestaurant
             });
             fn(deleteFavorite);
         });
@@ -48,10 +48,10 @@ class FavoritesModel {
             });
             fn(favorites);
         });
-        this.favoriteExists = (idUser, idOffer) => __awaiter(this, void 0, void 0, function* () {
+        this.favoriteExists = (idUser, idRestaurant) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             const favorite = yield this.MongoDBC.FavoriteSchema.find({
-                idOffer: { $eq: idOffer }
+                idRestaurant: { $eq: idRestaurant }
             });
             if (favorite.length > 0) {
                 return true;

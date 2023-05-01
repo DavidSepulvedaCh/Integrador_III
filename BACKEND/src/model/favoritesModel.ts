@@ -9,11 +9,11 @@ class FavoritesModel {
         this.MongoDBC = new MongoDBC();
     }
 
-    public addFavorite = async (idUser: string, idOffer: string, fn: Function) => {
+    public addFavorite = async (idUser: string, idRestaurant: string, fn: Function) => {
         this.MongoDBC.connection();
         let favoriteDetails = new FavoriteSchema({
             idUser: idUser,
-            idOffer: idOffer
+            idRestaurant: idRestaurant
         });
         const newFavorite = await favoriteDetails.save();
         if (newFavorite._id) {
@@ -27,12 +27,12 @@ class FavoritesModel {
         });
     }
 
-    public removeFavorite = async (idUser: string, idOffer: string, fn: Function) => {
+    public removeFavorite = async (idUser: string, idRestaurant: string, fn: Function) => {
         this.MongoDBC.connection();
         const deleteFavorite = await this.MongoDBC.FavoriteSchema.deleteOne(
             {
                 idUser: idUser,
-                idOffer: idOffer
+                idRestaurant: idRestaurant
             }
         );
         fn(deleteFavorite);
@@ -48,12 +48,11 @@ class FavoritesModel {
         fn(favorites);
     }
 
-    public favoriteExists = async (idUser: string, idOffer: String): Promise<boolean> => {
+    public favoriteExists = async (idUser: string, idRestaurant: String): Promise<boolean> => {
         this.MongoDBC.connection();
         const favorite = await this.MongoDBC.FavoriteSchema.find(
             {
-                
-                idOffer: { $eq: idOffer }
+                idRestaurant: { $eq: idRestaurant }
             }
         );
         if (favorite.length > 0) {

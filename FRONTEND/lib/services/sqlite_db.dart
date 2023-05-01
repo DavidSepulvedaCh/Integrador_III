@@ -5,25 +5,24 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class SQLiteDB {
-
   static Future<Database> _openDB() async {
-    return openDatabase(join(await getDatabasesPath(), 'Offers.db'),
+    return openDatabase(join(await getDatabasesPath(), 'Restaurants.db'),
         onCreate: (db, version) {
       return db.execute(
-        "CREATE TABLE offers (id TEXT PRIMARY KEY, address TEXT, latitude TEXT, longitude TEXT, name TEXT, description TEXT, photo TEXT, price REAL, idSeller TEXT, restaurantName TEXT, city TEXT)",
+        "CREATE TABLE restaurants (id TEXT PRIMARY KEY, photo TEXT, address TEXT, latitude TEXT, longitude TEXT, name TEXT, description TEXT, city TEXT)",
       );
     }, version: 1);
   }
 
-  static Future<void> saveFavorites(List<Offer> offers) async {
+  static Future<void> saveFavorites(List<Restaurant> restaurants) async {
     final db = await _openDB();
 
     final batch = db.batch();
 
-    for (final offer in offers) {
+    for (final restaurant in restaurants) {
       batch.insert(
-        'offers',
-        offer.toJson(),
+        'restaurants',
+        restaurant.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
@@ -34,45 +33,44 @@ class SQLiteDB {
   static Future<bool> existsFavorite(String id) async {
     Database database = await _openDB();
 
-    final result = await database.query('offers',
+    final result = await database.query('restaurants',
         where: "id = ?", whereArgs: [id], limit: 1);
 
     return result.isNotEmpty;
   }
 
-  static Future<void> insert(Offer offer) async {
+  static Future<void> insert(Restaurant restaurant) async {
     Database database = await _openDB();
 
-    database.insert('offers', offer.toJson());
+    database.insert('restaurants', restaurant.toJson());
   }
 
   static Future<void> delete(String id) async {
     Database database = await _openDB();
 
-    database.delete('offers', where: "id = ?", whereArgs: [id]);
+    database.delete('restaurants', where: "id = ?", whereArgs: [id]);
   }
 
-  static Future<List<Offer>> getFavorites() async {
+  static Future<List<Restaurant>> getFavorites() async {
     Database database = await _openDB();
     String idUser = SharedService.prefs.getString('id') ?? 'default';
     if (idUser == 'default') {
       return [];
     }
-    final List<Map<String, dynamic>> offers = await database.query('offers');
+    final List<Map<String, dynamic>> restaurant =
+        await database.query('restaurants');
 
     return List.generate(
-        offers.length,
-        (index) => Offer(
-            id: offers[index]['id'],
-            address: offers[index]['address'],
-            latitude: offers[index]['latitude'],
-            longitude: offers[index]['longitude'],
-            name: offers[index]['name'],
-            description: offers[index]['description'],
-            photo: offers[index]['photo'],
-            price: offers[index]['price'],
-            idSeller: offers[index]['idSeller'],
-            city: offers[index]['city']));
+        restaurant.length,
+        (index) => Restaurant(
+            id: restaurant[index]['id'],
+            address: restaurant[index]['address'],
+            latitude: restaurant[index]['latitude'],
+            longitude: restaurant[index]['longitude'],
+            name: restaurant[index]['name'],
+            description: restaurant[index]['description'],
+            photo: restaurant[index]['photo'],
+            city: restaurant[index]['city']));
   }
 
   static Future<List<String>> getFavoritesListIds() async {
@@ -81,16 +79,16 @@ class SQLiteDB {
     if (idUser == 'default') {
       return [];
     }
-    final List<Map<String, dynamic>> offers = await database.query('offers');
+    final List<Map<String, dynamic>> restaurants = await database.query('restaurants');
 
     return List.generate(
-      offers.length,
-      (index) => offers[index]['id'],
+      restaurants.length,
+      (index) => restaurants[index]['id'],
     );
   }
 
   static Future<void> deleteFavorites() async {
     Database database = await _openDB();
-    await database.execute("DELETE FROM offers");
+    await database.execute("DELETE FROM restaurants");
   }
 }
