@@ -101,7 +101,6 @@ class UserModel {
         }
         let biometricLoginUserDataDetails = new biometricLoginUserData({
             email: email,
-            password: userExists.password,
             token: token
         });
         try {
