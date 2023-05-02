@@ -16,7 +16,6 @@ class LocalAuth{
           stickyAuth: true
         ));
     } catch (e) {
-      print(e);
       return false;
     }
   }

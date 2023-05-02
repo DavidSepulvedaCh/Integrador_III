@@ -1,6 +1,5 @@
 import 'package:integrador/widgets/biometric_data.dart';
 import 'package:integrador/routes/imports.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:location/location.dart' as lt;
 
 class Index extends StatefulWidget {
@@ -17,7 +16,7 @@ class _IndexState extends State<Index> {
   bool _isDoingFetch = false;
 
   bool _locationEnabled = false;
-  lt.Location _location = lt.Location();
+  final lt.Location _location = lt.Location();
 
   String typeOfView = 'list';
   late Widget view = Container();
@@ -402,7 +401,7 @@ class _IndexState extends State<Index> {
                 children: <Widget>[
                   DrawerHeader(
                     decoration: const BoxDecoration(
-                      color: Color.fromARGB(207, 255, 86, 34),
+                      color: Colors.deepOrange,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -433,7 +432,7 @@ class _IndexState extends State<Index> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.favorite,
-                        color: Color.fromARGB(220, 255, 86, 34)),
+                        color: Colors.deepOrange),
                     title: const Text('Mis favoritos'),
                     onTap: () {
                       // setState(
@@ -465,7 +464,7 @@ class _IndexState extends State<Index> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.filter_alt,
-                        color: Color.fromARGB(220, 255, 86, 34)),
+                        color: Colors.deepOrange),
                     title: const Text('filtros'),
                     onTap: () {
                       Navigator.pop(context);
@@ -474,7 +473,7 @@ class _IndexState extends State<Index> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.map,
-                        color: Color.fromARGB(220, 255, 86, 34)),
+                        color: Colors.deepOrange),
                     title: const Text('Mapa'),
                     onTap: () {
                       Navigator.push(
@@ -488,7 +487,7 @@ class _IndexState extends State<Index> {
                   
                   ListTile(
                     leading: const Icon(Icons.fingerprint,
-                        color: Color.fromARGB(220, 255, 86, 34)),
+                        color: Colors.deepOrange),
                     title: const Text('Datos biométricos'),
                     onTap: () {
                       Navigator.pop(context);
@@ -499,13 +498,13 @@ class _IndexState extends State<Index> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.edit,
-                        color: Color.fromARGB(220, 255, 86, 34)),
+                        color: Colors.deepOrange),
                     title: const Text('Editar perfil'),
                     onTap: () {},
                   ),
                   ListTile(
                     leading: const Icon(Icons.logout,
-                        color: Color.fromARGB(220, 255, 86, 34)),
+                        color: Colors.deepOrange),
                     title: const Text('Cerrar Sesión'),
                     onTap: () {
                       Functions.logout(context);

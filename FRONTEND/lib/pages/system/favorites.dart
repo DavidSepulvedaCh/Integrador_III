@@ -1,4 +1,4 @@
-import 'package:integrador/routes/imports.dart';
+// import 'package:integrador/routes/imports.dart';
 
 // class Favorites extends StatefulWidget {
 //   const Favorites({super.key});

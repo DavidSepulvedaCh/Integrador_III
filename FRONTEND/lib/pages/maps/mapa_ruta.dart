@@ -15,8 +15,8 @@ class MapaRutaWidget extends StatefulWidget {
 
 class _MapaRutaWidgetState extends State<MapaRutaWidget> {
   late GoogleMapController _controller;
-  Set<Marker> _markers = {};
-  Set<Polyline> _polylines = {};
+  final Set<Marker> _markers = {};
+  final Set<Polyline> _polylines = {};
   late LatLngBounds _bounds;
 
   @override
@@ -57,7 +57,7 @@ class _MapaRutaWidgetState extends State<MapaRutaWidget> {
   void _getRoute() async {
     String googleMapsApiKey = "AIzaSyCAdQh3u8eBv2ASDf_qh0e92al8TK_ETy4";
     final String url =
-        'https://maps.googleapis.com/maps/api/directions/json?origin=${widget.origen.latitude},${widget.origen.longitude}&destination=${widget.destino.latitude},${widget.destino.longitude}&mode=driving&key=${googleMapsApiKey}';
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${widget.origen.latitude},${widget.origen.longitude}&destination=${widget.destino.latitude},${widget.destino.longitude}&mode=driving&key=$googleMapsApiKey';
 
     final response = await http.get(Uri.parse(url));
 
@@ -105,7 +105,7 @@ class _MapaRutaWidgetState extends State<MapaRutaWidget> {
       );
 
       // Declaración de la variable antes de ser utilizada
-      GoogleMapController controller = await _controller;
+      GoogleMapController controller = _controller;
 
       controller.animateCamera(CameraUpdate.newLatLngBounds(_bounds, 50));
     }
