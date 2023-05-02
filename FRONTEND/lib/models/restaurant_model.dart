@@ -20,7 +20,7 @@ class Restaurant {
   });
 
   Restaurant.fromJson(Map<String, dynamic> json) {
-    id = json["_id"].toString();
+    id = json["idUser"]["_id"].toString();
     address = json['address'];
     latitude = json['latitude'];
     longitude = json['longitude'];

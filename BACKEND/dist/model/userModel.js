@@ -137,6 +137,7 @@ class UserModel {
                 id: userExists._id,
                 email: userExists.email,
                 name: userExists.name,
+                photo: userExists.photo,
                 role: userExists.role
             });
         });

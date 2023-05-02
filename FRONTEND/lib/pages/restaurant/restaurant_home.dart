@@ -22,7 +22,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
   String _restaurantName = "";
   String _restaurantAddress = "";
   String _restaurantEmail = "";
-  String _restaurantPhoto = "";
+  String _restaurantPhoto = "https://bit.ly/3Lstjcq";
   String _restaurantDescription = "";
   List<Offer> offerss = <Offer>[];
   late Widget view = Container();
@@ -67,7 +67,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
   }
 
   Future<List<Offer>> getOffers() async {
-    var register = await APIService.getOffersByIdUser();
+    var register = await APIService.getOffersByIdUser(null);
     return register;
   }
 
@@ -78,8 +78,10 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
       _restaurantEmail = SharedService.prefs.getString("email") ?? "email";
       _restaurantAddress =
           SharedService.prefs.getString('address') ?? "Colombia";
-      _restaurantPhoto = SharedService.prefs.getString('photo') ?? "https://bit.ly/3Lstjcq";
-      _restaurantDescription = SharedService.prefs.getString('description')!;
+      _restaurantPhoto =
+          SharedService.prefs.getString('photo') ?? "https://bit.ly/3Lstjcq";
+      _restaurantDescription =
+          SharedService.prefs.getString('description') ?? "";
     });
   }
 
@@ -173,7 +175,8 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                     builder: (context) => ProfileSettings(
                         name: _restaurantName,
                         description: _restaurantDescription,
-                        photo: _restaurantPhoto, update: _updateReload),
+                        photo: _restaurantPhoto,
+                        update: _updateReload),
                   ),
                 );
               },
@@ -238,8 +241,8 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Image.network(
-                        _restaurantPhoto,
+                      CachedNetworkImage(
+                        imageUrl: _restaurantPhoto,
                         height: 40,
                         width: 40,
                       ),
