@@ -6,8 +6,10 @@ export 'package:integrador/pages/login.dart'; // Pantalla de login
 export 'package:integrador/middlewares/is_logged_middleware.dart';
 export 'package:integrador/models/offers.dart';
 export 'package:integrador/services/shared_service.dart';
+export 'package:integrador/services/secure_storage.dart';
 export 'package:integrador/services/sqlite_db.dart';
 export 'package:integrador/services/api_service.dart';
+export 'package:integrador/services/local_auth_service.dart';
 export 'package:integrador/widgets/button_favorite.dart';
 export 'package:integrador/widgets/list_offers.dart';
 export 'package:integrador/widgets/grid_offers.dart';

@@ -21,4 +21,7 @@ class Config {
   static const String updateRestaurantName = '/api/users/restaurant/updateName';
   static const String updatePhoto= '/api/users/updatePhoto';
   static const String updateRestaurantDescription = '/api/users/restaurant/updateDescription';
+  static const String registerBiometric = '/api/users/register/biometric';
+  static const String removeBiometric = '/api/users/remove/biometric';
+  static const String loginBiometric = '/api/users/login/biometric';
 }

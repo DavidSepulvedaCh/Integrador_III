@@ -10,10 +10,24 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool _isUsingBiometric = false;
   bool _isDoingFetch = false;
 
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    buildBiometrics();
+  }
+
+  buildBiometrics() async {
+    final response = await SecureStorageService.isUsingBiometric();
+    setState(() {
+      _isUsingBiometric = response;
+    });
+  }
 
   void submit() async {
     if (Functions.validate(
@@ -40,6 +54,57 @@ class _LoginState extends State<Login> {
         });
       }
     }
+  }
+
+  void authenticate() async {
+    final auth = await LocalAuth.authenticate();
+    if (auth) {
+      setState(() {
+        _isDoingFetch = true;
+      });
+      await APIService.biometricLogin().then((value) => {
+            if (value == 0)
+              {Functions.loginSuccess(context)}
+            else if (value == 10)
+              {Navigator.pushReplacementNamed(context, '/restaurantIndex')}
+            else if (value == 1)
+              {
+                CustomShowDialog.make(
+                    context, 'Error', 'Usuario o contraseña incorrecta'),
+                setState(() {
+                  _isDoingFetch = false;
+                })
+              }
+            else
+              {
+                CustomShowDialog.make(
+                    context, 'Error', 'Ocurrió un error. Intente más tarde'),
+                setState(() {
+                  _isDoingFetch = false;
+                })
+              }
+          });
+    }
+  }
+
+  Widget buildBiometricWidget() {
+    Widget returnWidget = Container();
+    if (_isUsingBiometric) {
+      returnWidget = GestureDetector(
+        onTap: () => authenticate(),
+        child: Container(
+            margin: const EdgeInsets.only(bottom: 20),
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: Colors.blueGrey, width: 2.0),
+                borderRadius: BorderRadius.circular(30)),
+            padding: const EdgeInsets.all(10),
+            child: const Icon(Icons.fingerprint,
+                color: Color.fromARGB(220, 255, 86, 34),
+                size: 50,)),
+      );
+    }
+    return returnWidget;
   }
 
   Widget buildBtnSingUp() {
@@ -161,6 +226,7 @@ class _LoginState extends State<Login> {
                               hintText: 'Contraseña'),
                           const SizedBox(height: 25),
                           const SizedBox(height: 25),
+                          buildBiometricWidget(),
                           ButtonOne(
                               onClick: () {
                                 setState(() {

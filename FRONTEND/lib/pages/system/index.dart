@@ -1,3 +1,4 @@
+import 'package:integrador/pages/biometric_data.dart';
 import 'package:integrador/routes/imports.dart';
 
 class Index extends StatefulWidget {
@@ -129,7 +130,7 @@ class _IndexState extends State<Index> {
   Future<void> setMaxPrice() async {
     await getMaxPrice().then((value) {
       setState(() {
-        if(value == -1){
+        if (value == -1) {
           _maxPrice = 1;
         } else {
           _maxPrice = value;
@@ -425,19 +426,17 @@ class _IndexState extends State<Index> {
                       );
                     },
                   ),
-                  /*  ListTile(
-              leading: const Icon(Icons.map,
-                  color: Color.fromARGB(220, 255, 86, 34)),
-              title: const Text('ejemplo ruta'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MapaRutaWidget(origen: origen, destino: destino),
+                  ListTile(
+                    leading: const Icon(Icons.fingerprint,
+                        color: Color.fromARGB(220, 255, 86, 34)),
+                    title: const Text('Datos biométricos'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        view = const BiometricData();
+                      });
+                    },
                   ),
-                );
-              },
-            ), */
                   ListTile(
                     leading: const Icon(Icons.edit,
                         color: Color.fromARGB(220, 255, 86, 34)),

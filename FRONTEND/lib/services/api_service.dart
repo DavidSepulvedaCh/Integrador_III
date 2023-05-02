@@ -118,7 +118,9 @@ class APIService {
     var idUser = SharedService.prefs.getString("id");
     try {
       final response = await http
-          .post(url, headers: header, body: jsonEncode({ 'idUser': idUser, 'token': token}))
+          .post(url,
+              headers: header,
+              body: jsonEncode({'idUser': idUser, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         List<dynamic> jsonList = jsonDecode(response.body);
@@ -133,7 +135,8 @@ class APIService {
     }
   }
 
-  static Future<List<Offer>> getOffersByPriceRange(int minPrice, int maxPrice) async {
+  static Future<List<Offer>> getOffersByPriceRange(
+      int minPrice, int maxPrice) async {
     Uri url = Uri.http(Config.apiURL, Config.getOfferByPriceRange);
     final header = {
       "Access-Control-Allow-Origin": "*",
@@ -145,7 +148,8 @@ class APIService {
       final response = await http
           .post(url,
               headers: header,
-              body: jsonEncode({'minPrice': minPrice, 'maxPrice': maxPrice, 'token': token}))
+              body: jsonEncode(
+                  {'minPrice': minPrice, 'maxPrice': maxPrice, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         List<dynamic> jsonList = jsonDecode(response.body);
@@ -171,8 +175,7 @@ class APIService {
     try {
       final response = await http
           .post(url,
-              headers: header,
-              body: jsonEncode({'city': city, 'token': token}))
+              headers: header, body: jsonEncode({'city': city, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         List<dynamic> jsonList = jsonDecode(response.body);
@@ -187,7 +190,8 @@ class APIService {
     }
   }
 
-  static Future<List<Offer>> getOffersByCityAndPriceRange(String city, int minPrice, int maxPrice) async {
+  static Future<List<Offer>> getOffersByCityAndPriceRange(
+      String city, int minPrice, int maxPrice) async {
     Uri url = Uri.http(Config.apiURL, Config.getOfferByCityAndPriceRange);
     final header = {
       "Access-Control-Allow-Origin": "*",
@@ -199,7 +203,12 @@ class APIService {
       final response = await http
           .post(url,
               headers: header,
-              body: jsonEncode({'city': city, 'minPrice': minPrice, 'maxPrice': maxPrice, 'token': token}))
+              body: jsonEncode({
+                'city': city,
+                'minPrice': minPrice,
+                'maxPrice': maxPrice,
+                'token': token
+              }))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         List<dynamic> jsonList = jsonDecode(response.body);
@@ -306,8 +315,9 @@ class APIService {
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
         final List<dynamic> restaurantsJson = json['restaurants'];
-        List<Restaurant> restaurantList=
-            restaurantsJson.map((restaurantJson) => Restaurant.fromJson(restaurantJson)).toList();
+        List<Restaurant> restaurantList = restaurantsJson
+            .map((restaurantJson) => Restaurant.fromJson(restaurantJson))
+            .toList();
         return restaurantList;
       } else {
         return [];
@@ -332,7 +342,8 @@ class APIService {
               headers: header, body: jsonEncode({'idUser': id, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
-        RestaurantDetailsResponse model = restaurantDetailsResponse(response.body);
+        RestaurantDetailsResponse model =
+            restaurantDetailsResponse(response.body);
         await SharedService.setRestaurantDetails(model);
         return true;
       } else {
@@ -354,7 +365,8 @@ class APIService {
     try {
       final response = await http
           .post(url,
-              headers: header, body: jsonEncode({'id': idOffer, 'token': token}))
+              headers: header,
+              body: jsonEncode({'id': idOffer, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         return true;
@@ -366,7 +378,8 @@ class APIService {
     }
   }
 
-  static Future<bool> createOffer(String name, String description, String price, String imageUrl) async {
+  static Future<bool> createOffer(
+      String name, String description, String price, String imageUrl) async {
     Uri url = Uri.http(Config.apiURL, Config.createOffer);
     final header = {
       "Access-Control-Allow-Origin": "*",
@@ -379,13 +392,27 @@ class APIService {
     var longitude = SharedService.prefs.getString('longitude');
     var city = SharedService.prefs.getString('city');
     try {
-      if(token == null || address == null || latitude == null || longitude == null || city == null){
+      if (token == null ||
+          address == null ||
+          latitude == null ||
+          longitude == null ||
+          city == null) {
         return false;
       }
       final response = await http
           .post(url,
-              headers: header, body: jsonEncode({'address': address, 'latitude': latitude, 'longitude': longitude, 
-              'city': city, 'name': name, 'description': description, 'photo': imageUrl, 'price': price, 'token': token}))
+              headers: header,
+              body: jsonEncode({
+                'address': address,
+                'latitude': latitude,
+                'longitude': longitude,
+                'city': city,
+                'name': name,
+                'description': description,
+                'photo': imageUrl,
+                'price': price,
+                'token': token
+              }))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         return true;
@@ -397,7 +424,8 @@ class APIService {
     }
   }
 
-  static Future<int> registerRestaurant(RegisterRequestModel model, String latitude, String longitude, String address, String city) async {
+  static Future<int> registerRestaurant(RegisterRequestModel model,
+      String latitude, String longitude, String address, String city) async {
     Uri url = Uri.http(Config.apiURL, Config.registerRestaurant);
     final header = {
       "Access-Control-Allow-Origin": "*",
@@ -406,8 +434,17 @@ class APIService {
     };
     try {
       final response = await http
-          .post(url, headers: header, body: jsonEncode({"email": model.email, "name": model.name, "password": model.password, 
-          "latitude": latitude, "longitude": longitude, "address": address, "city": city}))
+          .post(url,
+              headers: header,
+              body: jsonEncode({
+                "email": model.email,
+                "name": model.name,
+                "password": model.password,
+                "latitude": latitude,
+                "longitude": longitude,
+                "address": address,
+                "city": city
+              }))
           .timeout(const Duration(seconds: 8));
       if (response.statusCode == 200) {
         await SharedService.setLogginDetails(loginResponseModel(response.body));
@@ -434,7 +471,8 @@ class APIService {
     try {
       final response = await http
           .post(url,
-              headers: header, body: jsonEncode({'idUser': id, 'name': name, 'token': token}))
+              headers: header,
+              body: jsonEncode({'idUser': id, 'name': name, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         await SharedService.updateRestaurantName(name);
@@ -459,7 +497,8 @@ class APIService {
     try {
       final response = await http
           .post(url,
-              headers: header, body: jsonEncode({'id': id, 'photo': photo, 'token': token}))
+              headers: header,
+              body: jsonEncode({'id': id, 'photo': photo, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         await SharedService.updatePhoto(photo);
@@ -484,7 +523,9 @@ class APIService {
     try {
       final response = await http
           .post(url,
-              headers: header, body: jsonEncode({'idUser': id, 'description': description, 'token': token}))
+              headers: header,
+              body: jsonEncode(
+                  {'idUser': id, 'description': description, 'token': token}))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         await SharedService.updateRestaurantDescription(description);
@@ -519,6 +560,104 @@ class APIService {
       }
     } catch (e) {
       return [];
+    }
+  }
+
+  static Future<int> biometricRegister(String email, String password) async {
+    var token = SharedService.prefs.getString('token');
+    if (token == 'default') {
+      return 0;
+    }
+    Uri url = Uri.http(Config.apiURL, Config.registerBiometric);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    try {
+      final body =
+          json.encode({"email": email, "password": password, "token": token});
+      final response = await http
+          .post(url, headers: header, body: body)
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        await SecureStorageService.setBiometricToken(jsonDecode(response.body));
+        return 1;
+      } else if (response.statusCode == 402) {
+        // Credenciales incorrectas
+        return 2;
+      } else if (response.statusCode == 409) {
+        // Error token repetido
+        return 3;
+      } else {
+        return 4;
+      }
+    } catch (e) {
+      return 5;
+    }
+  }
+
+  static Future<bool> removeBiometric() async {
+    var token = SharedService.prefs.getString('token');
+    String biometricToken = await SecureStorageService.getBiometricToken();
+    if (token == 'default' || biometricToken == 'default') {
+      return false;
+    }
+    Uri url = Uri.http(Config.apiURL, Config.removeBiometric);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    try {
+      final body =
+          json.encode({"token": token, "biometricToken": biometricToken});
+      final response = await http
+          .post(url, headers: header, body: body)
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        await SecureStorageService.clearBiometricToken();
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<int> biometricLogin() async {
+    var token = SharedService.prefs.getString('token');
+    String biometricToken = await SecureStorageService.getBiometricToken();
+    if (biometricToken == 'default') {
+      return -1;
+    }
+    Uri url = Uri.http(Config.apiURL, Config.loginBiometric);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    try {
+      final body =
+          json.encode({"token": token, "biometricToken": biometricToken});
+      final response = await http
+          .post(url, headers: header, body: body)
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        LoginResponseModel model = loginResponseModel(response.body);
+        await SharedService.setLogginDetails(model);
+        if (model.role == 'person') {
+          return 0;
+        } else if (model.role == 'restaurant') {
+          return 10;
+        }
+        return 2;
+      } else {
+        return 1;
+      }
+    } catch (e) {
+      return 2;
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:integrador/routes/imports.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedService.setUp();
+  await SecureStorageService.setUp();
   runApp(const MyApp());
 }
 
