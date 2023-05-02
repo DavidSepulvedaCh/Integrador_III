@@ -1,5 +1,7 @@
-import 'package:integrador/pages/biometric_data.dart';
+import 'package:integrador/widgets/biometric_data.dart';
 import 'package:integrador/routes/imports.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:location/location.dart' as lt;
 
 class Index extends StatefulWidget {
   const Index({super.key});
@@ -13,6 +15,9 @@ class _IndexState extends State<Index> {
   late String _email;
   late String _photo;
   bool _isDoingFetch = false;
+
+  bool _locationEnabled = false;
+  lt.Location _location = lt.Location();
 
   String typeOfView = 'list';
   late Widget view = Container();
@@ -50,7 +55,46 @@ class _IndexState extends State<Index> {
           SharedService.prefs.getString("photo") ?? "https://bit.ly/3Lstjcq";
     });
     setRestaurantsInformation();
+    _checkLocationEnabled();
   }
+
+  Future<void> _checkLocationEnabled() async {
+    var serviceEnabled = await _location.serviceEnabled();
+    setState(() {
+      _locationEnabled = serviceEnabled;
+    });
+  }
+
+  Future<void> _enableLocation() async {
+    var serviceEnabled = await _location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await _location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+    setState(() {
+      _locationEnabled = true;
+    });
+  }
+
+  /* Future<void> _habilitarUbicacion() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+  } */
 
   Future<void> setRestaurantsInformation() async {
     await getRestaurantsInformation().then((value) {
@@ -404,6 +448,21 @@ class _IndexState extends State<Index> {
                       // );
                     },
                   ),
+                  SwitchListTile(
+                    title: const Text('Ubicación'),
+                    value: _locationEnabled,
+                    onChanged: (bool value) {
+                      if (value) {
+                        _enableLocation();
+                      } else {
+                        setState(() {
+                          _locationEnabled = false;
+                        });
+                      }
+                    },
+                    secondary:
+                        const Icon(Icons.location_on, color: Colors.deepOrange),
+                  ),
                   ListTile(
                     leading: const Icon(Icons.filter_alt,
                         color: Color.fromARGB(220, 255, 86, 34)),
@@ -426,6 +485,7 @@ class _IndexState extends State<Index> {
                       );
                     },
                   ),
+                  
                   ListTile(
                     leading: const Icon(Icons.fingerprint,
                         color: Color.fromARGB(220, 255, 86, 34)),
