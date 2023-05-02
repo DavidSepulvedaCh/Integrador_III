@@ -188,8 +188,8 @@ class UserModel {
         this.getRestaurantById = (id, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             try {
-                const restaurant = yield this.MongoDBC.RestaurantSchema.find({
-                    _id: new mongodb_1.ObjectId(id)
+                const restaurant = yield this.MongoDBC.RestaurantSchema.findOne({
+                    idUser: { $eq: id }
                 })
                     .populate({
                     path: 'idUser',

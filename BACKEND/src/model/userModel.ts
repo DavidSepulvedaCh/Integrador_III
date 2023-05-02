@@ -200,8 +200,8 @@ class UserModel {
     public getRestaurantById = async (id: string, fn: Function) => {
         this.MongoDBC.connection();
         try {
-            const restaurant = await this.MongoDBC.RestaurantSchema.find({
-                _id: new ObjectId(id)
+            const restaurant = await this.MongoDBC.RestaurantSchema.findOne({
+                idUser: { $eq: id }
             })
             .populate({
                 path: 'idUser',
