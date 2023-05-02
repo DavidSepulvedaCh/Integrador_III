@@ -58,18 +58,62 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
+      bool result = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Ubicación desactivada'),
+            content: const Text('Por favor, active la ubicación para continuar.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancelar', style: TextStyle(color: Colors.deepOrange)),
+                onPressed: () => Navigator.of(context).pop(false),
+              ),
+              TextButton(
+                child: const Text('Aceptar', style: TextStyle(color: Colors.deepOrange)),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          );
+        },
+      );
+      if (!result) {
+        return Future.error('Location services are disabled.');
+      }
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+        bool result = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Permiso de ubicación denegado'),
+              content: const Text(
+                  'Por favor, otorgue el permiso de ubicación para continuar.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancelar', style: TextStyle(color: Colors.deepOrange)),
+                  onPressed: () => Navigator.of(context).pop(false),
+                ),
+                TextButton(
+                  child: const Text('Aceptar', style: TextStyle(color: Colors.deepOrange)),
+                  onPressed: () => Navigator.of(context).pop(true),
+                ),
+              ],
+            );
+          },
+        );
+        if (!result) {
+          return Future.error('Location permissions are denied');
+        }
       }
     }
 
     try {
+      // Obtener la ubicación actual del usuario
       final position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       setState(() {
