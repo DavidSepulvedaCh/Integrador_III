@@ -31,7 +31,8 @@ class _DeslizarState extends State<Deslizar> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => RestaurantSelected(
-                       restaurants: [widget.restaurants[index]], restaurantId: widget.restaurants[index].id!,
+                      restaurants: widget.restaurants,
+                      restaurantId: widget.restaurants[index].id!,
                     ),
                   ),
                 );

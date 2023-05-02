@@ -107,72 +107,95 @@ class OffertsCard extends StatefulWidget {
 }
 
 class _OffertsCardState extends State<OffertsCard> {
-  List<Offer> _offers = [];
-  
+  List<Offer> _offers = <Offer>[];
 
   @override
   void initState() {
     super.initState();
-    _loadOffers();
+    setOffers();
   }
 
-  Future<void> _loadOffers() async {
-    List<Offer> offers = await getOffertsRest(widget.restaurantId);
-    setState(() {
-      _offers = offers;
+  Future<void> setOffers() async {
+    _offers.clear();
+    await _loadOffers().then((value) {
+      setState(() {
+        _offers.addAll(value);
+      });
     });
+  }
+
+  Future<List<Offer>> _loadOffers() async {
+    var offers = await APIService.getOffersByIdUser(widget.restaurantId);
+    return offers;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mis Ofertas'),
-      ),
-      body: ListView.builder(
-        itemCount: _offers.length,
-        itemBuilder: (BuildContext context, int index) {
-          Offer offer = _offers[index];
-          return Card(
-            margin: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(offer.photo!),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        offer.name!,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+    return FutureBuilder<List<Offer>>(
+      future: _loadOffers(),
+      builder: (BuildContext context, AsyncSnapshot<List<Offer>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return const Center(
+            child: Text('An error has occurred!'),
+          );
+        } else {
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (BuildContext context, int index) {
+              Offer offer = snapshot.data![index];
+              return Card(
+                margin: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 150,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(offer.photo!),
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        offer.description!,
-                        style: const TextStyle(fontSize: 16),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            offer.name!,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            offer.description!,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '${offer.price!}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 8),
+                        ],
                       ),
-                      const SizedBox(height: 8),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           );
-        },
-      ),
+        }
+      },
     );
   }
 }
@@ -186,8 +209,6 @@ class RestaurantSelected extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Restaurant> restaurants =
-        ModalRoute.of(context)!.settings.arguments as List<Restaurant>;
     final Restaurant restaurant =
         restaurants.firstWhere((r) => r.id == restaurantId);
     return Scaffold(
@@ -202,7 +223,7 @@ class RestaurantSelected extends StatelessWidget {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                RestaurantHeader(restaurant: restaurants[0]),
+                RestaurantHeader(restaurant: restaurant),
                 OffertsCard(
                   restaurantId: restaurant.id!,
                 ),
