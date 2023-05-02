@@ -1,4 +1,4 @@
-import 'package:integrador/pages/biometric_data.dart';
+import 'package:integrador/widgets/biometric_data.dart';
 import 'package:integrador/routes/imports.dart';
 
 class Index extends StatefulWidget {

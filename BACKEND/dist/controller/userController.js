@@ -292,7 +292,7 @@ class UserController {
                     return res.status(401).json({ error: response.error });
                 }
                 let token = this.generateToken(response.id, response.email, response.name, response.role);
-                res.status(200).json({ id: response.id, name: response.name, email: response.email, token: token, messagge: response.success });
+                res.status(200).json({ id: response.id, name: response.name, email: response.email, photo: response.photo, role: response.role, token: token, messagge: response.success });
             });
         };
         this.removeBiometric = (req, res) => {

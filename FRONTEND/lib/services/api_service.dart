@@ -107,7 +107,7 @@ class APIService {
     }
   }
 
-  static Future<List<Offer>> getOffersByIdUser() async {
+  static Future<List<Offer>> getOffersByIdUser(String? idUser) async {
     Uri url = Uri.http(Config.apiURL, Config.getOffersByIdUser);
     final header = {
       "Access-Control-Allow-Origin": "*",
@@ -115,7 +115,7 @@ class APIService {
       'Accept': '*/*'
     };
     var token = SharedService.prefs.getString('token');
-    var idUser = SharedService.prefs.getString("id");
+    idUser = idUser ?? SharedService.prefs.getString("id");
     try {
       final response = await http
           .post(url,
