@@ -263,7 +263,7 @@ class APIService {
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         var restaurant = jsonDecode(response.body);
-        return Restaurant.fromJson(restaurant.first);
+        return Restaurant.fromJson(restaurant);
       } else {
         return null;
       }
