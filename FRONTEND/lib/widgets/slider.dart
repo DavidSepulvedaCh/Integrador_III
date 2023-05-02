@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:integrador/routes/imports.dart';
 
 class Deslizar extends StatefulWidget {
   final List<Restaurant> restaurants;
 
-  Deslizar({Key? key, required this.restaurants}) : super(key: key);
+  const Deslizar({Key? key, required this.restaurants}) : super(key: key);
 
   @override
-  _DeslizarState createState() => _DeslizarState();
+  State<Deslizar> createState() => _DeslizarState();
 }
 
 class _DeslizarState extends State<Deslizar> {

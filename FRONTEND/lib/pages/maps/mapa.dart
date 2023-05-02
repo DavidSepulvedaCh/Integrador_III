@@ -12,7 +12,7 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
   List<Restaurant> restaurants = <Restaurant>[];
-  List<Marker> _markers = [];
+  final List<Marker> _markers = [];
 
 // Lista de coordenadas con sus nombres
 
@@ -110,7 +110,6 @@ class MapSampleState extends State<MapSample> {
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     setState(() {
-      _markers.clear();
       _markers.add(
         Marker(
           markerId: const MarkerId("Ubicación del usuario"),

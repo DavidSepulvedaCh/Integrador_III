@@ -1,6 +1,4 @@
 import 'package:integrador/routes/imports.dart';
-import 'package:http/http.dart' as http;
-import 'package:integrador/config.dart';
 import 'dart:async';
 
 class RestaurantHeader extends StatelessWidget {
@@ -17,7 +15,7 @@ class RestaurantHeader extends StatelessWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               // ignore: unnecessary_string_interpolations
-              image: NetworkImage('${restaurant.photo!}'),
+              image: CachedNetworkImageProvider('${restaurant.photo!}'),
               fit: BoxFit.cover,
             ),
           ),
@@ -83,6 +81,9 @@ class RestaurantHeader extends StatelessWidget {
                               maxLines: 1,
                             ),
                           ),
+                          Flexible(
+                            child: ButtonFavorite(idRestaurant: restaurant.id,)
+                          ),
                         ],
                       ),
                     ),
@@ -100,14 +101,14 @@ class RestaurantHeader extends StatelessWidget {
 class OffertsCard extends StatefulWidget {
   final String restaurantId;
 
-  OffertsCard({required this.restaurantId});
+  const OffertsCard({super.key, required this.restaurantId});
 
   @override
-  _OffertsCardState createState() => _OffertsCardState();
+  State<OffertsCard> createState() => _OffertsCardState();
 }
 
 class _OffertsCardState extends State<OffertsCard> {
-  List<Offer> _offers = <Offer>[];
+  final List<Offer> _offers = <Offer>[];
 
   @override
   void initState() {
@@ -158,7 +159,7 @@ class _OffertsCardState extends State<OffertsCard> {
                       height: 150,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(offer.photo!),
+                          image: CachedNetworkImageProvider(offer.photo!),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -182,8 +183,8 @@ class _OffertsCardState extends State<OffertsCard> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '${offer.price!}',
                             style: const TextStyle(fontSize: 16),
+                            '\$${offer.price!}',
                           ),
                           const SizedBox(height: 8),
                         ],
@@ -216,7 +217,7 @@ class RestaurantSelected extends StatelessWidget {
         slivers: <Widget>[
           const SliverAppBar(
             title: Text("FOODHUB"),
-            backgroundColor: Color.fromARGB(197, 221, 91, 15),
+            backgroundColor: Colors.deepOrange,
             floating: true,
             snap: true,
           ),
