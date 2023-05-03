@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:integrador/routes/imports.dart';
 import 'package:integrador/widgets/new_promo.dart';
 
+import '../../widgets/biometric_data.dart';
 import '../edit_user.dart';
 
 class HomeRestaurante extends StatefulWidget {
@@ -117,7 +118,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color.fromARGB(207, 255, 86, 34),
+                color: Colors.deepOrange,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +149,7 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
             ),
             ListTile(
               leading: const Icon(Icons.local_offer,
-                  color: Color.fromARGB(220, 255, 86, 34)),
+                  color: Colors.deepOrange),
               title: const Text('Nueva oferta'),
               onTap: () {
                 setState(
@@ -164,26 +165,56 @@ class _HomeRestauranteState extends State<HomeRestaurante> {
                 );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.edit,
-                  color: Color.fromARGB(220, 255, 86, 34)),
-              title: const Text('Editar perfil'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfileSettings(
-                        name: _restaurantName,
-                        description: _restaurantDescription,
-                        photo: _restaurantPhoto,
-                        update: _updateReload),
+            ExpansionTile(
+              title: const Text(
+                'Cuenta',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              leading:
+                  const Icon(Icons.account_circle, color: Colors.deepOrange),
+              textColor: Colors.deepOrange,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: ListTile(
+                    leading: const Icon(Icons.edit,
+                        color: Colors.deepOrange),
+                    title: const Text('Editar perfil'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileSettings(
+                              name: _restaurantName,
+                              description: _restaurantDescription,
+                              photo: _restaurantPhoto,
+                              update: _updateReload),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: ListTile(
+                    leading:
+                        const Icon(Icons.fingerprint, color: Colors.deepOrange),
+                    title: const Text('Datos biométricos'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        view = const BiometricData();
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
             ListTile(
               leading: const Icon(Icons.logout,
-                  color: Color.fromARGB(220, 255, 86, 34)),
+                  color: Colors.deepOrange),
               title: const Text('Cerrar Sesión'),
               onTap: () {
                 Functions.logout(context);
