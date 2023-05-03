@@ -432,20 +432,19 @@ class _IndexState extends State<Index> {
                     ),
                   ),
                   ListTile(
-                    leading:
-                        const Icon(Icons.home, color: Colors.deepOrange),
+                    leading: const Icon(Icons.home, color: Colors.deepOrange),
                     title: const Text('Inicio'),
                     onTap: () {
-                       setState(
-                         () {
-                           Navigator.push(
-                             context,
-                             MaterialPageRoute(
-                               builder: (context) => const Index(),
-                             ),
-                           );
-                         },
-                       );
+                      setState(
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Index(),
+                            ),
+                          );
+                        },
+                      );
                     },
                   ),
                   SwitchListTile(
@@ -463,14 +462,40 @@ class _IndexState extends State<Index> {
                     secondary:
                         const Icon(Icons.location_on, color: Colors.deepOrange),
                   ),
-                  ListTile(
+                  ExpansionTile(
+                    title: const Text(
+                      'Filtros',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                     leading:
                         const Icon(Icons.filter_alt, color: Colors.deepOrange),
-                    title: const Text('filtros'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      showModal();
-                    },
+                    textColor: Colors.deepOrange,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: ListTile(
+                          leading:
+                              const Icon(Icons.money, color: Colors.deepOrange),
+                          title: Text("filtross"),
+                          onTap: () {
+                            Navigator.pop(context);
+                            showModal();
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: ListTile(
+                          leading:
+                              const Icon(Icons.location_city, color: Colors.deepOrange),
+                          title: Text(selectedValue),
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                    
                   ),
                   ExpansionTile(
                     title: const Text(
@@ -479,7 +504,8 @@ class _IndexState extends State<Index> {
                         color: Colors.black,
                       ),
                     ),
-                    leading: const Icon(Icons.account_circle, color: Colors.deepOrange),
+                    leading: const Icon(Icons.account_circle,
+                        color: Colors.deepOrange),
                     textColor: Colors.deepOrange,
                     children: <Widget>[
                       Padding(
