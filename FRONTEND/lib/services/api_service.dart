@@ -106,7 +106,7 @@ class APIService {
     try {
       final response = await http.post(url,
           headers: header,
-          body: {token: token}).timeout(const Duration(seconds: 5));
+          body: jsonEncode({'token': token})).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         return true;
       } else {

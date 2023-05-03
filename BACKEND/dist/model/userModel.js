@@ -245,7 +245,7 @@ class UserModel {
         this.getRestaurantsInformationByIds = (idsList, fn) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             const restaurants = yield this.MongoDBC.RestaurantSchema.find({
-                _id: { $in: idsList }
+                idUser: { $in: idsList }
             }) // Obtener todos los restaurantes
                 .populate({
                 path: 'idUser',

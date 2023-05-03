@@ -376,11 +376,6 @@ class UserController {
                 res.status(200).send(response);
             });
         };
-        this.prueba = (req, res) => {
-            const { idRestaurant } = req.body;
-            console.log("Dentro de prueba");
-            this.informationUsersNotificationModel.sendNotification(idRestaurant, "prueba", "prueba");
-        };
         this.userModel = new userModel_1.default();
         this.informationUsersNotificationModel = new informationUsersNotificationModel_1.default();
     }

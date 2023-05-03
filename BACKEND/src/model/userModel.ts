@@ -261,7 +261,7 @@ class UserModel {
     public getRestaurantsInformationByIds = async (idsList: string, fn: Function) => {
         this.MongoDBC.connection();
         const restaurants = await this.MongoDBC.RestaurantSchema.find({
-            _id: { $in: idsList }
+            idUser: { $in: idsList }
         }) // Obtener todos los restaurantes
             .populate({ // Referencia a la colección de usuarios y obtener su campo 'name'
                 path: 'idUser',

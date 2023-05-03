@@ -48,7 +48,6 @@ class MongoRoute{
         this.router.post('/favorites/updateFavorites', this.favoriteController.updateFavorites);
         this.router.post('/favorites/addFavorite', this.favoriteController.addFavorite);
         this.router.post('/favorites/removeFavorite', this.favoriteController.removeFavorite);
-        this.router.post('/prueba', this.userController.prueba);
     }
 }
 
