@@ -61,6 +61,19 @@ class FavoritesModel {
         return false;
     }
 
+    public getIdsUsersHaveRestaurantFavorite = async (idRestaurant: String) => {
+        try {
+            this.MongoDBC.connection();
+            console.log("antes de buscar");
+            const favorite = await this.MongoDBC.FavoriteSchema.find({ idRestaurant: { $eq: idRestaurant } });
+            console.log("Favoritos: " + favorite.toString());
+            return favorite;
+        } catch (error) {
+            console.log("getIdsUsersHaveRestaurantFavorite catch: "+error);
+            return [];
+        }
+    }
+
 }
 
 export default FavoritesModel;

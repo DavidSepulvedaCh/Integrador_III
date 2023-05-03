@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const offerModel_1 = __importDefault(require("../model/offerModel"));
+const informationUsersNotificationModel_1 = __importDefault(require("../model/informationUsersNotificationModel"));
 const jwt = require('jsonwebtoken');
 class OfferController {
     constructor() {
@@ -63,6 +64,7 @@ class OfferController {
         this.register = (req, res) => {
             const { address, latitude, longitude, name, description, photo, city } = req.body;
             let idSeller = '';
+            let restaurantName = "";
             const token = req.body.token;
             if (token) {
                 let decodedToken;
@@ -78,6 +80,9 @@ class OfferController {
                     return res.status(400).send({
                         error: 'Missing data'
                     });
+                }
+                if (!decodedToken.name) {
+                    restaurantName = decodedToken.name;
                 }
                 idSeller = decodedToken.id;
             }
@@ -107,7 +112,9 @@ class OfferController {
                 if (response.error) {
                     return res.status(409).json({ error: response.error });
                 }
-                res.json({ messagge: response.success });
+                this.notificationModel.sendNotification(idSeller, restaurantName, name).then(() => {
+                    res.status(200).json({ messagge: response.success });
+                });
             });
         };
         this.getMaxPriceAllOffers = (req, res) => {
@@ -173,6 +180,7 @@ class OfferController {
             });
         };
         this.offerModel = new offerModel_1.default();
+        this.notificationModel = new informationUsersNotificationModel_1.default();
     }
 }
 exports.default = OfferController;

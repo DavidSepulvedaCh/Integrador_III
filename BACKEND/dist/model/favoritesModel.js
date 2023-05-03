@@ -58,6 +58,19 @@ class FavoritesModel {
             }
             return false;
         });
+        this.getIdsUsersHaveRestaurantFavorite = (idRestaurant) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                this.MongoDBC.connection();
+                console.log("antes de buscar");
+                const favorite = yield this.MongoDBC.FavoriteSchema.find({ idRestaurant: { $eq: idRestaurant } });
+                console.log("Favoritos: " + favorite.toString());
+                return favorite;
+            }
+            catch (error) {
+                console.log("getIdsUsersHaveRestaurantFavorite catch: " + error);
+                return [];
+            }
+        });
         this.MongoDBC = new mongoDBC_1.default();
     }
 }

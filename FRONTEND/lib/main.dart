@@ -1,8 +1,10 @@
 import 'package:integrador/pages/system/index.dart';
 import 'package:integrador/routes/imports.dart';
+import 'package:integrador/services/push_notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await PushNotificationService.setUp();
   await SharedService.setUp();
   await SecureStorageService.setUp();
   runApp(const MyApp());

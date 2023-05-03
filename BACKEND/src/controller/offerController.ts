@@ -1,13 +1,16 @@
 import { Request, Response } from "express";
 import OfferModel from "../model/offerModel";
+import InformationUsersNotificationModel from "../model/informationUsersNotificationModel";
 const jwt = require('jsonwebtoken');
 
 class OfferController {
 
-    private offerModel: OfferModel
+    private offerModel: OfferModel;
+    private notificationModel: InformationUsersNotificationModel;
 
     constructor() {
         this.offerModel = new OfferModel();
+        this.notificationModel = new InformationUsersNotificationModel();
     }
 
     public getByListIds = (req: Request, res: Response) => {
@@ -71,6 +74,7 @@ class OfferController {
     public register = (req: Request, res: Response) => {
         const { address, latitude, longitude, name, description, photo, city } = req.body;
         let idSeller = '';
+        let restaurantName = "";
 
         const token = req.body.token;
         if (token) {
@@ -86,6 +90,9 @@ class OfferController {
                 return res.status(400).send({
                     error: 'Missing data'
                 });
+            }
+            if (!decodedToken.name) {
+                restaurantName = decodedToken.name;
             }
             idSeller = decodedToken.id;
         } else {
@@ -114,7 +121,9 @@ class OfferController {
             if (response.error) {
                 return res.status(409).json({ error: response.error });
             }
-            res.json({ messagge: response.success });
+            this.notificationModel.sendNotification(idSeller, restaurantName, name).then(() => {
+                res.status(200).json({ messagge: response.success });
+            });
         });
     }
 
@@ -178,7 +187,7 @@ class OfferController {
             });
         }
         this.offerModel.remove(id, (response: any) => {
-            if(response.error){
+            if (response.error) {
                 return res.status(409).json({ error: response.error });
             }
             res.status(200).json(response);

@@ -2,14 +2,17 @@ import { Request, response, Response } from "express";
 import UserModel from "../model/userModel";
 import bcryptjs from "bcryptjs";
 import restaurantSchema from "../mongoDB/schemas/restaurantSchema";
+import InformationUsersNotificationModel from "../model/informationUsersNotificationModel";
 const jwt = require('jsonwebtoken');
 
 class UserController {
 
     private userModel: UserModel;
+    private informationUsersNotificationModel: InformationUsersNotificationModel;
 
     constructor() {
         this.userModel = new UserModel();
+        this.informationUsersNotificationModel = new InformationUsersNotificationModel();
     }
 
     public personRegister = async (req: Request, res: Response) => {
@@ -341,6 +344,62 @@ class UserController {
         return res.status(400).send({
             error: 'Missin data'
         });
+    }
+
+    public addInformationFirebase = (req: Request, res: Response) => {
+        const { idUser, token } = req.body;
+        if (!idUser || !token) {
+            return res.status(400).send({
+                error: 'Missing data'
+            });
+        }
+        if (typeof idUser !== 'string' || typeof token !== 'string') {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        if (idUser.length <= 1 || token.length <= 1) {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        this.informationUsersNotificationModel.add(idUser, token, (response: any) => {
+            if (response.error) {
+                return res.status(401).json({ error: response.error });
+            }
+            res.status(200).json({ idFirebaseNotification: response.id});
+        });
+    }
+
+    public removeInformationFirebase = (req: Request, res: Response) => {
+        const { token } = req.body;
+        if (!token) {
+            return res.status(400).send({
+                error: 'Missing data'
+            });
+        }
+        if (typeof token !== 'string') {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        if (token.length <= 1) {
+            return res.status(400).send({
+                error: 'Invalid data'
+            });
+        }
+        this.informationUsersNotificationModel.remove(token, (response: any) => {
+            if (response.error) {
+                return res.status(401).json({ error: response.error });
+            }
+            res.status(200).send(response);
+        });
+    }
+
+    public prueba = (req: Request, res: Response) => {
+        const { idRestaurant } = req.body;
+        console.log("Dentro de prueba");
+        this.informationUsersNotificationModel.sendNotification(idRestaurant, "prueba", "prueba");
     }
 }
 

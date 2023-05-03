@@ -23,6 +23,8 @@ class MongoRoute {
             this.router.post('/users/restaurant/updateDescription', this.userController.updateRestaurantDescription);
             this.router.post('/users/restaurant/getById', this.userController.getRestaurantById);
             this.router.post('/users/restaurant/getInformationOfAllRestaurants', this.userController.getInformationAllRestaurants);
+            this.router.post('/users/firebase/addInformation', this.userController.addInformationFirebase);
+            this.router.post('/users/firebase/removeInformation', this.userController.removeInformationFirebase);
             this.router.post('/offers', this.offerController.getOffers);
             this.router.post('/offers/register', this.offerController.register);
             this.router.post('/offers/getByCity', this.offerController.getByCity);
@@ -37,6 +39,7 @@ class MongoRoute {
             this.router.post('/favorites/updateFavorites', this.favoriteController.updateFavorites);
             this.router.post('/favorites/addFavorite', this.favoriteController.addFavorite);
             this.router.post('/favorites/removeFavorite', this.favoriteController.removeFavorite);
+            this.router.post('/prueba', this.userController.prueba);
         };
         this.router = (0, express_1.Router)();
         this.userController = new userController_1.default();

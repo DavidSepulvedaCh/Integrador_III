@@ -1,8 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.integrador">
+    package="com.foodhub2.integrador">
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Optional permission for displaying notifications in the background -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Required for receiving FCM messages -->
+    <permission android:name="com.example.notificaciones_push.permission.C2D_MESSAGE"
+                android:protectionLevel="signature" />
+    <uses-permission android:name="com.example.notificaciones_push.permission.C2D_MESSAGE" />
    <application
         android:label="integrador"
         android:name="${applicationName}"

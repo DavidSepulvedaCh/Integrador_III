@@ -26,12 +26,6 @@ class _BiometricDataState extends State<BiometricData> {
 
   /* ================ Functions ============ */
 
-  void logout() {
-    SharedService.prefs.clear();
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const Login()));
-  }
-
   void authenticate(Function(BuildContext) next) async {
     final authenticate = await LocalAuth.authenticate();
     setState(() {

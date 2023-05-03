@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const userModel_1 = __importDefault(require("../model/userModel"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const restaurantSchema_1 = __importDefault(require("../mongoDB/schemas/restaurantSchema"));
+const informationUsersNotificationModel_1 = __importDefault(require("../model/informationUsersNotificationModel"));
 const jwt = require('jsonwebtoken');
 class UserController {
     constructor() {
@@ -327,7 +328,61 @@ class UserController {
                 error: 'Missin data'
             });
         };
+        this.addInformationFirebase = (req, res) => {
+            const { idUser, token } = req.body;
+            if (!idUser || !token) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            if (typeof idUser !== 'string' || typeof token !== 'string') {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            if (idUser.length <= 1 || token.length <= 1) {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            this.informationUsersNotificationModel.add(idUser, token, (response) => {
+                if (response.error) {
+                    return res.status(401).json({ error: response.error });
+                }
+                res.status(200).json({ idFirebaseNotification: response.id });
+            });
+        };
+        this.removeInformationFirebase = (req, res) => {
+            const { token } = req.body;
+            if (!token) {
+                return res.status(400).send({
+                    error: 'Missing data'
+                });
+            }
+            if (typeof token !== 'string') {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            if (token.length <= 1) {
+                return res.status(400).send({
+                    error: 'Invalid data'
+                });
+            }
+            this.informationUsersNotificationModel.remove(token, (response) => {
+                if (response.error) {
+                    return res.status(401).json({ error: response.error });
+                }
+                res.status(200).send(response);
+            });
+        };
+        this.prueba = (req, res) => {
+            const { idRestaurant } = req.body;
+            console.log("Dentro de prueba");
+            this.informationUsersNotificationModel.sendNotification(idRestaurant, "prueba", "prueba");
+        };
         this.userModel = new userModel_1.default();
+        this.informationUsersNotificationModel = new informationUsersNotificationModel_1.default();
     }
     generateToken(id, email, name, role) {
         const token = jwt.sign({ id: id, email: email, name: name, role: role }, process.env.TOKEN_KEY, { expiresIn: "7d" });

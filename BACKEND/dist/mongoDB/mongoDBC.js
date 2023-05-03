@@ -8,8 +8,9 @@ const userSchema_1 = __importDefault(require("./schemas/userSchema"));
 const offerSchema_1 = __importDefault(require("./schemas/offerSchema"));
 const favoriteSchema_1 = __importDefault(require("./schemas/favoriteSchema"));
 const biometricLoginUserData_1 = __importDefault(require("./schemas/biometricLoginUserData"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const restaurantSchema_1 = __importDefault(require("./schemas/restaurantSchema"));
+const informationUsersNotification_1 = __importDefault(require("./schemas/informationUsersNotification"));
+const dotenv_1 = __importDefault(require("dotenv"));
 class MongoDBC {
     constructor() {
         dotenv_1.default.config();
@@ -19,6 +20,7 @@ class MongoDBC {
         this.FavoriteSchema = favoriteSchema_1.default;
         this.BiometricLoginUserDataSchema = biometricLoginUserData_1.default;
         this.RestaurantSchema = restaurantSchema_1.default;
+        this.InformationUsersNotification = informationUsersNotification_1.default;
     }
     connection() {
         mongoose_1.default.connect(this.uri)

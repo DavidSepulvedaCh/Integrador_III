@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:integrador/config.dart';
 import 'package:integrador/models/restaurant_details_response.dart';
 import 'package:integrador/routes/imports.dart';
+import 'package:integrador/services/push_notification_service.dart';
 
 class APIService {
   static Future<int> register(RegisterRequestModel model) async {
@@ -18,7 +19,10 @@ class APIService {
           .post(url, headers: header, body: dataBody)
           .timeout(const Duration(seconds: 8));
       if (response.statusCode == 200) {
-        await SharedService.setLogginDetails(loginResponseModel(response.body));
+        LoginResponseModel model = loginResponseModel(response.body);
+        await SharedService.setLogginDetails(model);
+        await _addInformationUserNotification(
+            model.id ?? "", PushNotificationService.token ?? "");
         return 0;
       } else if (response.statusCode == 409) {
         return 1;
@@ -45,6 +49,8 @@ class APIService {
       if (response.statusCode == 200) {
         LoginResponseModel model = loginResponseModel(response.body);
         await SharedService.setLogginDetails(model);
+        await _addInformationUserNotification(
+            model.id ?? "", PushNotificationService.token ?? "");
         if (model.role == 'person') {
           return 0;
         } else if (model.role == 'restaurant') {
@@ -56,6 +62,58 @@ class APIService {
       }
     } catch (e) {
       return 2;
+    }
+  }
+
+  static Future<bool> _addInformationUserNotification(
+      String idUser, String token) async {
+    if (idUser.isEmpty || token.isEmpty) {
+      return false;
+    }
+    Uri url = Uri.http(Config.apiURL, Config.addInformationUserNotification);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    try {
+      final response = await http
+          .post(url,
+              headers: header,
+              body: jsonEncode({'idUser': idUser, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> removeInformationUserNotification(String token) async {
+    if (token.isEmpty) {
+      return false;
+    }
+    Uri url = Uri.http(Config.apiURL, Config.removeInformationUserNotification);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    try {
+      final response = await http.post(url,
+          headers: header,
+          body: {token: token}).timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
     }
   }
 
@@ -263,7 +321,7 @@ class APIService {
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         var restaurant = jsonDecode(response.body);
-        return Restaurant.fromJson(restaurant.first);
+        return Restaurant.fromJson(restaurant);
       } else {
         return null;
       }

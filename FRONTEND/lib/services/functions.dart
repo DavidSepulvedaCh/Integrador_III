@@ -1,12 +1,14 @@
 import 'package:integrador/routes/imports.dart';
 import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:integrador/services/push_notification_service.dart';
 
 
 class Functions {
   static void logout(BuildContext context) async {
     await updateFavorites();
     await SQLiteDB.deleteFavorites();
+    await APIService.removeInformationUserNotification(PushNotificationService.token ?? "");
     SharedService.prefs.clear();
     // ignore: use_build_context_synchronously
     Navigator.pushReplacementNamed(context, '/login');

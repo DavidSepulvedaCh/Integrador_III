@@ -3,8 +3,9 @@ import UserSchema from "./schemas/userSchema";
 import OfferSchema from "./schemas/offerSchema";
 import FavoriteSchema from "./schemas/favoriteSchema";
 import biometricLoginUserData from "./schemas/biometricLoginUserData";
-import dotenv from "dotenv";
 import restaurantSchema from "./schemas/restaurantSchema";
+import informationUsersNotification from "./schemas/informationUsersNotification";
+import dotenv from "dotenv";
 
 class MongoDBC {
 
@@ -14,6 +15,7 @@ class MongoDBC {
     public FavoriteSchema: any;
     public BiometricLoginUserDataSchema: any;
     public RestaurantSchema: any;
+    public InformationUsersNotification: any;
 
     constructor() {
         dotenv.config();
@@ -23,6 +25,7 @@ class MongoDBC {
         this.FavoriteSchema = FavoriteSchema;
         this.BiometricLoginUserDataSchema = biometricLoginUserData;
         this.RestaurantSchema = restaurantSchema;
+        this.InformationUsersNotification = informationUsersNotification;
     }
 
     public connection(){
