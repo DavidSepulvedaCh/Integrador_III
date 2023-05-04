@@ -447,6 +447,22 @@ class _IndexState extends State<Index> {
                       );
                     },
                   ),
+                  ListTile(
+                    leading: const Icon(Icons.favorite, color: Colors.deepOrange),
+                    title: const Text('Favoritos'),
+                    onTap: () {
+                      setState(
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RestaurantFavorites(restaurants: restaurants, userName: _name, email: _email,),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                   SwitchListTile(
                     title: const Text('Ubicación'),
                     value: _locationEnabled,

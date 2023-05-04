@@ -41,4 +41,5 @@ export 'package:integrador/pages/maps/mapa.dart';
 export 'package:integrador/pages/maps/mapa_ruta.dart';
 export 'package:integrador/models/restaurant_model.dart';
 export 'package:integrador/pages/restaurant/restaurant_selected.dart';
+export 'package:integrador/pages/restaurant/restaurant_favorites.dart';
 export 'dart:convert';
