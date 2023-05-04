@@ -3,8 +3,10 @@ import 'dart:async';
 
 class RestaurantHeader extends StatelessWidget {
   final Restaurant restaurant;
+  final Function(bool) setDoingFetch;
 
-  const RestaurantHeader({super.key, required this.restaurant});
+  const RestaurantHeader(
+      {super.key, required this.restaurant, required this.setDoingFetch});
 
   @override
   Widget build(BuildContext context) {
@@ -82,8 +84,10 @@ class RestaurantHeader extends StatelessWidget {
                             ),
                           ),
                           Flexible(
-                            child: ButtonFavorite(idRestaurant: restaurant.id,)
-                          ),
+                              child: ButtonFavorite(
+                            idRestaurant: restaurant.id,
+                            setDoingFetch: setDoingFetch,
+                          )),
                         ],
                       ),
                     ),
@@ -201,7 +205,7 @@ class _OffertsCardState extends State<OffertsCard> {
   }
 }
 
-class RestaurantSelected extends StatelessWidget {
+class RestaurantSelected extends StatefulWidget {
   final List<Restaurant> restaurants;
   final String restaurantId;
 
@@ -209,30 +213,58 @@ class RestaurantSelected extends StatelessWidget {
       {super.key, required this.restaurants, required this.restaurantId});
 
   @override
+  State<RestaurantSelected> createState() => _RestaurantSelectedState();
+}
+
+class _RestaurantSelectedState extends State<RestaurantSelected> {
+  bool _isDoingFetch = false;
+
+  void _makeFetch(bool value) {
+    setState(() {
+      _isDoingFetch = value;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Restaurant restaurant =
-        restaurants.firstWhere((r) => r.id == restaurantId);
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          const SliverAppBar(
-            title: Text("FOODHUB"),
-            backgroundColor: Colors.deepOrange,
-            floating: true,
-            snap: true,
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                RestaurantHeader(restaurant: restaurant),
-                OffertsCard(
-                  restaurantId: restaurant.id!,
+        widget.restaurants.firstWhere((r) => r.id == widget.restaurantId);
+    return Stack(
+      children: [
+        IgnorePointer(
+          ignoring: _isDoingFetch,
+          child: Scaffold(
+            body: CustomScrollView(
+              slivers: <Widget>[
+                const SliverAppBar(
+                  title: Text("FOODHUB"),
+                  backgroundColor: Colors.deepOrange,
+                  floating: true,
+                  snap: true,
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      RestaurantHeader(
+                          restaurant: restaurant, setDoingFetch: _makeFetch),
+                      OffertsCard(
+                        restaurantId: restaurant.id!,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
+        ),
+        if (_isDoingFetch)
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+      ],
     );
   }
 }

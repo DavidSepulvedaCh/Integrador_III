@@ -81,7 +81,7 @@ class OfferController {
                         error: 'Missing data'
                     });
                 }
-                if (!decodedToken.name) {
+                if (decodedToken.name) {
                     restaurantName = decodedToken.name;
                 }
                 idSeller = decodedToken.id;

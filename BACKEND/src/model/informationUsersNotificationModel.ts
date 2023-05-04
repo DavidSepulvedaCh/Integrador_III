@@ -84,8 +84,9 @@ class InformationUsersNotificationModel {
         try {
             const userIds = await this.favoritesModel.getIdsUsersHaveRestaurantFavorite(idRestaurant);
             this.MongoDBC.connection();
-            const tokens = await this.MongoDBC.InformationUsersNotification.find({ idUser: { $in: userIds.idUser } });
-            const tokensArray = userIds.map((register: any) => register.token);
+            const ids = userIds.map((register: any) => register.idUser);
+            const tokens = await this.MongoDBC.InformationUsersNotification.find({ idUser: { $in: ids } });
+            const tokensArray = tokens.map((register: any) => register.token);
             if (tokensArray.length == 0) {
                 return;
             }
@@ -94,11 +95,10 @@ class InformationUsersNotificationModel {
                     title: "¡Nueva oferta disponible!",
                     body: `El restaurante ${restaurantName} ha publicado una nueva oferta: ${offerName}`,
                 },
-                tokens: tokens,
+                tokens: tokensArray,
             };
-
-            this.firebaseConnect.initializeApp();
-            await this.firebaseConnect.admin.messaging().sendMulticast(message);
+            const response = await this.firebaseConnect.admin.messaging().sendMulticast(message);
+            console.log(`Notificaciones enviadas: ${response.successCount}`);
             return;
         } catch (error) {
             console.log("Error sendNotification: " + error);

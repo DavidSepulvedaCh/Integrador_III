@@ -8,11 +8,20 @@ class FirebaseConnect {
     constructor() {
         this.admin = require("firebase-admin");
         this.serviceAccount = foodhub_d4f82_firebase_adminsdk_dk9h9_dfc047aee4_json_1.default;
+        this.start();
     }
-    initializeApp() {
-        this.admin.initializeApp({
-            credential: this.admin.credential.cert(this.serviceAccount)
-        }).then(() => console.log("Firebase: Initialize app"));
+    start() {
+        if (!this.admin.apps.length) {
+            this.admin.initializeApp({
+                credential: this.admin.credential.cert(this.serviceAccount)
+            });
+        }
+        else {
+            this.admin.app().delete();
+            this.admin.initializeApp({
+                credential: this.admin.credential.cert(this.serviceAccount)
+            });
+        }
     }
 }
 exports.default = FirebaseConnect;

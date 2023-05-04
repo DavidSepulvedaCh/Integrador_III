@@ -26,6 +26,9 @@ class _RegisterState extends State<Register> {
         passwordOneTextController.text,
         passwordTwoTextController.text,
         terminos)) {
+          setState(() {
+            _isDoingFetch = false;
+          });
       return;
     }
     RegisterRequestModel model = RegisterRequestModel(

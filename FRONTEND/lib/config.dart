@@ -16,6 +16,8 @@ class Config {
   static const String createOffer = 'api/offers/register';
   static const String updateFavorite = '/api/favorites/updateFavorites';
   static const String getFavorites = '/api/favorites';
+  static const String addFavorite = '/api/favorites/addFavorite';
+  static const String removeFavorite = '/api/favorites/removeFavorite';
   static const String getMaxPriceAllOffers = 'api/offers/getMaxPriceAllOffers';
   static const String registerRestaurant = '/api/users/restaurant/register';
   static const String updateRestaurantName = '/api/users/restaurant/updateName';

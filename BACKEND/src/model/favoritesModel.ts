@@ -52,7 +52,7 @@ class FavoritesModel {
         this.MongoDBC.connection();
         const favorite = await this.MongoDBC.FavoriteSchema.find(
             {
-                idRestaurant: { $eq: idRestaurant }
+                idUser: { $eq: idUser }
             }
         );
         if (favorite.length > 0) {

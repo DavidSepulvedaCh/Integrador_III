@@ -104,9 +104,9 @@ class APIService {
       'Accept': '*/*'
     };
     try {
-      final response = await http.post(url,
-          headers: header,
-          body: jsonEncode({'token': token})).timeout(const Duration(seconds: 5));
+      final response = await http
+          .post(url, headers: header, body: jsonEncode({'token': token}))
+          .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         return true;
       } else {
@@ -382,6 +382,58 @@ class APIService {
       }
     } catch (e) {
       return [];
+    }
+  }
+
+  static Future<bool> addFavorite(String idRestaurant) async {
+    Uri url = Uri.http(Config.apiURL, Config.addFavorite);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    var id = SharedService.prefs.getString('id');
+    try {
+      final response = await http
+          .post(url,
+              headers: header,
+              body: jsonEncode(
+                  {'idUser': id, 'idRestaurant': idRestaurant, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> removeFavorite(String idRestaurant) async {
+    Uri url = Uri.http(Config.apiURL, Config.removeFavorite);
+    final header = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    };
+    var token = SharedService.prefs.getString('token');
+    var id = SharedService.prefs.getString('id');
+    try {
+      final response = await http
+          .post(url,
+              headers: header,
+              body: jsonEncode(
+                  {'idUser': id, 'idRestaurant': idRestaurant, 'token': token}))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
     }
   }
 
