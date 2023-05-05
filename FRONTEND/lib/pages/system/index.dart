@@ -23,6 +23,7 @@ class _IndexState extends State<Index> {
   late Widget view = Container();
   List<Offer> offerss = <Offer>[];
   List<Restaurant> restaurants = <Restaurant>[];
+  List<Restaurant> restaurantsFavs = <Restaurant>[];
   double _maxPrice = 0;
 
   List<String> imageUrls = [
@@ -47,6 +48,7 @@ class _IndexState extends State<Index> {
   void initState() {
     super.initState();
     setOffers();
+    setRestaurants();
     setMaxPrice();
     setState(() {
       _name = SharedService.prefs.getString("name") ?? "User name";
@@ -118,6 +120,20 @@ class _IndexState extends State<Index> {
         } else {
           view = GridOffers(offers: offerss);
         }
+      });
+    });
+  }
+
+  Future<List<Restaurant>> getRestaurantByFavorites() async {
+    var restFavs = await APIService.getFavorites();
+    return restFavs;
+  }
+
+  Future<void> setRestaurants() async {
+    await getRestaurantByFavorites().then((value) {
+      setState(() {
+        restaurantsFavs.clear();
+        restaurantsFavs.addAll(value);
       });
     });
   }
@@ -448,15 +464,21 @@ class _IndexState extends State<Index> {
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.favorite, color: Colors.deepOrange),
+                    leading:
+                        const Icon(Icons.favorite, color: Colors.deepOrange),
                     title: const Text('Favoritos'),
                     onTap: () {
                       setState(
                         () {
+                          setRestaurants();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RestaurantFavorites(restaurants: restaurants, userName: _name, email: _email,),
+                              builder: (context) => RestaurantFavorites(
+                                restaurants: restaurantsFavs,
+                                userName: _name,
+                                email: _email,
+                              ),
                             ),
                           );
                         },
@@ -504,14 +526,13 @@ class _IndexState extends State<Index> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: ListTile(
-                          leading:
-                              const Icon(Icons.location_city, color: Colors.deepOrange),
+                          leading: const Icon(Icons.location_city,
+                              color: Colors.deepOrange),
                           title: Text(selectedValue),
                           onTap: () {},
                         ),
                       ),
                     ],
-                    
                   ),
                   ExpansionTile(
                     title: const Text(

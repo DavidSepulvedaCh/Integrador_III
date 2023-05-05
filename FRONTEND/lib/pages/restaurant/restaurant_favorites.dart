@@ -34,7 +34,6 @@ class RestaurantFavorites extends StatelessWidget {
               flex: 2,
               child: Row(
                 children: [
-                  
                   const Flexible(
                     flex: 3,
                     child: Text(
@@ -100,19 +99,32 @@ class RestaurantFavorites extends StatelessWidget {
                 ),
                 itemCount: restaurants.length,
                 itemBuilder: (context, index) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: GridTile(
-                      // ignore: sort_child_properties_last
-                      child: Image.network(
-                        restaurants[index].photo!,
-                        fit: BoxFit.cover,
-                      ),
-                      footer: GridTileBar(
-                        backgroundColor: Colors.black45,
-                        title: Text(
-                          restaurants[index].name!,
-                          textAlign: TextAlign.center,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RestaurantSelected(
+                            restaurants: restaurants,
+                            restaurantId: restaurants[index].id!,
+                          ),
+                        ),
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: GridTile(
+                        // ignore: sort_child_properties_last
+                        child: Image.network(
+                          restaurants[index].photo!,
+                          fit: BoxFit.cover,
+                        ),
+                        footer: GridTileBar(
+                          backgroundColor: Colors.black45,
+                          title: Text(
+                            restaurants[index].name!,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     ),
