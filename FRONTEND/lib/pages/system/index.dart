@@ -1,6 +1,7 @@
 import 'package:integrador/widgets/biometric_data.dart';
 import 'package:integrador/routes/imports.dart';
 import 'package:location/location.dart' as lt;
+import 'package:permission_handler/permission_handler.dart';
 
 class Index extends StatefulWidget {
   const Index({super.key});
@@ -67,16 +68,29 @@ class _IndexState extends State<Index> {
     });
   }
 
-  Future<void> _enableLocation() async {
-    var serviceEnabled = await _location.serviceEnabled();
+  void _disableLocation() {
+    _location.onLocationChanged.listen(null);
+  }
+
+  void _enableLocation() async {
+    bool serviceEnabled = await _location.serviceEnabled();
     if (!serviceEnabled) {
       serviceEnabled = await _location.requestService();
       if (!serviceEnabled) {
         return;
       }
     }
-    setState(() {
-      _locationEnabled = true;
+
+    lt.PermissionStatus permissionGranted = await _location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _location.onLocationChanged.listen((lt.LocationData locationData) {
+      // aquí puedes hacer lo que necesites con la ubicación
     });
   }
 
@@ -466,7 +480,7 @@ class _IndexState extends State<Index> {
                   ListTile(
                     leading:
                         const Icon(Icons.favorite, color: Colors.deepOrange),
-                    title: const Text('Favoritos'),
+                    title: const Text('Restaurantes favoritos'),
                     onTap: () {
                       setState(
                         () {
@@ -493,12 +507,24 @@ class _IndexState extends State<Index> {
                         _enableLocation();
                       } else {
                         setState(() {
-                          _locationEnabled = false;
+                          _disableLocation();
                         });
                       }
                     },
                     secondary:
                         const Icon(Icons.location_on, color: Colors.deepOrange),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.map, color: Colors.deepOrange),
+                    title: const Text('Mapa'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MapSample(),
+                        ),
+                      );
+                    },
                   ),
                   ExpansionTile(
                     title: const Text(
@@ -571,18 +597,6 @@ class _IndexState extends State<Index> {
                         ),
                       ),
                     ],
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.map, color: Colors.deepOrange),
-                    title: const Text('Mapa'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MapSample(),
-                        ),
-                      );
-                    },
                   ),
                   ListTile(
                     leading: const Icon(Icons.logout, color: Colors.deepOrange),

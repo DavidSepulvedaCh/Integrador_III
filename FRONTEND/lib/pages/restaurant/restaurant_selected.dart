@@ -6,7 +6,8 @@ class RestaurantHeader extends StatelessWidget {
   final Function(bool) setDoingFetch;
 
   const RestaurantHeader(
-      {super.key, required this.restaurant, required this.setDoingFetch});
+      {Key? key, required this.restaurant, required this.setDoingFetch})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,70 +30,78 @@ class RestaurantHeader extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.black.withOpacity(0.3),
-                const Color.fromARGB(131, 0, 0, 0),
+                Colors.black.withOpacity(0.5),
+                Color.fromARGB(185, 0, 0, 0),
               ],
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  restaurant.name!,
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+              Positioned(
+                top: 5,
+                right: 5,
+                child: ButtonFavorite(
+                  idRestaurant: restaurant.id,
+                  setDoingFetch: setDoingFetch,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 13),
-                child: Text(
-                  restaurant.description!,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w100,
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.justify,
-                  maxLines: 3,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.location_on, color: Colors.white),
-                          const SizedBox(width: 4),
-                          Flexible(
-                            child: Text(
-                              restaurant.address!,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                              maxLines: 1,
-                            ),
-                          ),
-                          Flexible(
-                              child: ButtonFavorite(
-                            idRestaurant: restaurant.id,
-                            setDoingFetch: setDoingFetch,
-                          )),
-                        ],
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      restaurant.name!,
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 13),
+                    child: Text(
+                      restaurant.description!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.justify,
+                      maxLines: 2,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.location_on,
+                                  color: Colors.white),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  restaurant.address!,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -155,6 +164,8 @@ class _OffertsCardState extends State<OffertsCard> {
             itemBuilder: (BuildContext context, int index) {
               Offer offer = snapshot.data![index];
               return Card(
+                shadowColor: const Color.fromARGB(255, 190, 190, 190),
+                elevation: 1.8,
                 margin: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,12 +194,17 @@ class _OffertsCardState extends State<OffertsCard> {
                           const SizedBox(height: 8),
                           Text(
                             offer.description!,
-                            style: const TextStyle(fontSize: 16),
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w300),
+                            textAlign: TextAlign.justify,
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            style: const TextStyle(fontSize: 16),
-                            '\$${offer.price!}',
+                            style: const TextStyle(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 124, 35, 8),
+                                fontWeight: FontWeight.w400),
+                            '\$ ${offer.price!}',
                           ),
                           const SizedBox(height: 8),
                         ],
@@ -234,6 +250,7 @@ class _RestaurantSelectedState extends State<RestaurantSelected> {
         IgnorePointer(
           ignoring: _isDoingFetch,
           child: Scaffold(
+            backgroundColor: Color.fromARGB(255, 228, 228, 228),
             body: CustomScrollView(
               slivers: <Widget>[
                 const SliverAppBar(

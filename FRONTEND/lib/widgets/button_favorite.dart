@@ -127,7 +127,10 @@ class _ButtonFavoriteState extends State<ButtonFavorite> {
           },
         );
       },
-      icon: const Icon(Icons.favorite),
+      icon: const Icon(
+        Icons.favorite,
+        size: 35,
+      ),
       color: heartColor,
       padding: const EdgeInsets.only(left: 0),
       alignment: Alignment.centerLeft,
