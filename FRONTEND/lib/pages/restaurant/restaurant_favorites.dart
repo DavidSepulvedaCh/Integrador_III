@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:integrador/routes/imports.dart';
 
 class RestaurantFavorites extends StatelessWidget {
@@ -81,7 +80,7 @@ class RestaurantFavorites extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Hola ${userName}, estos son tus restaurantes favoritos",
+              "Hola $userName, estos son tus restaurantes favoritos",
               style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w300,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 // ignore: must_be_immutable
 class PriceFilter extends StatefulWidget {
   double maxPrice;
@@ -11,17 +10,16 @@ class PriceFilter extends StatefulWidget {
   @override
   State<PriceFilter> createState() => _PriceFilterState();
 
-  int getMinPrice(){
+  int getMinPrice() {
     return rangeValues.start.round();
   }
 
-  int getMaxPrice(){
+  int getMaxPrice() {
     return rangeValues.end.round();
   }
 }
 
 class _PriceFilterState extends State<PriceFilter> {
-
   // El 1000 es el valor máximo, debe ser igual en ambos lados, max y los atributos
   @override
   Widget build(BuildContext context) {

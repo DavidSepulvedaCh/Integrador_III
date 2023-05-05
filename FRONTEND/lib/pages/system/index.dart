@@ -1,7 +1,5 @@
 import 'package:integrador/widgets/biometric_data.dart';
 import 'package:integrador/routes/imports.dart';
-import 'package:location/location.dart' as lt;
-import 'package:permission_handler/permission_handler.dart';
 
 class Index extends StatefulWidget {
   const Index({super.key});
@@ -15,10 +13,7 @@ class _IndexState extends State<Index> {
   late String _email;
   late String _photo;
   bool _isDoingFetch = false;
-  bool _showAccountMenu = false;
-
-  bool _locationEnabled = false;
-  final lt.Location _location = lt.Location();
+  double precioo = 0;
 
   String typeOfView = 'list';
   late Widget view = Container();
@@ -26,6 +21,8 @@ class _IndexState extends State<Index> {
   List<Restaurant> restaurants = <Restaurant>[];
   List<Restaurant> restaurantsFavs = <Restaurant>[];
   double _maxPrice = 0;
+  double priceMax = 0;
+  bool switchValue = false;
 
   List<String> imageUrls = [
     'https://bit.ly/3ngEDPI',
@@ -38,10 +35,17 @@ class _IndexState extends State<Index> {
     'Comics Pizza',
   ];
 
+  Position? currentLocation;
+  double latit = 00.0;
+  double longit = -0.00;
+  String? selectedCity;
+  String? selectedLocation;
+  LatLng? selectedLocationLatLng;
+
   /* ================ Filter's variables ========= */
   PriceFilter priceFilter =
       PriceFilter(maxPrice: 0, rangeValues: const RangeValues(0, 0));
-  String selectedValue = '';
+  late String selectedValue;
 
   /* ==================Functions================= */
 
@@ -52,65 +56,128 @@ class _IndexState extends State<Index> {
     setRestaurants();
     setMaxPrice();
     setState(() {
+      selectedValue = selectedCity ?? "Ninguna ciudad seleccionada";
       _name = SharedService.prefs.getString("name") ?? "User name";
       _email = SharedService.prefs.getString("email") ?? "Correo electrónico";
       _photo =
           SharedService.prefs.getString("photo") ?? "https://bit.ly/3Lstjcq";
     });
     setRestaurantsInformation();
-    _checkLocationEnabled();
   }
 
-  Future<void> _checkLocationEnabled() async {
-    var serviceEnabled = await _location.serviceEnabled();
-    setState(() {
-      _locationEnabled = serviceEnabled;
-    });
-  }
+  void disabledLocation() async {
+    bool desactivar = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Desactivar ubicación'),
+          content: const Text(
+              '¿Estás seguro de que deseas desactivar la ubicación?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () => Navigator.of(context).pop(false),
+            ),
+            TextButton(
+              child: const Text('Desactivar'),
+              onPressed: () => Navigator.of(context).pop(true),
+            ),
+          ],
+        );
+      },
+    );
 
-  void _disableLocation() {
-    _location.onLocationChanged.listen(null);
-  }
-
-  void _enableLocation() async {
-    bool serviceEnabled = await _location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await _location.requestService();
-      if (!serviceEnabled) {
-        return;
-      }
+    if (desactivar) {
+      await Geolocator.openLocationSettings();
     }
-
-    lt.PermissionStatus permissionGranted = await _location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await _location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _location.onLocationChanged.listen((lt.LocationData locationData) {
-      // aquí puedes hacer lo que necesites con la ubicación
-    });
   }
 
-  /* Future<void> _habilitarUbicacion() async {
+  Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
+      bool result = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Ubicación desactivada'),
+            content:
+                const Text('Por favor, active la ubicación para continuar.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancelar',
+                    style: TextStyle(color: Colors.deepOrange)),
+                onPressed: () {
+                  switchValue = false;
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                child: const Text('Aceptar',
+                    style: TextStyle(color: Colors.deepOrange)),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          );
+        },
+      );
+      if (!result) {
+        return Future.error('Location services are disabled.');
+      }
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+        bool result = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Permiso de ubicación denegado'),
+              content: const Text(
+                  'Por favor, otorgue el permiso de ubicación para continuar.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancelar',
+                      style: TextStyle(color: Colors.deepOrange)),
+                  onPressed: () => Navigator.of(context).pop(false),
+                ),
+                TextButton(
+                  child: const Text('Aceptar',
+                      style: TextStyle(color: Colors.deepOrange)),
+                  onPressed: () {
+                    switchValue = true;
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        if (!result) {
+          return Future.error('Location permissions are denied');
+        }
       }
     }
-  } */
+
+    try {
+      // Obtener la ubicación actual del usuario
+      final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        currentLocation = position;
+        selectedLocation = '${position.latitude}, ${position.longitude}';
+        selectedLocationLatLng = LatLng(position.latitude, position.longitude);
+        latit = position.latitude;
+        longit = position.longitude;
+      });
+    } catch (e) {
+      e.toString();
+    }
+  }
 
   Future<void> setRestaurantsInformation() async {
     await getRestaurantsInformation().then((value) {
@@ -206,8 +273,10 @@ class _IndexState extends State<Index> {
       setState(() {
         if (value == -1) {
           _maxPrice = 1;
+          precioo = value;
         } else {
           _maxPrice = value;
+          precioo = value;
         }
       });
     });
@@ -218,7 +287,70 @@ class _IndexState extends State<Index> {
     return maxPriceApi;
   }
 
+  Future<void> onSwitchChanged(bool value) async {
+    if (value) {
+      _getCurrentLocation();
+      bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
+      if (isLocationEnabled != true) {
+        value = false;
+      }
+    } else {
+      disabledLocation();
+      bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
+      setState(() {
+        value = isLocationEnabled;
+      });
+    }
+
+    setState(() async {
+      switchValue = value;
+    });
+  }
+
   /* ================= Filter's functions ============= */
+
+  Future<void> _deleteValues() async {
+    selectedValue = "";
+    _maxPrice = precioo;
+    priceFilter =
+        PriceFilter(maxPrice: 0, rangeValues: RangeValues(0, _maxPrice));
+
+    if (selectedValue.isEmpty) {
+      setOffersByPriceRange()
+          .then((value) => {
+                setState(() {
+                  if (typeOfView == 'list') {
+                    view = ListOffers(offers: offerss);
+                  } else {
+                    view = GridOffers(offers: offerss);
+                  }
+                })
+              })
+          .then((value) => {
+                if (Navigator.canPop(context)) {Navigator.pop(context)},
+                setState(() {
+                  _isDoingFetch = false;
+                })
+              });
+    } else {
+      setOffersByCityAndPriceRange()
+          .then((value) => {
+                setState(() {
+                  if (typeOfView == 'list') {
+                    view = ListOffers(offers: offerss);
+                  } else {
+                    view = GridOffers(offers: offerss);
+                  }
+                })
+              })
+          .then((value) => {
+                if (Navigator.canPop(context)) {Navigator.pop(context)},
+                setState(() {
+                  _isDoingFetch = false;
+                })
+              });
+    }
+  }
 
   void showModal() {
     showModalBottomSheet(
@@ -289,61 +421,88 @@ class _IndexState extends State<Index> {
                     : priceFilter,
                 IgnorePointer(
                   ignoring: _isDoingFetch,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              HexColor('#E64A19')),
                         ),
+                        child: const Text('Aceptar'),
+                        onPressed: () {
+                          setState(() {
+                            _isDoingFetch = true;
+                          });
+                          if (selectedValue.isEmpty) {
+                            setOffersByPriceRange()
+                                .then((value) => {
+                                      setState(() {
+                                        if (typeOfView == 'list') {
+                                          view = ListOffers(offers: offerss);
+                                        } else {
+                                          view = GridOffers(offers: offerss);
+                                        }
+                                      })
+                                    })
+                                .then((value) => {
+                                      if (Navigator.canPop(context))
+                                        {Navigator.pop(context)},
+                                      setState(() {
+                                        _isDoingFetch = false;
+                                      })
+                                    });
+                          } else {
+                            setOffersByCityAndPriceRange()
+                                .then((value) => {
+                                      setState(() {
+                                        if (typeOfView == 'list') {
+                                          view = ListOffers(offers: offerss);
+                                        } else {
+                                          view = GridOffers(offers: offerss);
+                                        }
+                                      })
+                                    })
+                                .then((value) => {
+                                      if (Navigator.canPop(context))
+                                        {Navigator.pop(context)},
+                                      setState(() {
+                                        _isDoingFetch = false;
+                                      })
+                                    });
+                          }
+                        },
                       ),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(HexColor('#E64A19')),
-                    ),
-                    child: const Text('Aceptar'),
-                    onPressed: () {
-                      setState(() {
-                        _isDoingFetch = true;
-                      });
-                      if (selectedValue.isEmpty) {
-                        setOffersByPriceRange()
-                            .then((value) => {
-                                  setState(() {
-                                    if (typeOfView == 'list') {
-                                      view = ListOffers(offers: offerss);
-                                    } else {
-                                      view = GridOffers(offers: offerss);
-                                    }
-                                  })
-                                })
-                            .then((value) => {
-                                  if (Navigator.canPop(context))
-                                    {Navigator.pop(context)},
-                                  setState(() {
-                                    _isDoingFetch = false;
-                                  })
-                                });
-                      } else {
-                        setOffersByCityAndPriceRange()
-                            .then((value) => {
-                                  setState(() {
-                                    if (typeOfView == 'list') {
-                                      view = ListOffers(offers: offerss);
-                                    } else {
-                                      view = GridOffers(offers: offerss);
-                                    }
-                                  })
-                                })
-                            .then((value) => {
-                                  if (Navigator.canPop(context))
-                                    {Navigator.pop(context)},
-                                  setState(() {
-                                    _isDoingFetch = false;
-                                  })
-                                });
-                      }
-                    },
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              HexColor('#E64A19')),
+                        ),
+                        child: const Text('Eliminar filtros'),
+                        onPressed: () {
+                          setState(() {
+                            _isDoingFetch = true;
+                          });
+                          _deleteValues();
+                        },
+                      ),
+                    ],
                   ),
                 ),
+                const SizedBox(height: 15),
               ],
             );
           }),
@@ -501,16 +660,8 @@ class _IndexState extends State<Index> {
                   ),
                   SwitchListTile(
                     title: const Text('Ubicación'),
-                    value: _locationEnabled,
-                    onChanged: (bool value) {
-                      if (value) {
-                        _enableLocation();
-                      } else {
-                        setState(() {
-                          _disableLocation();
-                        });
-                      }
-                    },
+                    value: switchValue,
+                    onChanged: onSwitchChanged,
                     secondary:
                         const Icon(Icons.location_on, color: Colors.deepOrange),
                   ),
@@ -528,21 +679,21 @@ class _IndexState extends State<Index> {
                   ),
                   ExpansionTile(
                     title: const Text(
-                      'Filtros',
+                      'Panel de Filtros',
                       style: TextStyle(
                         color: Colors.black,
                       ),
                     ),
-                    leading:
-                        const Icon(Icons.filter_alt, color: Colors.deepOrange),
+                    leading: const Icon(Icons.filter_alt_outlined,
+                        color: Colors.deepOrange),
                     textColor: Colors.deepOrange,
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: ListTile(
-                          leading:
-                              const Icon(Icons.money, color: Colors.deepOrange),
-                          title: Text("filtross"),
+                          leading: const Icon(Icons.filter_alt,
+                              color: Colors.deepOrange),
+                          title: const Text("Seleccionar valores"),
                           onTap: () {
                             Navigator.pop(context);
                             showModal();
@@ -555,6 +706,16 @@ class _IndexState extends State<Index> {
                           leading: const Icon(Icons.location_city,
                               color: Colors.deepOrange),
                           title: Text(selectedValue),
+                          onTap: () {},
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: ListTile(
+                          leading: const Icon(Icons.monetization_on,
+                              color: Colors.deepOrange),
+                          title: Text(
+                              '\$ ${priceFilter.getMinPrice()}  -  \$ ${priceFilter.getMaxPrice()}'),
                           onTap: () {},
                         ),
                       ),

@@ -20,13 +20,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/':(context) => const IsLoggedMiddleware(),
-        '/login':(context) => const Login(),
-        '/signUp':(context) => const Register(),
-        '/signUpRestaurant':(context) => const RegisterRestaurant(),
+        '/': (context) => const IsLoggedMiddleware(),
+        '/login': (context) => const Login(),
+        '/signUp': (context) => const Register(),
+        '/signUpRestaurant': (context) => const RegisterRestaurant(),
         '/index': ((context) => const Index()),
-        '/restaurantIndex':(context) =>  const HomeRestaurante(),
-        '/mapa':(context) => const MapSample(),
+        '/restaurantIndex': (context) => const HomeRestaurante(),
+        '/mapa': (context) => const MapSample(),
       },
     );
   }

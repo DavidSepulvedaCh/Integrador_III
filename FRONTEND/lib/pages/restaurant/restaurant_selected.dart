@@ -31,7 +31,7 @@ class RestaurantHeader extends StatelessWidget {
               end: Alignment.bottomCenter,
               colors: [
                 Colors.black.withOpacity(0.5),
-                Color.fromARGB(185, 0, 0, 0),
+                const Color.fromARGB(185, 0, 0, 0),
               ],
             ),
           ),
@@ -250,7 +250,7 @@ class _RestaurantSelectedState extends State<RestaurantSelected> {
         IgnorePointer(
           ignoring: _isDoingFetch,
           child: Scaffold(
-            backgroundColor: Color.fromARGB(255, 228, 228, 228),
+            backgroundColor: const Color.fromARGB(255, 228, 228, 228),
             body: CustomScrollView(
               slivers: <Widget>[
                 const SliverAppBar(
