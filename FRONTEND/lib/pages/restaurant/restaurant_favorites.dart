@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:integrador/routes/imports.dart';
 
-class RestaurantFavorites extends StatelessWidget {
+class RestaurantFavorites extends StatefulWidget {
   final List<Restaurant> restaurants;
   final String userName;
   final String email;
@@ -12,6 +11,27 @@ class RestaurantFavorites extends StatelessWidget {
       required this.userName,
       required this.email})
       : super(key: key);
+
+  @override
+  State<RestaurantFavorites> createState() => _RestaurantFavoritesState();
+}
+
+class _RestaurantFavoritesState extends State<RestaurantFavorites> {
+
+  @override
+  void initState(){
+    super.initState();
+    _setRestaurants();
+  }
+
+  Future<void> _setRestaurants() async {
+    await Functions.getRestaurantByFavorites().then((value) {
+      setState(() {
+        widget.restaurants.clear();
+        widget.restaurants.addAll(value);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +72,7 @@ class RestaurantFavorites extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          userName,
+                          widget.userName,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -60,7 +80,7 @@ class RestaurantFavorites extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          email,
+                          widget.email,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -81,7 +101,7 @@ class RestaurantFavorites extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Hola ${userName}, estos son tus restaurantes favoritos",
+              "Hola $widget.userName, estos son tus restaurantes favoritos",
               style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w300,
@@ -97,7 +117,7 @@ class RestaurantFavorites extends StatelessWidget {
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
                 ),
-                itemCount: restaurants.length,
+                itemCount: widget.restaurants.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
@@ -105,8 +125,9 @@ class RestaurantFavorites extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RestaurantSelected(
-                            restaurants: restaurants,
-                            restaurantId: restaurants[index].id!,
+                            restaurants: widget.restaurants,
+                            restaurantId: widget.restaurants[index].id!,
+                            update: _setRestaurants,
                           ),
                         ),
                       );
@@ -116,13 +137,13 @@ class RestaurantFavorites extends StatelessWidget {
                       child: GridTile(
                         // ignore: sort_child_properties_last
                         child: Image.network(
-                          restaurants[index].photo!,
+                          widget.restaurants[index].photo!,
                           fit: BoxFit.cover,
                         ),
                         footer: GridTileBar(
                           backgroundColor: Colors.black45,
                           title: Text(
-                            restaurants[index].name!,
+                            widget.restaurants[index].name!,
                             textAlign: TextAlign.center,
                           ),
                         ),

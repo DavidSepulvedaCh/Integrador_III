@@ -15,7 +15,6 @@ class _IndexState extends State<Index> {
   late String _email;
   late String _photo;
   bool _isDoingFetch = false;
-  bool _showAccountMenu = false;
 
   bool _locationEnabled = false;
   final lt.Location _location = lt.Location();
@@ -138,13 +137,8 @@ class _IndexState extends State<Index> {
     });
   }
 
-  Future<List<Restaurant>> getRestaurantByFavorites() async {
-    var restFavs = await APIService.getFavorites();
-    return restFavs;
-  }
-
   Future<void> setRestaurants() async {
-    await getRestaurantByFavorites().then((value) {
+    await Functions.getRestaurantByFavorites().then((value) {
       setState(() {
         restaurantsFavs.clear();
         restaurantsFavs.addAll(value);
@@ -481,22 +475,19 @@ class _IndexState extends State<Index> {
                     leading:
                         const Icon(Icons.favorite, color: Colors.deepOrange),
                     title: const Text('Restaurantes favoritos'),
-                    onTap: () {
-                      setState(
-                        () {
-                          setRestaurants();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RestaurantFavorites(
-                                restaurants: restaurantsFavs,
-                                userName: _name,
-                                email: _email,
+                    onTap: () async {
+                      await setRestaurants().then((value) => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RestaurantFavorites(
+                                  restaurants: restaurantsFavs,
+                                  userName: _name,
+                                  email: _email,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
+                            )
+                          });
                     },
                   ),
                   SwitchListTile(
@@ -542,7 +533,7 @@ class _IndexState extends State<Index> {
                         child: ListTile(
                           leading:
                               const Icon(Icons.money, color: Colors.deepOrange),
-                          title: Text("filtross"),
+                          title: const Text("Agregar filtro"),
                           onTap: () {
                             Navigator.pop(context);
                             showModal();

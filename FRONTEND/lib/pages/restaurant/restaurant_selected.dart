@@ -4,9 +4,10 @@ import 'dart:async';
 class RestaurantHeader extends StatelessWidget {
   final Restaurant restaurant;
   final Function(bool) setDoingFetch;
+  final Function()? update;
 
   const RestaurantHeader(
-      {Key? key, required this.restaurant, required this.setDoingFetch})
+      {Key? key, required this.restaurant, required this.setDoingFetch, this.update})
       : super(key: key);
 
   @override
@@ -17,8 +18,7 @@ class RestaurantHeader extends StatelessWidget {
           height: 200,
           decoration: BoxDecoration(
             image: DecorationImage(
-              // ignore: unnecessary_string_interpolations
-              image: CachedNetworkImageProvider('${restaurant.photo!}'),
+              image: CachedNetworkImageProvider(restaurant.photo!),
               fit: BoxFit.cover,
             ),
           ),
@@ -31,7 +31,7 @@ class RestaurantHeader extends StatelessWidget {
               end: Alignment.bottomCenter,
               colors: [
                 Colors.black.withOpacity(0.5),
-                Color.fromARGB(185, 0, 0, 0),
+                const Color.fromARGB(185, 0, 0, 0),
               ],
             ),
           ),
@@ -43,6 +43,7 @@ class RestaurantHeader extends StatelessWidget {
                 child: ButtonFavorite(
                   idRestaurant: restaurant.id,
                   setDoingFetch: setDoingFetch,
+                  update: update,
                 ),
               ),
               Column(
@@ -224,9 +225,10 @@ class _OffertsCardState extends State<OffertsCard> {
 class RestaurantSelected extends StatefulWidget {
   final List<Restaurant> restaurants;
   final String restaurantId;
+  final Function()? update;
 
   const RestaurantSelected(
-      {super.key, required this.restaurants, required this.restaurantId});
+      {super.key, required this.restaurants, required this.restaurantId, this.update});
 
   @override
   State<RestaurantSelected> createState() => _RestaurantSelectedState();
@@ -250,7 +252,7 @@ class _RestaurantSelectedState extends State<RestaurantSelected> {
         IgnorePointer(
           ignoring: _isDoingFetch,
           child: Scaffold(
-            backgroundColor: Color.fromARGB(255, 228, 228, 228),
+            backgroundColor: const Color.fromARGB(255, 228, 228, 228),
             body: CustomScrollView(
               slivers: <Widget>[
                 const SliverAppBar(
@@ -263,7 +265,7 @@ class _RestaurantSelectedState extends State<RestaurantSelected> {
                   delegate: SliverChildListDelegate(
                     [
                       RestaurantHeader(
-                          restaurant: restaurant, setDoingFetch: _makeFetch),
+                          restaurant: restaurant, setDoingFetch: _makeFetch, update: widget.update),
                       OffertsCard(
                         restaurantId: restaurant.id!,
                       ),

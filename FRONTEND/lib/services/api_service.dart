@@ -88,7 +88,6 @@ class APIService {
         return false;
       }
     } catch (e) {
-      print(e);
       return false;
     }
   }
