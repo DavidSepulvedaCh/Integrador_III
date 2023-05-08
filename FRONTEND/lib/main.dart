@@ -10,8 +10,28 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    PushNotificationService.messageStream.listen((event) {
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+          builder: (context) => RestaurantSelected(restaurant: event),
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +39,15 @@ class MyApp extends StatelessWidget {
       title: 'FoodHub',
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
+      navigatorKey: navigatorKey,
       routes: {
-        '/':(context) => const IsLoggedMiddleware(),
-        '/login':(context) => const Login(),
-        '/signUp':(context) => const Register(),
-        '/signUpRestaurant':(context) => const RegisterRestaurant(),
+        '/': (context) => const IsLoggedMiddleware(),
+        '/login': (context) => const Login(),
+        '/signUp': (context) => const Register(),
+        '/signUpRestaurant': (context) => const RegisterRestaurant(),
         '/index': ((context) => const Index()),
-        '/restaurantIndex':(context) =>  const HomeRestaurante(),
-        '/mapa':(context) => const MapSample(),
+        '/restaurantIndex': (context) => const HomeRestaurante(),
+        '/mapa': (context) => const MapSample(),
       },
     );
   }

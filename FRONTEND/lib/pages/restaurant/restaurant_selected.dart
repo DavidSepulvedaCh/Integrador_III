@@ -223,12 +223,11 @@ class _OffertsCardState extends State<OffertsCard> {
 }
 
 class RestaurantSelected extends StatefulWidget {
-  final List<Restaurant> restaurants;
-  final String restaurantId;
+  final Restaurant restaurant;
   final Function()? update;
 
   const RestaurantSelected(
-      {super.key, required this.restaurants, required this.restaurantId, this.update});
+      {super.key, required this.restaurant, this.update});
 
   @override
   State<RestaurantSelected> createState() => _RestaurantSelectedState();
@@ -245,8 +244,6 @@ class _RestaurantSelectedState extends State<RestaurantSelected> {
 
   @override
   Widget build(BuildContext context) {
-    final Restaurant restaurant =
-        widget.restaurants.firstWhere((r) => r.id == widget.restaurantId);
     return Stack(
       children: [
         IgnorePointer(
@@ -265,9 +262,9 @@ class _RestaurantSelectedState extends State<RestaurantSelected> {
                   delegate: SliverChildListDelegate(
                     [
                       RestaurantHeader(
-                          restaurant: restaurant, setDoingFetch: _makeFetch, update: widget.update),
+                          restaurant: widget.restaurant, setDoingFetch: _makeFetch, update: widget.update),
                       OffertsCard(
-                        restaurantId: restaurant.id!,
+                        restaurantId: widget.restaurant.id!,
                       ),
                     ],
                   ),

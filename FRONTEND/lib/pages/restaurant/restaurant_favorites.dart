@@ -17,9 +17,8 @@ class RestaurantFavorites extends StatefulWidget {
 }
 
 class _RestaurantFavoritesState extends State<RestaurantFavorites> {
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _setRestaurants();
   }
@@ -125,8 +124,7 @@ class _RestaurantFavoritesState extends State<RestaurantFavorites> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RestaurantSelected(
-                            restaurants: widget.restaurants,
-                            restaurantId: widget.restaurants[index].id!,
+                            restaurant: widget.restaurants[index],
                             update: _setRestaurants,
                           ),
                         ),
@@ -135,17 +133,16 @@ class _RestaurantFavoritesState extends State<RestaurantFavorites> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: GridTile(
-                        // ignore: sort_child_properties_last
-                        child: Image.network(
-                          widget.restaurants[index].photo!,
-                          fit: BoxFit.cover,
-                        ),
                         footer: GridTileBar(
                           backgroundColor: Colors.black45,
                           title: Text(
                             widget.restaurants[index].name!,
                             textAlign: TextAlign.center,
                           ),
+                        ),
+                        child: Image.network(
+                          widget.restaurants[index].photo!,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
