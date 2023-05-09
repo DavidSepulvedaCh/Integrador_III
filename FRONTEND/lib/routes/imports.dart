@@ -43,3 +43,4 @@ export 'package:integrador/models/restaurant_model.dart';
 export 'package:integrador/pages/restaurant/restaurant_selected.dart';
 export 'package:integrador/pages/restaurant/restaurant_favorites.dart';
 export 'dart:convert';
+export 'package:integrador/pages/terminos.dart';

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:integrador/pages/system/index.dart';
 import 'package:integrador/routes/imports.dart';
 import 'package:integrador/services/push_notification_service.dart';
@@ -18,9 +19,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'FoodHub',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      home: Splash(),
       routes: {
-        '/': (context) => const IsLoggedMiddleware(),
         '/login': (context) => const Login(),
         '/signUp': (context) => const Register(),
         '/signUpRestaurant': (context) => const RegisterRestaurant(),
@@ -28,6 +28,29 @@ class MyApp extends StatelessWidget {
         '/restaurantIndex': (context) => const HomeRestaurante(),
         '/mapa': (context) => const MapSample(),
       },
+    );
+  }
+}
+
+class Splash extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const IsLoggedMiddleware()),
+      );
+    });
+
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/foodhubL.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
     );
   }
 }
