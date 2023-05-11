@@ -10,14 +10,35 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    PushNotificationService.messageStream.listen((event) {
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+          builder: (context) => RestaurantSelected(restaurant: event),
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FoodHub',
       debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
       home: const Splash(),
       routes: {
         '/login': (context) => const Login(),

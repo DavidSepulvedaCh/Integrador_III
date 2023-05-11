@@ -25,7 +25,7 @@ class PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenApp);
 
     const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings("ic_launcher");
+        AndroidInitializationSettings("@drawable/ic_stat_foodhub");
     const InitializationSettings initializationSettings =
         InitializationSettings(android: androidInitializationSettings);
 

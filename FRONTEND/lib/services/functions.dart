@@ -97,5 +97,8 @@ class Functions {
     }
   }
 
-
+  static Future<List<Restaurant>> getRestaurantByFavorites() async {
+    var restFavs = await APIService.getFavorites();
+    return restFavs;
+  }
 }
