@@ -51,8 +51,7 @@ class FavoritesModel {
         this.favoriteExists = (idUser, idRestaurant) => __awaiter(this, void 0, void 0, function* () {
             this.MongoDBC.connection();
             const favorite = yield this.MongoDBC.FavoriteSchema.find({
-                idUser: idUser,
-                idRestaurant: idRestaurant
+                idUser: { $eq: idUser }
             });
             if (favorite.length > 0) {
                 return true;

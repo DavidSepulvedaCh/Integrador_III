@@ -1,6 +1,6 @@
 import 'package:integrador/routes/imports.dart';
 
-class RestaurantFavorites extends StatefulWidget {
+class RestaurantFavorites extends StatelessWidget {
   final List<Restaurant> restaurants;
   final String userName;
   final String email;
@@ -11,26 +11,6 @@ class RestaurantFavorites extends StatefulWidget {
       required this.userName,
       required this.email})
       : super(key: key);
-
-  @override
-  State<RestaurantFavorites> createState() => _RestaurantFavoritesState();
-}
-
-class _RestaurantFavoritesState extends State<RestaurantFavorites> {
-  @override
-  void initState() {
-    super.initState();
-    _setRestaurants();
-  }
-
-  Future<void> _setRestaurants() async {
-    await Functions.getRestaurantByFavorites().then((value) {
-      setState(() {
-        widget.restaurants.clear();
-        widget.restaurants.addAll(value);
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +51,7 @@ class _RestaurantFavoritesState extends State<RestaurantFavorites> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          widget.userName,
+                          userName,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -79,7 +59,7 @@ class _RestaurantFavoritesState extends State<RestaurantFavorites> {
                           ),
                         ),
                         Text(
-                          widget.email,
+                          email,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -100,7 +80,7 @@ class _RestaurantFavoritesState extends State<RestaurantFavorites> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Hola $widget.userName, estos son tus restaurantes favoritos",
+              "Hola $userName, estos son tus restaurantes favoritos",
               style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w300,
@@ -116,7 +96,7 @@ class _RestaurantFavoritesState extends State<RestaurantFavorites> {
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
                 ),
-                itemCount: widget.restaurants.length,
+                itemCount: restaurants.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
@@ -124,8 +104,8 @@ class _RestaurantFavoritesState extends State<RestaurantFavorites> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RestaurantSelected(
-                            restaurant: widget.restaurants[index],
-                            update: _setRestaurants,
+                            restaurants: restaurants,
+                            restaurantId: restaurants[index].id!,
                           ),
                         ),
                       );
@@ -133,16 +113,17 @@ class _RestaurantFavoritesState extends State<RestaurantFavorites> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: GridTile(
+                        // ignore: sort_child_properties_last
+                        child: Image.network(
+                          restaurants[index].photo!,
+                          fit: BoxFit.cover,
+                        ),
                         footer: GridTileBar(
                           backgroundColor: Colors.black45,
                           title: Text(
-                            widget.restaurants[index].name!,
+                            restaurants[index].name!,
                             textAlign: TextAlign.center,
                           ),
-                        ),
-                        child: Image.network(
-                          widget.restaurants[index].photo!,
-                          fit: BoxFit.cover,
                         ),
                       ),
                     ),

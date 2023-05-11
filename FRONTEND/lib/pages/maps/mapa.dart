@@ -1,4 +1,4 @@
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, deprecated_member_use, use_build_context_synchronously
 
 import 'dart:async';
 import 'package:integrador/routes/imports.dart';
@@ -13,6 +13,9 @@ class MapSample extends StatefulWidget {
 class MapSampleState extends State<MapSample> {
   List<Restaurant> restaurants = <Restaurant>[];
   final List<Marker> _markers = [];
+  Position? currentLocation;
+  double lati = 0.0000;
+  double long = 0.0000;
 
 // Lista de coordenadas con sus nombres
 
@@ -35,13 +38,103 @@ class MapSampleState extends State<MapSample> {
     return register;
   }
 
+  Future<LatLng> _getCurrentLocation() async {
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    return LatLng(position.latitude, position.longitude);
+  }
+
   void _createMarkers(List<Restaurant> restaurants) {
     for (final restaurant in restaurants) {
       final marker = Marker(
         markerId: MarkerId(restaurant.id!),
-        position: LatLng(double.parse(restaurant.latitude!),
-            double.parse(restaurant.longitude!)),
+        position: LatLng(
+          double.parse(restaurant.latitude!),
+          double.parse(restaurant.longitude!),
+        ),
         infoWindow: InfoWindow(title: restaurant.name!),
+        onTap: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: 300,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(restaurant.photo!),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          restaurant.name!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
+                          child: Text(
+                            restaurant.description!,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        ElevatedButton(
+                          onPressed: () async {
+                            lati = double.parse(restaurant.latitude!);
+                            long = double.parse(restaurant.longitude!);
+                            final destino = LatLng(lati, long);
+                            final origen = await _getCurrentLocation();
+                            //const origen = LatLng(7.098191, -73.123305);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MapaRutaWidget(
+                                    origen: origen, destino: destino),
+                              ),
+                            );
+                          },
+                          // ignore: sort_child_properties_last
+                          child: const Text(
+                            "Ruta al restaurante",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.orange,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 32,
+                              vertical: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       );
       _markers.add(marker);
     }

@@ -4,10 +4,9 @@ import 'dart:async';
 class RestaurantHeader extends StatelessWidget {
   final Restaurant restaurant;
   final Function(bool) setDoingFetch;
-  final Function()? update;
 
   const RestaurantHeader(
-      {Key? key, required this.restaurant, required this.setDoingFetch, this.update})
+      {Key? key, required this.restaurant, required this.setDoingFetch})
       : super(key: key);
 
   @override
@@ -18,7 +17,8 @@ class RestaurantHeader extends StatelessWidget {
           height: 200,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: CachedNetworkImageProvider(restaurant.photo!),
+              // ignore: unnecessary_string_interpolations
+              image: CachedNetworkImageProvider('${restaurant.photo!}'),
               fit: BoxFit.cover,
             ),
           ),
@@ -43,7 +43,6 @@ class RestaurantHeader extends StatelessWidget {
                 child: ButtonFavorite(
                   idRestaurant: restaurant.id,
                   setDoingFetch: setDoingFetch,
-                  update: update,
                 ),
               ),
               Column(
@@ -223,11 +222,11 @@ class _OffertsCardState extends State<OffertsCard> {
 }
 
 class RestaurantSelected extends StatefulWidget {
-  final Restaurant restaurant;
-  final Function()? update;
+  final List<Restaurant> restaurants;
+  final String restaurantId;
 
   const RestaurantSelected(
-      {super.key, required this.restaurant, this.update});
+      {super.key, required this.restaurants, required this.restaurantId});
 
   @override
   State<RestaurantSelected> createState() => _RestaurantSelectedState();
@@ -244,6 +243,8 @@ class _RestaurantSelectedState extends State<RestaurantSelected> {
 
   @override
   Widget build(BuildContext context) {
+    final Restaurant restaurant =
+        widget.restaurants.firstWhere((r) => r.id == widget.restaurantId);
     return Stack(
       children: [
         IgnorePointer(
@@ -262,9 +263,9 @@ class _RestaurantSelectedState extends State<RestaurantSelected> {
                   delegate: SliverChildListDelegate(
                     [
                       RestaurantHeader(
-                          restaurant: widget.restaurant, setDoingFetch: _makeFetch, update: widget.update),
+                          restaurant: restaurant, setDoingFetch: _makeFetch),
                       OffertsCard(
-                        restaurantId: widget.restaurant.id!,
+                        restaurantId: restaurant.id!,
                       ),
                     ],
                   ),

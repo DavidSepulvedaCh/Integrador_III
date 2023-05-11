@@ -91,9 +91,6 @@ class InformationUsersNotificationModel {
                 return;
             }
             const message = {
-                data: {
-                    idRestaurant: idRestaurant
-                },
                 notification: {
                     title: "¡Nueva oferta disponible!",
                     body: `El restaurante ${restaurantName} ha publicado una nueva oferta: ${offerName}`,

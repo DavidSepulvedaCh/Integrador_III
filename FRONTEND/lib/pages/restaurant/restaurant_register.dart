@@ -63,14 +63,17 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Ubicación desactivada'),
-            content: const Text('Por favor, active la ubicación para continuar.'),
+            content:
+                const Text('Por favor, active la ubicación para continuar.'),
             actions: <Widget>[
               TextButton(
-                child: const Text('Cancelar', style: TextStyle(color: Colors.deepOrange)),
+                child: const Text('Cancelar',
+                    style: TextStyle(color: Colors.deepOrange)),
                 onPressed: () => Navigator.of(context).pop(false),
               ),
               TextButton(
-                child: const Text('Aceptar', style: TextStyle(color: Colors.deepOrange)),
+                child: const Text('Aceptar',
+                    style: TextStyle(color: Colors.deepOrange)),
                 onPressed: () => Navigator.of(context).pop(true),
               ),
             ],
@@ -95,11 +98,13 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                   'Por favor, otorgue el permiso de ubicación para continuar.'),
               actions: <Widget>[
                 TextButton(
-                  child: const Text('Cancelar', style: TextStyle(color: Colors.deepOrange)),
+                  child: const Text('Cancelar',
+                      style: TextStyle(color: Colors.deepOrange)),
                   onPressed: () => Navigator.of(context).pop(false),
                 ),
                 TextButton(
-                  child: const Text('Aceptar', style: TextStyle(color: Colors.deepOrange)),
+                  child: const Text('Aceptar',
+                      style: TextStyle(color: Colors.deepOrange)),
                   onPressed: () => Navigator.of(context).pop(true),
                 ),
               ],
@@ -171,6 +176,55 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     return null;
   }
 
+  void term() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Términos y condiciones'),
+          content:
+              const Text('Al acceder, aceptas los términos y condiciones.'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                primary: Colors.deepOrange, // Color de fondo del botón
+              ),
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                primary: Colors.deepOrange, // Color de fondo del botón
+              ),
+              child: const Text('Aceptar'),
+              onPressed: () {
+                register();
+              },
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (value) {
+        // El usuario ha aceptado los términos y condiciones, continuar con la lógica de la aplicación aquí
+      } else {
+        // El usuario ha cancelado la acción, realizar alguna acción aquí si es necesario
+      }
+    });
+  }
+
   void register() async {
     if (!Functions.validateRegister(
         context,
@@ -239,10 +293,32 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
               },
             ),
           ),
-          const Text(
-            'Acepto los terminos y condiciones.',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          )
+          GestureDetector(
+            onTap: (() {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Terminos()));
+            }),
+            child: RichText(
+              text: const TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Acepto ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Términos y condiciones',
+                    style: TextStyle(
+                      color: Colors.deepOrange,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -574,7 +650,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                         const SizedBox(height: 15),
                         builTerminos(),
                         const SizedBox(height: 20),
-                        ButtonOne(onClick: register, text: 'Registrar'),
+                        ButtonOne(onClick: term, text: 'Registrar'),
                         buildBtnSingIn()
                       ],
                     ),
