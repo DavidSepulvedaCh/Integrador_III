@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:integrador/widgets/biometric_data.dart';
 import 'package:integrador/routes/imports.dart';
 
