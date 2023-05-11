@@ -11,6 +11,7 @@ class Deslizar extends StatefulWidget {
 }
 
 class _DeslizarState extends State<Deslizar> {
+  // ignore: unused_field
   int _currentIndex = 0;
 
   @override

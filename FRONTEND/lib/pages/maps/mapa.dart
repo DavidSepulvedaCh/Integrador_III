@@ -158,9 +158,6 @@ class MapSampleState extends State<MapSample> {
         actions: [
           IconButton(
             onPressed: () {
-              for (var restaurant in restaurants) {
-                print(restaurant.name);
-              }
             },
             icon: const Icon(Icons.menu),
           )

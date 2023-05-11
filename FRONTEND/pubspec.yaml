@@ -58,6 +58,7 @@ dependencies:
   firebase_messaging: ^14.4.1
   firebase_core: ^2.10.0
   flutter_native_splash: ^2.2.18
+  flutter_local_notifications: ^14.0.0+2
 
 dev_dependencies:
   flutter_test:

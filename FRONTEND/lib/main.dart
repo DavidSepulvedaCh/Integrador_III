@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:integrador/pages/system/index.dart';
 import 'package:integrador/routes/imports.dart';
 import 'package:integrador/services/push_notification_service.dart';
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'FoodHub',
       debugShowCheckedModeBanner: false,
-      home: Splash(),
+      home: const Splash(),
       routes: {
         '/login': (context) => const Login(),
         '/signUp': (context) => const Register(),
@@ -33,6 +32,8 @@ class MyApp extends StatelessWidget {
 }
 
 class Splash extends StatelessWidget {
+  const Splash({super.key});
+
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 2), () {

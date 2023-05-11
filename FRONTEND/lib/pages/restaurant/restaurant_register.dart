@@ -192,7 +192,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                primary: Colors.deepOrange, // Color de fondo del botón
+                backgroundColor: Colors.deepOrange, // Color de fondo del botón
               ),
               child: const Text('Cancelar'),
               onPressed: () {
@@ -206,7 +206,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                primary: Colors.deepOrange, // Color de fondo del botón
+                backgroundColor: Colors.deepOrange, // Color de fondo del botón
               ),
               child: const Text('Aceptar'),
               onPressed: () {
