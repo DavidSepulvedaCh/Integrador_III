@@ -268,7 +268,34 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                 child: Visibility(
                                   visible: isImg != false,
                                   child: IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Confirmación actualizar foto'),
+                                            content: const Text(
+                                                '¿Estas seguro de actualizar la foto?'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Cancelar'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Aceptar'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                  updatePhoto();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
                                     icon: const Icon(
                                       Icons.save,
                                       color: Colors.white,

@@ -756,6 +756,8 @@ class APIService {
       if (response.statusCode == 200) {
         LoginResponseModel model = loginResponseModel(response.body);
         await SharedService.setLogginDetails(model);
+        await _addInformationUserNotification(
+            model.id ?? "", PushNotificationService.token ?? "");
         if (model.role == 'person') {
           return 0;
         } else if (model.role == 'restaurant') {
